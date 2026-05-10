@@ -2008,22 +2008,30 @@
         min-width: 0;
       }
 
+      /* Fast ramme på figuren = alle tre billeder samme højde (symmetrisk bund) */
       .step-visual-card {
+        position: relative;
         margin: 0;
-      }
-
-      .step-visual-card img {
-        display: block;
         width: 100%;
         aspect-ratio: 4 / 5;
-        object-fit: cover;
+        overflow: hidden;
         border-radius: 26px;
         box-shadow: 0 18px 58px rgba(34, 25, 12, 0.09);
       }
 
-      /* Overkrop synlig: beskæringer matcher samme ramme som sejr-billede (4:5 + cover) */
+      .step-visual-card img {
+        display: block;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0;
+      }
+
+      /* Beskæring: hus/himmel mindre i toppen på første billede */
       .step-visual-card.brush img {
-        object-position: center 38%;
+        object-position: center 58%;
       }
 
       .step-visual-card.workout img {
@@ -2053,13 +2061,13 @@
         }
 
         .result-pair .step-visual-card img {
-          aspect-ratio: 4 / 5;
           width: 100%;
+          height: 100%;
           object-fit: cover;
         }
 
         .step-visual-card.brush img {
-          object-position: center 36%;
+          object-position: center 54%;
         }
 
         .step-visual-card.workout img {
