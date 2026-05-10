@@ -3,112 +3,34 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Gratis feedback | Niels Wahlberg Coaching</title>
+    <meta http-equiv="refresh" content="0;url=https://tally.so/r/WO8VLJ" />
+    <title>Omdirigerer… | Niels Wahlberg Coaching</title>
     <meta
       name="description"
-      content="Få personlig struktur-feedback — fem korte spørgsmål og en konkret retning."
+      content="Gratis personlig struktur-feedback — du sendes til spørgeskemaet."
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="page">
-      <nav class="nav" aria-label="Primær navigation">
-        <div class="container nav-inner">
-          <a class="brand" href="index.html#top" aria-label="Niels Wahlberg Coaching">
-            <span class="brand-mark" aria-hidden="true"></span>
-            <span class="brand-text">
-              <span class="brand-name">Niels Wahlberg</span>
-              <span class="brand-subtitle">Coaching</span>
-            </span>
-          </a>
-          <div class="nav-links nav-desktop">
-            <a href="index.html#resultat">Fremgangsmåde</a>
-            <a href="index.html#klip">Testimonials</a>
-            <a href="index.html#anmeldelser">Anmeldelser</a>
-            <a href="index.html#feedback">Gratis feedback</a>
-          </div>
-          <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book samtale</a>
-        </div>
-      </nav>
-
-      <main id="top">
-        <section id="feedback" class="cta">
-          <div class="container cta-panel">
-            <div>
-              <p class="section-kicker">Gratis personlig struktur feedback</p>
-              <h2>Få en konkret retning.</h2>
-              <p class="section-copy">
-                Du svarer på fem korte spørgsmål. Jeg gennemgår din nuværende situation personligt
-                og sender dig en kort lydbesked med, hvor jeg ville starte, hvis jeg var dig.
-              </p>
-              <ul class="list" style="margin-top: 22px">
-                <li>Du svarer på 5 korte spørgsmål</li>
-                <li>Jeg gennemgår dine svar personligt</li>
-                <li>Du får en konkret retning, ikke generelle råd</li>
-              </ul>
-            </div>
-
-            <form class="form" id="feedback-form">
-              <label>
-                Navn
-                <input name="name" autocomplete="name" placeholder="Dit navn" required />
-              </label>
-              <label>
-                Email
-                <input name="email" type="email" autocomplete="email" placeholder="dig@email.dk" required />
-              </label>
-              <label>
-                Hvor sejler strukturen mest lige nu?
-                <textarea name="situation" placeholder="Skriv kort hvad der fylder mest..." required></textarea>
-              </label>
-              <label>
-                Hvad vil du gerne have styr på de næste 12 uger?
-                <textarea name="goal" placeholder="Din vigtigste retning..." required></textarea>
-              </label>
-              <button class="btn btn-primary" type="submit">Send og få feedback</button>
-              <p class="section-copy" style="font-size: 0.9rem">
-                Gratis · Skræddersyet · Hjælp til struktur
-              </p>
-            </form>
-          </div>
-        </section>
-      </main>
-
-      <footer>
-        <div class="container footer-inner">
-          <span>Niels Wahlberg coaching</span>
-          <span>Terms & Support · Privacy Policy</span>
-        </div>
-      </footer>
-
-      <nav class="mobile-tabbar" aria-label="Mobil navigation">
-        <a href="index.html" class="mobile-tab">Hjem</a>
-        <a href="klip.html" class="mobile-tab">Testimonials</a>
-        <a href="resultat.html" class="mobile-tab">Fremgangsmåde</a>
-        <a href="anmeldelser.html" class="mobile-tab">Anmeldelser</a>
-        <a href="feedback.html" class="mobile-tab is-active" aria-current="page">Feedback</a>
-      </nav>
-    </div>
-
     <script>
-      const form = document.querySelector("#feedback-form");
-
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const data = new FormData(form);
-        const subject = encodeURIComponent("Gratis personlig struktur feedback");
-        const body = encodeURIComponent(
-          `Navn: ${data.get("name")}\nEmail: ${data.get("email")}\n\nHvor sejler strukturen mest lige nu?\n${data.get("situation")}\n\nHvad vil du gerne have styr på de næste 12 uger?\n${data.get("goal")}`
-        );
-
-        window.location.href = `mailto:?subject=${subject}&body=${body}`;
-      });
+      location.replace("https://tally.so/r/WO8VLJ");
     </script>
+  </head>
+  <body
+    style="
+      margin: 0;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, sans-serif;
+      padding: 24px;
+      text-align: center;
+      color: #333;
+      background: #f7f2ea;
+    "
+  >
+    <p style="max-width: 28rem; line-height: 1.5">
+      Sender dig videre til feedback-formularen …<br />
+      <a href="https://tally.so/r/WO8VLJ" style="color: #101010; font-weight: 700"
+        >Klik her, hvis du ikke bliver viderestillet.</a
+      >
+    </p>
   </body>
 </html>

@@ -31,7 +31,7 @@
             <a href="#resultat">Fremgangsmåde</a>
             <a href="#klip">Testimonials</a>
             <a href="#anmeldelser">Anmeldelser</a>
-            <a href="#feedback">Gratis feedback</a>
+            <a href="https://tally.so/r/WO8VLJ">Gratis feedback</a>
           </div>
           <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book samtale</a>
         </div>
@@ -185,7 +185,7 @@
               <div class="result-pair">
                 <article class="card good">
                   <strong>Rolig morgen, klar plan</strong>
-                  <p>Du starter dagen med få vigtige handlinger i stedet for en lang mental liste.</p>
+                  <p>Du starter med få vigtige handlinger – ikke en lang mental liste.</p>
                 </article>
                 <figure class="step-visual-card brush">
                   <img src="images/niels-brushing-teeth.png" alt="Niels børster tænder som en del af morgenrutinen" />
@@ -333,28 +333,12 @@
               </ul>
             </div>
 
-            <form class="form" id="feedback-form">
-              <label>
-                Navn
-                <input name="name" autocomplete="name" placeholder="Dit navn" required />
-              </label>
-              <label>
-                Email
-                <input name="email" type="email" autocomplete="email" placeholder="dig@email.dk" required />
-              </label>
-              <label>
-                Hvor sejler strukturen mest lige nu?
-                <textarea name="situation" placeholder="Skriv kort hvad der fylder mest..." required></textarea>
-              </label>
-              <label>
-                Hvad vil du gerne have styr på de næste 12 uger?
-                <textarea name="goal" placeholder="Din vigtigste retning..." required></textarea>
-              </label>
-              <button class="btn btn-primary" type="submit">Send og få feedback</button>
-              <p class="section-copy" style="font-size: 0.9rem">
-                Gratis · Skræddersyet · Hjælp til struktur
+            <div class="form">
+              <a class="btn btn-primary" href="https://tally.so/r/WO8VLJ">Udfyld de 5 spørgsmål</a>
+              <p class="section-copy" style="font-size: 0.9rem; margin-top: 14px">
+                Du åbner et kort Tally-spørgeskema. Gratis · Skræddersyet · Hjælp til struktur
               </p>
-            </form>
+            </div>
           </div>
         </section>
       </main>
@@ -371,23 +355,9 @@
         <a href="klip.html" class="mobile-tab">Testimonials</a>
         <a href="resultat.html" class="mobile-tab">Fremgangsmåde</a>
         <a href="anmeldelser.html" class="mobile-tab">Anmeldelser</a>
-        <a href="feedback.html" class="mobile-tab">Feedback</a>
+        <a href="https://tally.so/r/WO8VLJ" class="mobile-tab">Feedback</a>
       </nav>
     </div>
 
-    <script>
-      const form = document.querySelector("#feedback-form");
-
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const data = new FormData(form);
-        const subject = encodeURIComponent("Gratis personlig struktur feedback");
-        const body = encodeURIComponent(
-          `Navn: ${data.get("name")}\nEmail: ${data.get("email")}\n\nHvor sejler strukturen mest lige nu?\n${data.get("situation")}\n\nHvad vil du gerne have styr på de næste 12 uger?\n${data.get("goal")}`
-        );
-
-        window.location.href = `mailto:?subject=${subject}&body=${body}`;
-      });
-    </script>
   </body>
 </html>

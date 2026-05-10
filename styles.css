@@ -2090,9 +2090,9 @@
       }
 
       .hero-grid {
-        grid-template-columns: minmax(0, 0.88fr) minmax(360px, 0.9fr);
+        grid-template-columns: minmax(0, 0.74fr) minmax(0, 1.08fr);
         align-items: center;
-        gap: clamp(42px, 6vw, 76px);
+        gap: clamp(32px, 5vw, 64px);
       }
 
       .hero h1 {
@@ -2115,7 +2115,8 @@
 
       .hero-card {
         align-self: center;
-        max-width: 440px;
+        width: 100%;
+        max-width: min(100%, 620px);
         justify-self: end;
         padding: 12px;
         background: rgba(255, 255, 255, 0.44);
