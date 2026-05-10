@@ -2125,6 +2125,130 @@
           justify-self: stretch;
         }
       }
+
+      /* Larger hero image + phone polish */
+      .hero-grid {
+        grid-template-columns: minmax(0, 0.84fr) minmax(420px, 1fr);
+        gap: clamp(36px, 5vw, 68px);
+      }
+
+      .hero-card {
+        max-width: 540px;
+        width: 100%;
+      }
+
+      .hero-photo {
+        aspect-ratio: 4 / 3.15;
+        object-position: center 36%;
+      }
+
+      @media (max-width: 880px) {
+        .nav {
+          position: static;
+        }
+
+        .nav-inner {
+          min-height: auto;
+          padding: 14px 0;
+          flex-wrap: wrap;
+        }
+
+        .brand {
+          flex: 1 1 auto;
+        }
+
+        .nav-links {
+          order: 3;
+          width: 100%;
+          gap: 10px;
+          overflow-x: auto;
+          padding: 6px 0 2px;
+          scrollbar-width: none;
+        }
+
+        .nav-links::-webkit-scrollbar {
+          display: none;
+        }
+
+        .nav-links a {
+          flex: 0 0 auto;
+          padding: 8px 10px;
+          background: rgba(255, 255, 255, 0.45);
+          border-radius: 999px;
+          font-size: 0.68rem;
+        }
+
+        .nav .btn {
+          min-height: 40px;
+          padding: 0 14px;
+          font-size: 0.66rem;
+        }
+
+        .hero {
+          padding: 38px 0 44px;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+
+        .hero h1 {
+          max-width: 440px;
+          font-size: clamp(3rem, 12vw, 4.4rem);
+          line-height: 0.88;
+        }
+
+        .hero .lead {
+          max-width: 390px;
+          font-size: 1rem;
+        }
+
+        .hero-card {
+          padding: 8px;
+          border-radius: 28px;
+        }
+
+        .hero-photo {
+          aspect-ratio: 16 / 11;
+          border-radius: 22px;
+        }
+
+        .mini-proof {
+          display: grid;
+          grid-template-columns: 1fr;
+          max-width: 360px;
+        }
+
+        .proof-pill {
+          width: fit-content;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .brand-mark {
+          width: 34px;
+          height: 34px;
+        }
+
+        .brand-name {
+          font-size: 0.78rem;
+        }
+
+        .hero h1 {
+          font-size: clamp(2.65rem, 13.5vw, 3.8rem);
+        }
+
+        .hero-actions {
+          display: grid;
+          grid-template-columns: 1fr;
+          max-width: 280px;
+        }
+
+        .hero-actions .btn {
+          width: 100%;
+        }
+      }
     </style>
   </head>
   <body>
