@@ -1921,6 +1921,39 @@
         line-height: 1.5;
       }
 
+      /* Lille billede under teksten i hvert kort */
+      .offer-point {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .offer-point span {
+        flex: 1;
+      }
+
+      .offer-photo {
+        margin: 14px 0 0;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        border-radius: 14px;
+        box-shadow: 0 10px 28px rgba(34, 25, 12, 0.10);
+      }
+
+      .offer-photo img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      @media (max-width: 880px) {
+        .offer-photo {
+          width: min(100%, 240px);
+          aspect-ratio: 16 / 9;
+        }
+      }
+
       .offer-brief-actions {
         display: flex;
         flex-wrap: wrap;
@@ -2022,73 +2055,12 @@
         }
       }
 
-      .result-cards {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: clamp(18px, 3vw, 26px);
-        align-items: start;
-        margin-top: 22px;
-      }
-
-      /* Tekst øverst, lille billede nederst i hvert kort */
-      .result-cards .card {
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-      }
-
-      .result-cards .card p {
-        flex: 1;
-      }
-
-      .card-photo {
-        margin: 18px 0 0;
-        width: 100%;
-        aspect-ratio: 16 / 10;
-        overflow: hidden;
-        border-radius: 16px;
-        box-shadow: 0 12px 34px rgba(34, 25, 12, 0.10);
-      }
-
-      .card-photo img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      /* Beskæring så motivet sidder pænt i det lave format */
-      .card-photo.brush img {
-        object-position: center 56%;
-      }
-
-      .card-photo.workout img {
-        object-position: center 28%;
-      }
-
-      .card-photo.win img {
-        object-position: center 18%;
-      }
-
       .programme-panel {
         grid-template-columns: minmax(0, 0.95fr) minmax(300px, 0.85fr);
         grid-template-areas: "intro list";
       }
 
       @media (max-width: 880px) {
-        .result-cards {
-          grid-template-columns: 1fr;
-          gap: 16px;
-          margin-top: 18px;
-        }
-
-        /* Lille billede – ikke fuld kortbredde – centreret under teksten */
-        .card-photo {
-          width: min(100%, 260px);
-          aspect-ratio: 16 / 9;
-          margin-top: 14px;
-        }
-
         .programme-panel {
           grid-template-columns: 1fr;
           grid-template-areas: none;
