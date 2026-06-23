@@ -1947,6 +1947,23 @@
         object-fit: cover;
       }
 
+      /* Beskæring pr. billede: vis ansigt + overkrop */
+      .offer-photo--train img {
+        object-position: center 24%;
+      }
+
+      .offer-photo--brush img {
+        object-position: center 42%;
+      }
+
+      .offer-photo--kick img {
+        object-position: center 28%;
+      }
+
+      .offer-photo--win img {
+        object-position: center 22%;
+      }
+
       @media (max-width: 880px) {
         .offer-photo {
           width: min(100%, 240px);
@@ -2136,17 +2153,24 @@
         text-align: center;
       }
 
-      @media (min-width: 881px) {
+      @media (min-width: 1081px) {
         .hero-grid {
           align-items: center;
         }
       }
 
-      @media (max-width: 880px) {
+      @media (max-width: 1080px) {
         .hero-grid {
           grid-template-columns: 1fr;
         }
 
+        .hero-card {
+          max-width: 560px;
+          justify-self: center;
+        }
+      }
+
+      @media (max-width: 880px) {
         .hero-card {
           max-width: none;
           justify-self: stretch;
