@@ -2022,7 +2022,7 @@
         }
       }
 
-      .result-pairs {
+      .result-cards {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: clamp(18px, 3vw, 26px);
@@ -2030,44 +2030,43 @@
         margin-top: 22px;
       }
 
-      .result-pair {
+      /* Tekst øverst, lille billede nederst i hvert kort */
+      .result-cards .card {
         display: flex;
         flex-direction: column;
-        gap: 18px;
         min-width: 0;
       }
 
-      /* Fast ramme på figuren = alle tre billeder samme højde (symmetrisk bund) */
-      .step-visual-card {
-        position: relative;
-        margin: 0;
-        width: 100%;
-        aspect-ratio: 4 / 5;
-        overflow: hidden;
-        border-radius: 26px;
-        box-shadow: 0 18px 58px rgba(34, 25, 12, 0.09);
+      .result-cards .card p {
+        flex: 1;
       }
 
-      .step-visual-card img {
+      .card-photo {
+        margin: 18px 0 0;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        border-radius: 16px;
+        box-shadow: 0 12px 34px rgba(34, 25, 12, 0.10);
+      }
+
+      .card-photo img {
         display: block;
-        position: absolute;
-        inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 0;
       }
 
-      /* Beskæring: hus/himmel mindre i toppen på første billede */
-      .step-visual-card.brush img {
-        object-position: center 58%;
+      /* Beskæring så motivet sidder pænt i det lave format */
+      .card-photo.brush img {
+        object-position: center 56%;
       }
 
-      .step-visual-card.workout img {
-        object-position: center 30%;
+      .card-photo.workout img {
+        object-position: center 28%;
       }
 
-      .step-visual-card.win img {
+      .card-photo.win img {
         object-position: center 18%;
       }
 
@@ -2077,34 +2076,17 @@
       }
 
       @media (max-width: 880px) {
-        .result-pairs {
+        .result-cards {
           grid-template-columns: 1fr;
-          gap: 28px;
+          gap: 16px;
           margin-top: 18px;
         }
 
-        /* Ikke fuld skærmbredde; samme format som sejr-billede (4:5), croppet med cover */
-        .result-pair .step-visual-card {
-          width: min(100%, 320px);
-          margin-inline: auto;
-        }
-
-        .result-pair .step-visual-card img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .step-visual-card.brush img {
-          object-position: center 54%;
-        }
-
-        .step-visual-card.workout img {
-          object-position: center 22%;
-        }
-
-        .step-visual-card.win img {
-          object-position: center 18%;
+        /* Lille billede – ikke fuld kortbredde – centreret under teksten */
+        .card-photo {
+          width: min(100%, 260px);
+          aspect-ratio: 16 / 9;
+          margin-top: 14px;
         }
 
         .programme-panel {
