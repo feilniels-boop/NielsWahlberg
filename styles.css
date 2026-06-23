@@ -2199,7 +2199,7 @@
         }
       }
 
-      /* Mobile: separate pages from one-pager sections + bottom tab bar */
+      /* One-pager on every breakpoint; bottom tab bar scrolls to sections on mobile */
       .nav-desktop {
         display: flex;
       }
@@ -2212,20 +2212,16 @@
         display: none;
       }
 
+      /* Keep anchor targets clear of the sticky top nav */
+      #top,
+      .page-home .split-section,
+      .page-home .offer-brief,
+      .page-home .cta {
+        scroll-margin-top: 84px;
+      }
+
       @media (max-width: 880px) {
         .nav-desktop {
-          display: none !important;
-        }
-
-        .nav-desktop-inline {
-          display: none !important;
-        }
-
-        .nav-mobile-inline {
-          display: inline-flex !important;
-        }
-
-        .page-home .split-section {
           display: none !important;
         }
 

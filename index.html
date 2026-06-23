@@ -358,13 +358,55 @@
       </footer>
 
       <nav class="mobile-tabbar" aria-label="Mobil navigation">
-        <a href="index.html" class="mobile-tab is-active" aria-current="page">Hjem</a>
-        <a href="klip.html" class="mobile-tab">Testimonials</a>
-        <a href="resultat.html" class="mobile-tab">Fremgangsmåde</a>
-        <a href="anmeldelser.html" class="mobile-tab">Anmeldelser</a>
-        <a href="https://tally.so/r/WO8VLJ" class="mobile-tab">Feedback</a>
+        <a href="#top" class="mobile-tab is-active" aria-current="page">Hjem</a>
+        <a href="#klip" class="mobile-tab">Testimonials</a>
+        <a href="#resultat" class="mobile-tab">Fremgangsmåde</a>
+        <a href="#anmeldelser" class="mobile-tab">Anmeldelser</a>
+        <a href="#feedback" class="mobile-tab">Feedback</a>
       </nav>
     </div>
 
+    <script>
+      (function () {
+        var tabs = Array.prototype.slice.call(
+          document.querySelectorAll(".mobile-tabbar .mobile-tab")
+        );
+        if (!tabs.length || !("IntersectionObserver" in window)) return;
+
+        var sections = tabs
+          .map(function (tab) {
+            var id = (tab.getAttribute("href") || "").replace("#", "");
+            var el = id ? document.getElementById(id) : null;
+            return el ? { tab: tab, el: el } : null;
+          })
+          .filter(Boolean);
+
+        function setActive(tab) {
+          tabs.forEach(function (t) {
+            var on = t === tab;
+            t.classList.toggle("is-active", on);
+            if (on) t.setAttribute("aria-current", "page");
+            else t.removeAttribute("aria-current");
+          });
+        }
+
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              var match = sections.find(function (s) {
+                return s.el === entry.target;
+              });
+              if (match) setActive(match.tab);
+            });
+          },
+          { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+        );
+
+        sections.forEach(function (s) {
+          observer.observe(s.el);
+        });
+      })();
+    </script>
   </body>
 </html>
