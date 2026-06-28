@@ -798,8 +798,20 @@ h1 {
 }
 
 .review-person {
-  display: grid;
-  gap: 3px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 2px solid #fff;
+  box-shadow: var(--sh-sm);
+  background: var(--bg-2);
 }
 
 .review-person strong {
