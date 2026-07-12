@@ -317,6 +317,8 @@ h1 {
 .grad {
   display: block;
   margin-top: 0.1em;
+  padding-bottom: 0.14em;
+  line-height: 1.02;
   background: linear-gradient(120deg, var(--brand) 10%, var(--brand-2) 55%, var(--accent) 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -595,71 +597,61 @@ h1 {
   line-height: 1.5;
 }
 
-/* ---------------- Dark block (video) ---------------- */
-.block-dark {
+/* ---------------- Video testimonials (heaviest element, full width) ---------------- */
+.testi-band {
   position: relative;
-  margin: clamp(20px, 4vw, 48px) auto;
-  width: min(1160px, calc(100% - 40px));
   color: #fff;
+  padding: clamp(64px, 9vw, 120px) 0;
+  margin: clamp(24px, 5vw, 56px) 0;
+  scroll-margin-top: 84px;
   background:
-    radial-gradient(circle at 88% 0%, rgba(124, 58, 237, 0.4), transparent 26rem),
-    radial-gradient(circle at 0% 100%, rgba(6, 182, 212, 0.25), transparent 24rem),
+    radial-gradient(circle at 84% -6%, rgba(124, 58, 237, 0.42), transparent 30rem),
+    radial-gradient(circle at 4% 106%, rgba(6, 182, 212, 0.28), transparent 28rem),
     #0e1326;
-  border-radius: clamp(28px, 4vw, 40px);
   box-shadow: var(--sh-lg);
-  overflow: hidden;
 }
 
-.block-dark .wrap {
-  width: min(100%, calc(100% - clamp(36px, 8vw, 96px)));
-}
-
-.block-dark h2 {
+.testi-band h2 {
   color: #fff;
 }
 
-.clip-feature-row {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 22px;
-  margin-bottom: 22px;
+.testi-head {
+  max-width: none;
+  margin-bottom: clamp(36px, 5vw, 56px);
+  text-align: center;
 }
 
-.clip-feature {
-  padding: 12px;
+.testi-head h2 {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+}
+
+.testi-primary {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 14px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-lg);
 }
 
-.clip-feature video {
+.testi-primary video {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   background: #000;
 }
 
-.clip-feature-side {
+.testi-grid {
+  margin-top: clamp(28px, 4vw, 44px);
+  gap: clamp(16px, 2vw, 22px);
+}
+
+.testi-cta {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  gap: 18px;
-  padding: clamp(20px, 3vw, 34px);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--r-md);
-}
-
-.clip-feature-side h3 {
-  font-size: clamp(1.5rem, 3vw, 2.3rem);
-  line-height: 1.05;
-  font-weight: 800;
-}
-
-.clip-feature-side p {
-  color: rgba(255, 255, 255, 0.72);
-  line-height: 1.55;
+  margin-top: clamp(32px, 5vw, 52px);
 }
 
 .clip-grid {
@@ -939,6 +931,29 @@ h1 {
   text-align: center;
 }
 
+/* Final Calendly CTA (single, centered) */
+.cta-final {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  text-align: center;
+}
+
+.cta-final .cta-copy {
+  max-width: 620px;
+}
+
+.cta-final .cta-action {
+  width: min(420px, 100%);
+  margin-top: 6px;
+}
+
+.btn-cta-big {
+  width: 100%;
+  min-height: 64px;
+  padding: 16px 28px;
+  font-size: 1.05rem;
+}
+
 /* ---------------- Footer ---------------- */
 .footer {
   padding: 30px 0 calc(30px + env(safe-area-inset-bottom, 0px));
@@ -1006,13 +1021,13 @@ h1 {
 }
 
 /* ---------------- Scroll reveal ---------------- */
-.has-js :is(.bento-card, .block-head, .tl-step, .clip-feature-row, .clip-card, .offer-card, .review-card, .cta-panel) {
+.has-js :is(.bento-card, .block-head, .tl-step, .testi-primary, .clip-card, .offer-card, .review-card, .cta-panel) {
   opacity: 0;
   transform: translateY(22px);
   transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
 }
 
-.has-js :is(.bento-card, .block-head, .tl-step, .clip-feature-row, .clip-card, .offer-card, .review-card, .cta-panel).is-visible {
+.has-js :is(.bento-card, .block-head, .tl-step, .testi-primary, .clip-card, .offer-card, .review-card, .cta-panel).is-visible {
   opacity: 1;
   transform: none;
 }
@@ -1066,10 +1081,6 @@ h1 {
   .hero-photo {
     min-height: 300px;
     max-height: 460px;
-  }
-
-  .clip-feature-row {
-    grid-template-columns: 1fr;
   }
 
   .cta-panel {
@@ -1144,7 +1155,7 @@ h1 {
   }
 
   *,
-  .has-js :is(.bento-card, .block-head, .tl-step, .clip-feature-row, .clip-card, .offer-card, .review-card, .cta-panel) {
+  .has-js :is(.bento-card, .block-head, .tl-step, .testi-primary, .clip-card, .offer-card, .review-card, .cta-panel) {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
