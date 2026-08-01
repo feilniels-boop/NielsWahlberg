@@ -2,35 +2,1027 @@
 <html lang="da">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content="0;url=https://tally.so/r/WO8VLJ" />
-    <title>Omdirigerer… | Niels Wahlberg Coaching</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script>
+      document.documentElement.classList.add("has-js");
+    </script>
+    <title>Gratis feedback | Niels Wahlberg Coaching</title>
     <meta
       name="description"
-      content="Gratis personlig struktur-feedback — du sendes til spørgeskemaet."
+      content="Svar på 5 hurtige spørgsmål. Så sender Niels dig en personlig lydbesked med, hvor han ville starte."
     />
-    <script>
-      location.replace("https://tally.so/r/WO8VLJ");
-    </script>
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="da_DK" />
+    <meta property="og:title" content="Gratis feedback | Niels Wahlberg Coaching" />
+    <meta
+      property="og:description"
+      content="Svar på 5 hurtige spørgsmål. Så sender Niels dig en personlig lydbesked."
+    />
+    <meta property="og:image" content="/hero-niels.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* ---- Feedback-formular (genbruger variabler + knapper fra styles.css) ---- */
+      .page-form {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Fast progress-header — altid synlig, også når mobiltastaturet er åbent */
+      .fb-top {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 30;
+        background: rgba(247, 242, 234, 0.96);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 12px 0 14px;
+      }
+
+      .fb-top-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 10px;
+      }
+
+      .fb-counter {
+        font-size: 0.72rem;
+        font-weight: 900;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .fb-progress {
+        height: 12px;
+        width: 100%;
+        background: rgba(16, 16, 16, 0.09);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .fb-progress-fill {
+        height: 100%;
+        width: 20%;
+        background: #101010;
+        border-radius: 999px;
+        transition: width 300ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .fb-subline {
+        margin: 9px 0 0;
+        min-height: 1.1em;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--warm);
+      }
+
+      .fb-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: min(620px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 132px 0 60px;
+      }
+
+      /* Startskærm */
+      .fb-start .eyebrow {
+        margin-bottom: 18px;
+      }
+      .fb-start h1 {
+        font-size: clamp(2.4rem, 7vw, 4rem);
+        line-height: 0.92;
+        text-transform: uppercase;
+        letter-spacing: -0.06em;
+        margin: 0 0 18px;
+      }
+      .fb-start p {
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.6;
+        max-width: 34rem;
+        margin: 0 0 28px;
+      }
+      .fb-start-meta {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #101010;
+        margin-bottom: 12px;
+      }
+
+      /* Trin */
+      .fb-step {
+        animation: fbIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+      @keyframes fbIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .fb-q {
+        font-size: clamp(1.5rem, 4.5vw, 2.3rem);
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+        margin: 0 0 6px;
+      }
+      .fb-help {
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin: 0 0 20px;
+      }
+      .fb-field {
+        margin-top: 20px;
+      }
+
+      .fb-field input,
+      .fb-field textarea,
+      .fb-contact-field input,
+      .fb-email-wrap input {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        font-size: 1.05rem;
+      }
+      .fb-field input::placeholder,
+      .fb-field textarea::placeholder,
+      .fb-contact-field input::placeholder,
+      .fb-email-wrap input::placeholder {
+        color: rgba(16, 16, 16, 0.38);
+      }
+      .fb-field input:focus,
+      .fb-field textarea:focus,
+      .fb-contact-field input:focus,
+      .fb-email-wrap input:focus {
+        border-color: #101010;
+        box-shadow: 0 0 0 3px rgba(16, 16, 16, 0.12);
+      }
+
+      /* Enkeltvalg */
+      .fb-options {
+        display: grid;
+        gap: 10px;
+        margin-top: 22px;
+      }
+      .fb-option {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        text-align: left;
+        padding: 16px 18px;
+        background: rgba(255, 255, 255, 0.66);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        color: var(--text);
+        font: inherit;
+        font-size: 1rem;
+        line-height: 1.35;
+        cursor: pointer;
+        transition: border-color 0.18s ease, background 0.18s ease, transform 0.12s ease;
+      }
+      .fb-option:hover {
+        border-color: #101010;
+      }
+      .fb-option:focus-visible {
+        outline: 2px solid #101010;
+        outline-offset: 2px;
+      }
+      .fb-option .fb-key {
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border: 1.5px solid var(--line);
+        border-radius: 50%;
+        font-size: 0.82rem;
+        font-weight: 900;
+      }
+      .fb-option.is-selected {
+        border-color: #101010;
+        background: #101010;
+        color: #fff;
+      }
+      .fb-option.is-selected .fb-key {
+        border-color: #fff;
+        color: #fff;
+      }
+
+      /* Skala 1–10 */
+      .fb-scale {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-top: 22px;
+      }
+      .fb-scale button {
+        min-height: 54px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.66);
+        color: var(--text);
+        font-size: 1.1rem;
+        font-weight: 900;
+        cursor: pointer;
+        transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease;
+      }
+      .fb-scale button:hover {
+        border-color: #101010;
+      }
+      .fb-scale button.is-selected {
+        border-color: #101010;
+        background: #101010;
+        color: #fff;
+      }
+      .fb-scale-legend {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* Kontakt-trin */
+      .fb-contact-field {
+        margin-top: 18px;
+      }
+      .fb-flabel {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.78rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .fb-fhelp {
+        margin: 6px 0 0;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .fb-ferr {
+        margin: 6px 0 0;
+        min-height: 0;
+        color: #b42318;
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+
+      /* Consent / nyhedsbrev */
+      .fb-consent {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 16px 18px;
+        background: rgba(255, 255, 255, 0.66);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        cursor: pointer;
+        margin-top: 22px;
+      }
+      .fb-consent input {
+        width: 22px;
+        height: 22px;
+        margin: 2px 0 0;
+        flex: 0 0 auto;
+        accent-color: #101010;
+      }
+      .fb-consent span {
+        font-size: 1rem;
+        line-height: 1.4;
+      }
+      .fb-email-wrap {
+        margin-top: 14px;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+      }
+      .fb-email-wrap.is-open {
+        max-height: 180px;
+        opacity: 1;
+      }
+
+      .fb-error {
+        margin: 12px 0 0;
+        color: #b42318;
+        font-size: 0.9rem;
+        font-weight: 700;
+        min-height: 1em;
+      }
+
+      .fb-nav {
+        display: flex;
+        gap: 12px;
+        margin-top: 30px;
+      }
+      .fb-nav .btn {
+        min-height: 54px;
+      }
+      .fb-next {
+        flex: 1;
+      }
+      .fb-back {
+        flex: 0 0 auto;
+      }
+      .fb-hint {
+        margin: 16px 0 0;
+        font-size: 0.76rem;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+      }
+
+      /* Honeypot — skjult for mennesker */
+      .fb-hp {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+
+      .btn[disabled] {
+        opacity: 0.6;
+        cursor: progress;
+        pointer-events: none;
+      }
+
+      /* HTML hidden-attribut vinder ikke over .btn's display — tving skjul */
+      #fbBack[hidden] {
+        display: none;
+      }
+
+      @media (max-width: 540px) {
+        .fb-nav {
+          flex-direction: column-reverse;
+        }
+        .fb-nav .btn {
+          width: 100%;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .fb-step {
+          animation: none;
+        }
+        .fb-progress-fill,
+        .fb-email-wrap {
+          transition: none;
+        }
+      }
+    </style>
   </head>
-  <body
-    style="
-      margin: 0;
-      min-height: 100dvh;
-      display: grid;
-      place-items: center;
-      font-family: system-ui, sans-serif;
-      padding: 24px;
-      text-align: center;
-      color: #333;
-      background: #f7f2ea;
-    "
-  >
-    <p style="max-width: 28rem; line-height: 1.5">
-      Sender dig videre til feedback-formularen …<br />
-      <a href="https://tally.so/r/WO8VLJ" style="color: #101010; font-weight: 700"
-        >Klik her, hvis du ikke bliver viderestillet.</a
-      >
-    </p>
+  <body class="page page-form">
+    <header class="fb-top">
+      <div class="fb-main" style="padding: 0; justify-content: flex-start">
+        <div class="fb-top-row">
+          <a class="brand" href="/" aria-label="Niels Wahlberg Coaching">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span class="brand-text">
+              <span class="brand-name">Niels Wahlberg</span>
+              <span class="brand-subtitle">Coaching</span>
+            </span>
+          </a>
+          <span class="fb-counter" id="fbCounter" hidden></span>
+        </div>
+        <div class="fb-progress" id="fbProgressWrap" role="progressbar" aria-valuemin="1" aria-valuemax="5" hidden>
+          <div class="fb-progress-fill" id="fbProgressFill"></div>
+        </div>
+        <p class="fb-subline" id="fbSubline" hidden></p>
+      </div>
+    </header>
+
+    <main class="fb-main" id="fbMain">
+      <!-- Formular — går direkte til første spørgsmål -->
+      <form id="fbForm" novalidate>
+        <div id="fbStepMount" aria-live="polite"></div>
+
+        <!-- Honeypot -->
+        <div class="fb-hp" aria-hidden="true">
+          <label>Udfyld ikke dette felt
+            <input type="text" id="fbHp" name="company" tabindex="-1" autocomplete="off" />
+          </label>
+        </div>
+
+        <p class="fb-error" id="fbError" role="alert"></p>
+
+        <div class="fb-nav">
+          <button class="btn btn-secondary fb-back" id="fbBack" type="button" hidden>← Tilbage</button>
+          <button class="btn btn-primary fb-next" id="fbNext" type="submit">Næste</button>
+        </div>
+        <p class="fb-hint">Tryk Enter for at gå videre.</p>
+      </form>
+    </main>
+
+    <script>
+      (function () {
+        "use strict";
+
+        /* ---- De tællende spørgsmål (styrer tæller + startskærm — ét sted) ---- */
+        var QUESTIONS = [
+          {
+            id: "situation",
+            type: "choice",
+            question: "Hvad passer bedst på din situation?",
+            options: [
+              { key: "A", label: "Jeg ved godt hvad jeg burde gøre, men jeg gør det ikke" },
+              { key: "B", label: "Jeg mangler struktur og gode vaner" },
+              { key: "C", label: "Jeg mangler retning, jeg ved ikke rigtig hvad jeg vil" },
+              { key: "D", label: "Jeg kommer i gang, men falder af på den igen" },
+              { key: "E", label: "Noget andet" },
+            ],
+          },
+          {
+            id: "change",
+            type: "textarea",
+            question: "Hvad er den ene ting du helst vil ændre lige nu?",
+            placeholder: "Skriv kort …",
+          },
+          {
+            id: "drain",
+            type: "textarea",
+            question: "Hvad dræner dig mest i hverdagen?",
+            placeholder: "Skriv kort …",
+          },
+          {
+            id: "future",
+            type: "textarea",
+            question: "Hvad ville du ønske, der var anderledes om 3 måneder?",
+            placeholder: "Skriv kort …",
+          },
+          {
+            id: "readiness",
+            type: "scale",
+            question: "Hvor klar er du fra 1 til 10 på at investere i at nå dit mål?",
+            min: 1,
+            max: 10,
+          },
+        ];
+
+        /* Kontakt-trin (tæller IKKE med) */
+        var CONTACT = {
+          fields: [
+            { id: "name", type: "text", label: "Dit navn", placeholder: "Fx Jonas", autocomplete: "name" },
+            { id: "age", type: "number", label: "Din alder", placeholder: "Fx 24", min: 13, max: 99 },
+            {
+              id: "phone",
+              type: "tel",
+              label: "Telefonnummer",
+              placeholder: "Fx 12 34 56 78",
+              help: "jeg ringer ikke, kun til at sende lydbesked",
+              autocomplete: "tel",
+            },
+          ],
+          newsletterLabel: "Ja tak, send mig også værktøjer og råd på mail",
+        };
+
+        var COUNT = QUESTIONS.length; // 5 tællende spørgsmål
+        var LAST = COUNT; // index for kontakt-trinet (det sidste)
+        var TIME_TEXT = "cirka 1 minut";
+        var STORAGE_KEY = "nw_feedback_v2";
+
+        /* ---- DOM ---- */
+        var form = document.getElementById("fbForm");
+        var mount = document.getElementById("fbStepMount");
+        var counterEl = document.getElementById("fbCounter");
+        var progressWrap = document.getElementById("fbProgressWrap");
+        var progressFill = document.getElementById("fbProgressFill");
+        var sublineEl = document.getElementById("fbSubline");
+        var backBtn = document.getElementById("fbBack");
+        var nextBtn = document.getElementById("fbNext");
+        var errorEl = document.getElementById("fbError");
+        var hpInput = document.getElementById("fbHp");
+
+        progressWrap.setAttribute("aria-valuemax", String(COUNT));
+
+        /* ---- State ---- */
+        var state = { answers: {}, currentIdx: 0, started: false };
+
+        function load() {
+          try {
+            var raw = sessionStorage.getItem(STORAGE_KEY);
+            if (raw) {
+              var parsed = JSON.parse(raw);
+              if (parsed && parsed.answers) {
+                state.answers = parsed.answers;
+                state.started = !!parsed.started;
+                state.currentIdx =
+                  typeof parsed.currentIdx === "number" ? parsed.currentIdx : 0;
+              }
+            }
+          } catch (e) {}
+        }
+        function save() {
+          try {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          } catch (e) {}
+        }
+        function clearSaved() {
+          try {
+            sessionStorage.removeItem(STORAGE_KEY);
+          } catch (e) {}
+        }
+
+        function cap(s) {
+          return s.charAt(0).toUpperCase() + s.slice(1);
+        }
+
+        /* ---- Progress ---- */
+        function sublineFor(idx) {
+          if (idx === COUNT - 1) return "Sidste spørgsmål";
+          if (idx >= COUNT - 2) return "Sidste to spørgsmål";
+          if (idx >= Math.floor(COUNT / 2)) return "Du er over halvvejs.";
+          return "";
+        }
+        function updateProgress(idx) {
+          if (idx < COUNT) {
+            var pct = Math.round(((idx + 1) / COUNT) * 100);
+            progressFill.style.width = pct + "%";
+            counterEl.textContent = "Spørgsmål " + (idx + 1) + " af " + COUNT;
+            counterEl.hidden = false;
+            progressWrap.setAttribute("aria-valuenow", String(idx + 1));
+            var sub = sublineFor(idx);
+            sublineEl.textContent = sub;
+            sublineEl.hidden = !sub;
+          } else {
+            // Kontakt-trin: baren er fuld, tælleren skjules
+            progressFill.style.width = "100%";
+            counterEl.hidden = true;
+            progressWrap.setAttribute("aria-valuenow", String(COUNT));
+            sublineEl.textContent = "Sidste trin";
+            sublineEl.hidden = false;
+          }
+          progressWrap.hidden = false;
+        }
+
+        /* ---- Validering ---- */
+        function normalizePhone(v) {
+          return String(v || "").replace(/\s+/g, "").replace(/^(\+45|0045)/, "");
+        }
+        function validateQuestion(step, val) {
+          switch (step.type) {
+            case "choice":
+              return !val || !val.key ? "Vælg en mulighed for at gå videre." : "";
+            case "scale":
+              return val === undefined || val === null || val === ""
+                ? "Vælg et tal fra " + step.min + " til " + step.max + "."
+                : "";
+            case "textarea":
+              return !val || !String(val).trim() ? "Skriv et kort svar." : "";
+          }
+          return "";
+        }
+
+        /* ---- Rendering af spørgsmål ---- */
+        function buildQuestionField(step) {
+          var val = state.answers[step.id];
+          var wrap = document.createElement("div");
+          wrap.className = "fb-field";
+
+          if (step.type === "textarea") {
+            var ta = document.createElement("textarea");
+            ta.id = "fbInput";
+            ta.placeholder = step.placeholder || "";
+            ta.rows = 4;
+            if (val) ta.value = val;
+            wrap.appendChild(ta);
+          } else if (step.type === "choice") {
+            wrap.className = "fb-options";
+            step.options.forEach(function (opt) {
+              var b = document.createElement("button");
+              b.type = "button";
+              b.className = "fb-option";
+              if (val && val.key === opt.key) b.classList.add("is-selected");
+              b.innerHTML =
+                '<span class="fb-key">' + opt.key + "</span><span>" + opt.label + "</span>";
+              b.addEventListener("click", function () {
+                Array.prototype.forEach.call(wrap.children, function (c) {
+                  c.classList.remove("is-selected");
+                });
+                b.classList.add("is-selected");
+                state.answers[step.id] = { key: opt.key, label: opt.label };
+                save();
+                clearError();
+                setTimeout(goNext, 250);
+              });
+              wrap.appendChild(b);
+            });
+          } else if (step.type === "scale") {
+            var scale = document.createElement("div");
+            scale.className = "fb-scale";
+            for (var i = step.min; i <= step.max; i++) {
+              (function (num) {
+                var b = document.createElement("button");
+                b.type = "button";
+                b.textContent = num;
+                if (val === num) b.classList.add("is-selected");
+                b.addEventListener("click", function () {
+                  Array.prototype.forEach.call(scale.children, function (c) {
+                    c.classList.remove("is-selected");
+                  });
+                  b.classList.add("is-selected");
+                  state.answers[step.id] = num;
+                  save();
+                  clearError();
+                  setTimeout(goNext, 250);
+                });
+                scale.appendChild(b);
+              })(i);
+            }
+            wrap.appendChild(scale);
+            var legend = document.createElement("div");
+            legend.className = "fb-scale-legend";
+            legend.innerHTML = "<span>Slet ikke klar</span><span>Meget klar</span>";
+            wrap.appendChild(legend);
+          }
+          return wrap;
+        }
+
+        function renderQuestion(idx) {
+          var step = QUESTIONS[idx];
+          mount.innerHTML = "";
+          var container = document.createElement("div");
+          container.className = "fb-step";
+
+          var q = document.createElement("h2");
+          q.className = "fb-q";
+          q.textContent = step.question;
+          container.appendChild(q);
+
+          container.appendChild(buildQuestionField(step));
+          mount.appendChild(container);
+
+          backBtn.hidden = idx === 0;
+          nextBtn.textContent = "Næste";
+          clearError();
+          updateProgress(idx);
+
+          setTimeout(function () {
+            var focusable = mount.querySelector("textarea, input:not([type=checkbox])");
+            if (focusable) focusable.focus();
+          }, 40);
+        }
+
+        /* ---- Rendering af kontakt-trin ---- */
+        function renderContact() {
+          mount.innerHTML = "";
+          var a = state.answers;
+          var c = document.createElement("div");
+          c.className = "fb-step";
+
+          var h = document.createElement("h2");
+          h.className = "fb-q";
+          h.textContent = "Tak for dit svar.";
+          c.appendChild(h);
+
+          var help = document.createElement("p");
+          help.className = "fb-help";
+          help.textContent = "Udfyld lige, hvem jeg sender svaret til.";
+          c.appendChild(help);
+
+          CONTACT.fields.forEach(function (f) {
+            var wrap = document.createElement("div");
+            wrap.className = "fb-contact-field";
+
+            var lbl = document.createElement("label");
+            lbl.className = "fb-flabel";
+            lbl.setAttribute("for", "fb" + cap(f.id));
+            lbl.textContent = f.label;
+            wrap.appendChild(lbl);
+
+            var input = document.createElement("input");
+            input.id = "fb" + cap(f.id);
+            input.type = f.type === "number" ? "text" : f.type;
+            if (f.type === "number") input.inputMode = "numeric";
+            if (f.type === "tel") input.inputMode = "tel";
+            input.placeholder = f.placeholder || "";
+            if (f.autocomplete) input.autocomplete = f.autocomplete;
+            if (a[f.id]) input.value = a[f.id];
+            wrap.appendChild(input);
+
+            if (f.help) {
+              var fh = document.createElement("p");
+              fh.className = "fb-fhelp";
+              fh.textContent = f.help;
+              wrap.appendChild(fh);
+            }
+            var er = document.createElement("p");
+            er.className = "fb-ferr";
+            er.id = "err-" + f.id;
+            wrap.appendChild(er);
+            c.appendChild(wrap);
+          });
+
+          // Nyhedsbrev
+          var nl = a.newsletter || { optIn: false, email: "" };
+          var lblc = document.createElement("label");
+          lblc.className = "fb-consent";
+          var cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.id = "fbConsent";
+          cb.checked = !!nl.optIn;
+          var tx = document.createElement("span");
+          tx.textContent = CONTACT.newsletterLabel;
+          lblc.appendChild(cb);
+          lblc.appendChild(tx);
+          c.appendChild(lblc);
+
+          var ew = document.createElement("div");
+          ew.className = "fb-email-wrap" + (nl.optIn ? " is-open" : "");
+          var em = document.createElement("input");
+          em.type = "email";
+          em.id = "fbEmail";
+          em.placeholder = "Din e-mail";
+          em.autocomplete = "email";
+          if (nl.email) em.value = nl.email;
+          ew.appendChild(em);
+          var ee = document.createElement("p");
+          ee.className = "fb-ferr";
+          ee.id = "err-email";
+          ew.appendChild(ee);
+          c.appendChild(ew);
+
+          function syncNL() {
+            state.answers.newsletter = { optIn: cb.checked, email: em.value };
+            save();
+          }
+          cb.addEventListener("change", function () {
+            ew.classList.toggle("is-open", cb.checked);
+            syncNL();
+            if (cb.checked) setTimeout(function () { em.focus(); }, 60);
+          });
+          em.addEventListener("input", syncNL);
+
+          mount.appendChild(c);
+
+          backBtn.hidden = false;
+          nextBtn.textContent = "Send";
+          clearError();
+          updateProgress(LAST);
+
+          setTimeout(function () {
+            var f = document.getElementById("fbName");
+            if (f) f.focus();
+          }, 40);
+        }
+
+        function renderStep(idx) {
+          if (idx < COUNT) renderQuestion(idx);
+          else renderContact();
+        }
+
+        function clearError() {
+          errorEl.textContent = "";
+        }
+        function showError(msg) {
+          errorEl.textContent = msg;
+        }
+        function showFieldError(id, msg) {
+          var el = document.getElementById("err-" + id);
+          if (el) el.textContent = msg || "";
+        }
+
+        /* ---- Læs aktuelle felter ind i state ---- */
+        function captureCurrent() {
+          var idx = state.currentIdx;
+          if (idx < COUNT) {
+            var step = QUESTIONS[idx];
+            if (step.type === "textarea") {
+              var el = document.getElementById("fbInput");
+              if (el) {
+                state.answers[step.id] = el.value;
+                save();
+              }
+            }
+            // choice/scale gemmes ved klik
+          } else {
+            CONTACT.fields.forEach(function (f) {
+              var el = document.getElementById("fb" + cap(f.id));
+              if (el) state.answers[f.id] = el.value;
+            });
+            var cb = document.getElementById("fbConsent");
+            var em = document.getElementById("fbEmail");
+            if (cb) state.answers.newsletter = { optIn: cb.checked, email: em ? em.value : "" };
+            save();
+          }
+        }
+
+        function validateContact() {
+          captureCurrent();
+          var a = state.answers;
+          var firstInvalid = null;
+
+          var eName = !a.name || !a.name.trim() ? "Skriv dit navn." : "";
+          showFieldError("name", eName);
+          if (eName && !firstInvalid) firstInvalid = "fbName";
+
+          var eAge = "";
+          if (!a.age || !String(a.age).trim()) eAge = "Skriv din alder.";
+          else {
+            var n = parseInt(a.age, 10);
+            if (isNaN(n) || n < 13 || n > 99) eAge = "Alderen skal være mellem 13 og 99.";
+          }
+          showFieldError("age", eAge);
+          if (eAge && !firstInvalid) firstInvalid = "fbAge";
+
+          var eP = "";
+          if (!a.phone || !a.phone.trim()) eP = "Skriv dit telefonnummer.";
+          else if (!/^\d{8}$/.test(normalizePhone(a.phone)))
+            eP = "Skriv et gyldigt dansk telefonnummer.";
+          showFieldError("phone", eP);
+          if (eP && !firstInvalid) firstInvalid = "fbPhone";
+
+          var nl = a.newsletter || {};
+          var eE = "";
+          if (nl.optIn) {
+            if (!nl.email || !nl.email.trim()) eE = "Skriv din e-mail.";
+            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nl.email)) eE = "Skriv en gyldig e-mail.";
+          }
+          showFieldError("email", eE);
+          if (eE && !firstInvalid) firstInvalid = "fbEmail";
+
+          if (firstInvalid) {
+            var f = document.getElementById(firstInvalid);
+            if (f) f.focus();
+            return false;
+          }
+          return true;
+        }
+
+        /* ---- Navigation ---- */
+        function goTo(idx, push) {
+          state.currentIdx = idx;
+          state.started = true;
+          save();
+          if (push) history.pushState({ fbIdx: idx }, "");
+          renderStep(idx);
+        }
+
+        function goNext() {
+          if (state.currentIdx === LAST) {
+            if (!validateContact()) return;
+            submitForm();
+            return;
+          }
+          captureCurrent();
+          var step = QUESTIONS[state.currentIdx];
+          var err = validateQuestion(step, state.answers[step.id]);
+          if (err) {
+            showError(err);
+            return;
+          }
+          goTo(state.currentIdx + 1, true);
+        }
+
+        function goBack() {
+          if (state.currentIdx > 0) {
+            captureCurrent();
+            history.back();
+          }
+        }
+
+        window.addEventListener("popstate", function (e) {
+          if (e.state && typeof e.state.fbIdx === "number") {
+            state.currentIdx = e.state.fbIdx;
+            save();
+            renderStep(e.state.fbIdx);
+          }
+        });
+
+        /* ---- Enter-håndtering ---- */
+        form.addEventListener("keydown", function (e) {
+          if (e.key !== "Enter") return;
+          var t = e.target;
+          if (t && t.tagName === "TEXTAREA") {
+            if (e.shiftKey) return; // Shift+Enter = linjeskift
+            e.preventDefault();
+            goNext();
+          } else if (t && t.tagName === "INPUT" && t.type !== "checkbox") {
+            e.preventDefault();
+            if (state.currentIdx === LAST) {
+              // Kontakt-trin: hop til næste synlige felt, ellers send
+              var inputs = Array.prototype.slice.call(
+                mount.querySelectorAll("input:not([type=checkbox])")
+              );
+              var i = inputs.indexOf(t);
+              if (i > -1 && i < inputs.length - 1 && inputs[i + 1].offsetParent !== null) {
+                inputs[i + 1].focus();
+              } else {
+                goNext();
+              }
+            } else {
+              goNext();
+            }
+          }
+        });
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          goNext();
+        });
+        backBtn.addEventListener("click", goBack);
+
+        /* ---- Afsendelse ---- */
+        function formatAnswer(step) {
+          var val = state.answers[step.id];
+          if (step.type === "choice") return val ? val.key + " – " + val.label : "";
+          if (step.type === "scale") return val != null ? val + " / " + step.max : "";
+          return val != null ? String(val).trim() : "";
+        }
+
+        function buildPayload() {
+          var lines = QUESTIONS.map(function (step) {
+            return { q: step.question, a: formatAnswer(step) };
+          });
+          lines.push({ q: "Alder", a: (state.answers.age || "").trim() });
+          var consent = state.answers.newsletter || {};
+          return {
+            name: (state.answers.name || "").trim(),
+            phone: (state.answers.phone || "").trim(),
+            email: (consent.email || "").trim(),
+            newsletter: !!consent.optIn,
+            hp: hpInput.value,
+            lines: lines,
+          };
+        }
+
+        function submitForm() {
+          showError("");
+          nextBtn.disabled = true;
+          backBtn.disabled = true;
+          var original = nextBtn.textContent;
+          nextBtn.textContent = "Sender …";
+
+          fetch("/api/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(buildPayload()),
+          })
+            .then(function (res) {
+              return res.json().catch(function () {
+                return { ok: res.ok };
+              });
+            })
+            .then(function (data) {
+              if (data && data.ok) {
+                clearSaved();
+                window.location.href = "/tak";
+              } else {
+                throw new Error((data && data.error) || "fejl");
+              }
+            })
+            .catch(function () {
+              nextBtn.disabled = false;
+              backBtn.disabled = false;
+              nextBtn.textContent = original;
+              showError(
+                "Noget gik galt, og dine svar blev ikke sendt. Tjek din forbindelse og prøv igen."
+              );
+            });
+        }
+
+        /* ---- Gå direkte til første spørgsmål (eller genoptag efter reload) ---- */
+        load();
+        var startIdx =
+          state.started && state.currentIdx > 0 && state.currentIdx <= LAST
+            ? state.currentIdx
+            : 0;
+        state.started = true;
+        save();
+        history.replaceState({ fbIdx: startIdx }, "");
+        renderStep(startIdx);
+      })();
+    </script>
   </body>
 </html>

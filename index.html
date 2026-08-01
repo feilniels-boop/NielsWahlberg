@@ -34,7 +34,7 @@
             <a href="#resultat">Fremgangsmåde</a>
             <a href="#klip">Testimonials</a>
             <a href="#anmeldelser">Anmeldelser</a>
-            <a href="https://tally.so/r/WO8VLJ">Gratis feedback</a>
+            <a href="/feedback">Gratis feedback</a>
           </div>
           <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book samtale</a>
         </div>
@@ -85,56 +85,10 @@
               </div>
             </div>
 
-            <div class="clip-showcase">
-              <div class="clip-feature">
-                <video controls preload="metadata" playsinline>
-                  <source src="videos/hvorfor-niels.mp4#t=0.1" type="video/mp4" />
-                </video>
-              </div>
-              <div class="clip-side">
-                <h3>Hvorfor vælge Niels?</h3>
-                <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book gratis samtale</a>
-              </div>
-            </div>
+            <!-- Video-testimonials renderes fra testimonials.js (fælles kilde) -->
+            <div class="clip-showcase" id="tm-video-showcase"></div>
 
-            <div class="clip-grid" aria-label="Kundeclips">
-              <article class="clip-card">
-                <video controls preload="metadata" playsinline>
-                  <source src="videos/anbefaling-elias.mp4#t=0.1" type="video/mp4" />
-                </video>
-                <div class="clip-meta">
-                  <strong>Elias anbefaling</strong>
-                  <span>Hvad han fik ud af forløbet.</span>
-                </div>
-              </article>
-              <article class="clip-card">
-                <video controls preload="metadata" playsinline>
-                  <source src="videos/for-efter-elias.mp4#t=0.1" type="video/mp4" />
-                </video>
-                <div class="clip-meta">
-                  <strong>Elias før / efter</strong>
-                  <span>Fra kaos til mere struktur.</span>
-                </div>
-              </article>
-              <article class="clip-card">
-                <video controls preload="metadata" playsinline>
-                  <source src="videos/aziz-for-efter.mp4#t=0.1" type="video/mp4" />
-                </video>
-                <div class="clip-meta">
-                  <strong>Aziz før / efter</strong>
-                  <span>Konkrete ændringer i hverdagen.</span>
-                </div>
-              </article>
-              <article class="clip-card">
-                <video controls preload="metadata" playsinline>
-                  <source src="videos/aziz-taknemlig.mp4#t=0.1" type="video/mp4" />
-                </video>
-                <div class="clip-meta">
-                  <strong>Aziz taknemlig</strong>
-                  <span>En personlig anbefaling.</span>
-                </div>
-              </article>
-            </div>
+            <div class="clip-grid" id="tm-video-grid" aria-label="Kundeclips"></div>
           </div>
         </section>
 
@@ -147,97 +101,8 @@
               </div>
             </div>
 
-            <div class="review-grid">
-              <article class="review-card">
-                <div class="review-top">
-                  <div class="review-person">
-                    <strong>Kasper</strong>
-                    <span>Efter forløbet</span>
-                  </div>
-                  <div class="review-stars" aria-label="5 ud af 5 stjerner">★★★★★</div>
-                </div>
-                <div class="review-answer">
-                  <h3>Vigtigste udbytte</h3>
-                  <p>Gode vaner især om aftenen og gode træningsråd.</p>
-                </div>
-                <div class="review-answer">
-                  <h3>Konkrete resultater</h3>
-                  <p>
-                    Det jeg har opnået er at blive meget stærkere fra hver træning, grundet den
-                    rette struktur.
-                  </p>
-                </div>
-                <div class="review-answer">
-                  <h3>Om Niels som coach</h3>
-                  <p>
-                    Niels er en god coach, da han bl.a. ser en som ens ven. Han er god at snakke
-                    med, og man kan være ærlig uden han dømmer en. Han finder i stedet en plan for
-                    at komme på sporet igen.
-                  </p>
-                </div>
-              </article>
-
-              <article class="review-card">
-                <div class="review-top">
-                  <div class="review-person">
-                    <strong>Mikkel</strong>
-                    <span>Efter forløbet</span>
-                  </div>
-                  <div class="review-stars" aria-label="5 ud af 5 stjerner">★★★★★</div>
-                </div>
-                <div class="review-answer">
-                  <h3>Vigtigste udbytte</h3>
-                  <p>Hjælp til vejning og træningstips.</p>
-                </div>
-                <div class="review-answer">
-                  <h3>Konkrete resultater</h3>
-                  <p>At kunne mærke mit bryst bedre, og har fået styr på nogen sociale ting.</p>
-                </div>
-                <div class="review-answer">
-                  <h3>Om Niels som coach</h3>
-                  <p>
-                    Måden han gør det på er faktisk det jeg rigtig godt kan lide ved Niels. Han er
-                    en ung mand, der har gået gennem det samme som mig, så tror han forstår mig
-                    bedre end en anden gør. Niels har god energi og lytter på en.
-                  </p>
-                </div>
-              </article>
-
-              <article class="review-card">
-                <div class="review-top">
-                  <div class="review-person">
-                    <strong>Alfred</strong>
-                    <span>Efter forløbet</span>
-                  </div>
-                  <div class="review-stars" aria-label="4 ud af 5 stjerner">
-                    ★★★★<span class="empty">★</span>
-                  </div>
-                </div>
-                <div class="review-answer">
-                  <h3>Vigtigste udbytte</h3>
-                  <p>
-                    Jeg har haft mange gode samtaler med Niels, hvor jeg har vendt og udviklet en
-                    række idéer sammen med ham, og det har hjulpet mig til at blive mere afklaret
-                    omkring, hvilken retning jeg vil gå i mit liv.
-                  </p>
-                </div>
-                <div class="review-answer">
-                  <h3>Konkrete resultater</h3>
-                  <p>
-                    Jeg havde personligt ikke mange konkrete målsætninger, som for eksempel at træne
-                    fem gange om ugen. Til gengæld er jeg gennem sparringen kommet videre og har
-                    gjort fremskridt i mit liv.
-                  </p>
-                </div>
-                <div class="review-answer">
-                  <h3>Om Niels som coach</h3>
-                  <p>
-                    Det, jeg godt kan lide ved netop Niels, er, at han er nede på jorden, og at det
-                    føles som at tale med en ven, hvilket jeg sætter pris på.
-                  </p>
-                </div>
-              </article>
-            </div>
+            <!-- Anmeldelser renderes fra testimonials.js (fælles kilde) -->
+            <div class="review-grid" id="tm-reviews"></div>
 
           </div>
         </section>
@@ -297,8 +162,9 @@
               <p class="section-kicker">Gratis personlig struktur feedback</p>
               <h2>Få en konkret retning.</h2>
               <p class="section-copy">
-                Du svarer på fem korte spørgsmål. Jeg gennemgår din nuværende situation personligt
-                og sender dig en kort lydbesked med, hvor jeg ville starte, hvis jeg var dig.
+                Du svarer på 5 korte spørgsmål, cirka 1 minut. Jeg gennemgår din nuværende
+                situation personligt og sender dig en kort lydbesked med, hvor jeg ville starte,
+                hvis jeg var dig.
               </p>
               <ul class="list" style="margin-top: 22px">
                 <li>Du svarer på 5 korte spørgsmål</li>
@@ -308,15 +174,9 @@
             </div>
 
             <div class="form">
-              <a
-                class="btn btn-tally"
-                href="https://tally.so/r/WO8VLJ"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Udfyld de 5 spørgsmål →</a
-              >
+              <a class="btn btn-tally" href="/feedback">Start spørgeskemaet →</a>
               <p class="section-copy" style="font-size: 0.9rem; margin-top: 14px">
-                Du åbner et kort Tally-spørgeskema. Gratis · Skræddersyet · Hjælp til struktur
+                5 hurtige spørgsmål · cirka 1 minut · Gratis · Hjælp til struktur
               </p>
             </div>
           </div>
@@ -338,6 +198,9 @@
         <a href="#feedback" class="mobile-tab">Feedback</a>
       </nav>
     </div>
+
+    <!-- Fælles testimonials-kilde: renderes ind i #tm-* containere ovenfor -->
+    <script src="testimonials.js"></script>
 
     <script>
       (function () {
