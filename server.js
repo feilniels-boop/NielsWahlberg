@@ -182,9 +182,18 @@ function serveStatic(req, res) {
       res.end("Not found");
       return;
     }
-    res.writeHead(200, {
-      "Content-Type": types[path.extname(filePath).toLowerCase()] || "application/octet-stream",
-    });
+    const ext = path.extname(filePath).toLowerCase();
+    const headers = {
+      "Content-Type": types[ext] || "application/octet-stream",
+    };
+    // HTML/JS/CSS: revalidér altid, så nye versioner slår igennem efter deploy.
+    // Billeder/video: må gerne caches længe (de er versioneret via filnavn).
+    if (ext === ".html" || ext === ".js" || ext === ".css") {
+      headers["Cache-Control"] = "no-cache";
+    } else {
+      headers["Cache-Control"] = "public, max-age=86400";
+    }
+    res.writeHead(200, headers);
     res.end(data);
   });
 }

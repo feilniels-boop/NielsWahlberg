@@ -187,9 +187,8 @@
     renderVideoGrid: renderVideoGrid,
   };
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mount);
-  } else {
-    mount();
-  }
+  // Scriptet ligger sidst i <body>, så mount-containerne er allerede parset.
+  // Mount synkront NU, så en efterfølgende scroll-reveal-observer kan nå at
+  // se de renderede kort (ellers ville de sidde fast på opacity:0).
+  mount();
 })();

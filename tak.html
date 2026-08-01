@@ -4,9 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <script>
-      document.documentElement.classList.add("has-js");
-    </script>
     <title>Tak for dit svar | Niels Wahlberg Coaching</title>
     <meta
       name="description"
@@ -28,33 +25,31 @@
     />
     <link rel="stylesheet" href="styles.css" />
     <style>
-      .tak-hero {
-        padding: clamp(64px, 10vw, 120px) 0 clamp(40px, 6vw, 72px);
-        text-align: center;
+      /* Lille bekræftelse i toppen — testimonials skal fylde */
+      .tak-confirm {
+        padding: 34px 0 6px;
       }
-      .tak-hero .eyebrow {
-        margin-bottom: 20px;
-      }
-      .tak-hero h1 {
-        max-width: 16ch;
-        margin: 0 auto 22px;
-        font-size: clamp(2.6rem, 7vw, 5.4rem);
-        line-height: 0.9;
+      .tak-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 8px;
+        font-size: 0.8rem;
+        font-weight: 900;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        letter-spacing: -0.06em;
+        color: #101010;
       }
-      .tak-hero p {
-        max-width: 40rem;
-        margin: 0 auto 30px;
+      .tak-line {
+        max-width: 46rem;
+        margin: 0;
         color: var(--muted);
-        font-size: clamp(1.05rem, 2vw, 1.28rem);
-        line-height: 1.6;
+        font-size: 1.02rem;
+        line-height: 1.55;
       }
-      .tak-cta-row {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 12px;
+      /* Stram afstand så video-testimonials kommer højt op */
+      .tak-first {
+        padding-top: 30px;
       }
       .tak-bottom {
         text-align: center;
@@ -63,6 +58,12 @@
       .tak-bottom h2 {
         margin-bottom: 22px;
       }
+      .tak-cta-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
       @media (max-width: 540px) {
         .tak-cta-row .btn {
           width: 100%;
@@ -70,7 +71,7 @@
       }
     </style>
   </head>
-  <body class="page">
+  <body>
     <div class="page">
       <nav class="nav" aria-label="Primær navigation">
         <div class="container nav-inner">
@@ -86,26 +87,19 @@
       </nav>
 
       <main id="top">
-        <!-- 1. Bekræftelse -->
-        <header class="tak-hero">
+        <!-- 1. Lille bekræftelse -->
+        <header class="tak-confirm">
           <div class="container">
-            <span class="eyebrow">Tak for dit svar</span>
-            <h1>Dit svar er modtaget.</h1>
-            <p>
-              Jeg gennemgår dine svar personligt og sender dig en kort lydbesked på det
-              telefonnummer, du har angivet — typisk inden for et par dage. Så du får en konkret
-              retning, ikke generelle råd.
+            <p class="tak-eyebrow">✓ Tak — dit svar er modtaget</p>
+            <p class="tak-line">
+              Jeg gennemgår dine svar og sender dig en kort lydbesked på dit nummer, typisk inden
+              for et par dage.
             </p>
-            <div class="tak-cta-row">
-              <a class="btn btn-primary" href="https://calendly.com/feilniels/15min"
-                >Book en gratis samtale</a
-              >
-            </div>
           </div>
         </header>
 
-        <!-- 2a. Video-testimonials (fælles kilde: testimonials.js) -->
-        <section class="clip-section split-section" id="klip">
+        <!-- 2a. Video-testimonials (fælles kilde: testimonials.js) — først -->
+        <section class="clip-section split-section tak-first" id="klip">
           <div class="container">
             <div class="section-head">
               <div>
@@ -118,7 +112,7 @@
           </div>
         </section>
 
-        <!-- 2b. Skrevne anmeldelser (fælles kilde: testimonials.js) -->
+        <!-- 2b. Skrevne anmeldelser med stjerner (fælles kilde: testimonials.js) -->
         <section class="split-section" id="anmeldelser">
           <div class="container">
             <div class="section-head">
@@ -132,7 +126,7 @@
           </div>
         </section>
 
-        <!-- 3. Gentaget CTA -->
+        <!-- 3. CTA -->
         <section class="tak-bottom">
           <div class="container">
             <h2>Klar til at komme i gang?</h2>
@@ -153,39 +147,7 @@
       </footer>
     </div>
 
+    <!-- Testimonials renderes synligt med det samme (ingen scroll-reveal her) -->
     <script src="testimonials.js"></script>
-    <script>
-      /* Scroll reveal — samme opførsel som forsiden */
-      (function () {
-        var reduce =
-          window.matchMedia &&
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        var targets = Array.prototype.slice.call(
-          document.querySelectorAll(
-            ".section-head, .clip-showcase, .clip-card, .review-card"
-          )
-        );
-        if (!targets.length) return;
-        if (reduce || !("IntersectionObserver" in window)) {
-          targets.forEach(function (el) {
-            el.classList.add("is-visible");
-          });
-          return;
-        }
-        var revealer = new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (entry) {
-              if (!entry.isIntersecting) return;
-              entry.target.classList.add("is-visible");
-              revealer.unobserve(entry.target);
-            });
-          },
-          { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
-        );
-        targets.forEach(function (el) {
-          revealer.observe(el);
-        });
-      })();
-    </script>
   </body>
 </html>
