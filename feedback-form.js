@@ -179,6 +179,23 @@
       ta.rows = 4;
       if (val) ta.value = val;
       wrap.appendChild(ta);
+
+      // Valgfri "spring over"-knap (fx "Har ikke nogen")
+      if (step.skipLabel) {
+        var skipBtn = document.createElement("button");
+        skipBtn.type = "button";
+        skipBtn.className = "fb-skip";
+        skipBtn.textContent = step.skipLabel;
+        skipBtn.addEventListener("click", function () {
+          var v = step.skipValue || step.skipLabel;
+          ta.value = v;
+          state.answers[step.id] = v;
+          save();
+          clearError();
+          goNext();
+        });
+        wrap.appendChild(skipBtn);
+      }
     } else if (step.type === "choice") {
       wrap.className = "fb-options";
       step.options.forEach(function (opt) {

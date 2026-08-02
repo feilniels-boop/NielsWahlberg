@@ -130,6 +130,31 @@
   box-shadow: 0 0 0 3px rgba(16, 16, 16, 0.12);
 }
 
+/* "Spring over"-knap under en fritekst (fx "Har ikke nogen") */
+.fb-skip {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 14px;
+  padding: 11px 18px;
+  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+}
+.fb-skip:hover {
+  border-color: #101010;
+  color: #101010;
+}
+.fb-skip:focus-visible {
+  outline: 2px solid #101010;
+  outline-offset: 2px;
+}
+
 /* Enkeltvalg */
 .fb-options {
   display: grid;
