@@ -176,15 +176,18 @@ function serveStatic(req, res) {
     return;
   }
 
-  fs.readFile(filePath, function (error, data) {
-    if (error) {
+  fs.stat(filePath, function (error, stat) {
+    if (error || !stat.isFile()) {
       res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
       res.end("Not found");
       return;
     }
+
     const ext = path.extname(filePath).toLowerCase();
     const headers = {
       "Content-Type": types[ext] || "application/octet-stream",
+      // Range-support er påkrævet for at video kan afspilles på mobil (iOS Safari).
+      "Accept-Ranges": "bytes",
     };
     // HTML/JS/CSS: revalidér altid, så nye versioner slår igennem efter deploy.
     // Billeder/video: må gerne caches længe (de er versioneret via filnavn).
@@ -193,8 +196,58 @@ function serveStatic(req, res) {
     } else {
       headers["Cache-Control"] = "public, max-age=86400";
     }
+
+    const total = stat.size;
+    const range = req.headers.range;
+
+    // Delvis levering (206) når klienten beder om et byte-interval
+    if (range) {
+      const m = /^bytes=(\d*)-(\d*)$/.exec(range);
+      if (m) {
+        let start = m[1] === "" ? null : parseInt(m[1], 10);
+        let end = m[2] === "" ? null : parseInt(m[2], 10);
+        if (start === null && end !== null) {
+          start = Math.max(0, total - end); // "bytes=-N" → sidste N bytes
+          end = total - 1;
+        } else {
+          if (start === null) start = 0;
+          if (end === null || end >= total) end = total - 1;
+        }
+        if (isNaN(start) || isNaN(end) || start > end || start >= total) {
+          res.writeHead(416, {
+            "Content-Range": "bytes */" + total,
+            "Content-Type": headers["Content-Type"],
+          });
+          res.end();
+          return;
+        }
+        headers["Content-Range"] = "bytes " + start + "-" + end + "/" + total;
+        headers["Content-Length"] = end - start + 1;
+        res.writeHead(206, headers);
+        if (req.method === "HEAD") {
+          res.end();
+          return;
+        }
+        const partial = fs.createReadStream(filePath, { start: start, end: end });
+        partial.on("error", function () {
+          res.destroy();
+        });
+        partial.pipe(res);
+        return;
+      }
+    }
+
+    headers["Content-Length"] = total;
     res.writeHead(200, headers);
-    res.end(data);
+    if (req.method === "HEAD") {
+      res.end();
+      return;
+    }
+    const stream = fs.createReadStream(filePath);
+    stream.on("error", function () {
+      res.destroy();
+    });
+    stream.pipe(res);
   });
 }
 
