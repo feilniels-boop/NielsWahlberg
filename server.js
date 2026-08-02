@@ -101,6 +101,12 @@ function handleFeedback(req, res) {
 
     // Honeypot: udfyldt = bot. Svar OK uden at sende, så botten ikke lærer noget.
     if (data.hp && String(data.hp).trim() !== "") {
+      console.log(
+        'Honeypot udløst (hp="' +
+          String(data.hp).slice(0, 40) +
+          '") — sender IKKE mail. source=' +
+          (data.source || "")
+      );
       return sendJson(res, 200, { ok: true });
     }
 
@@ -146,6 +152,17 @@ function handleFeedback(req, res) {
         console.error("Resend-fejl", resp.status, errText);
         return sendJson(res, 502, { ok: false, error: "Kunne ikke sende mail" });
       }
+      const result = await resp.json().catch(function () {
+        return {};
+      });
+      console.log(
+        "Mail sendt via Resend. source=" +
+          (data.source || "") +
+          " id=" +
+          (result && result.id ? result.id : "?") +
+          " til=" +
+          to
+      );
       return sendJson(res, 200, { ok: true });
     } catch (err) {
       console.error("Fejl ved afsendelse:", err);

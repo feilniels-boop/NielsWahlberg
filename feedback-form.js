@@ -63,7 +63,8 @@
     '<form id="fbForm" novalidate>' +
     '<div id="fbStepMount" aria-live="polite"></div>' +
     '<div class="fb-hp" aria-hidden="true"><label>Udfyld ikke dette felt' +
-    '<input type="text" id="fbHp" name="company" tabindex="-1" autocomplete="off" /></label></div>' +
+    '<input type="text" id="fbHp" name="fb_hp_field" tabindex="-1" autocomplete="off" ' +
+    'data-lpignore="true" data-1p-ignore="" data-form-type="other" /></label></div>' +
     '<p class="fb-error" id="fbError" role="alert"></p>' +
     '<div class="fb-nav">' +
     '<button class="btn btn-secondary fb-back" id="fbBack" type="button" hidden>← Tilbage</button>' +
