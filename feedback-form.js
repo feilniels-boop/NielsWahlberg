@@ -1,0 +1,580 @@
+/* ============================================================
+   Fælles lead magnet-formular.
+   Bruges af både /feedback og /forretning. Konfiguration sættes
+   via window.FeedbackFormConfig FØR dette script indlæses:
+
+     window.FeedbackFormConfig = {
+       source: "feedback" | "forretning",  // spor til notifikationen
+       questions: [ ...tællende spørgsmål... ]
+     };
+
+   Kontakt-trin, honeypot, validering, tastaturnavigation,
+   afsendelse og kvittering (/tak) er ens for alle formularer.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var cfg = window.FeedbackFormConfig || {};
+  var QUESTIONS = cfg.questions || [];
+  var SOURCE = cfg.source || "feedback";
+
+  /* Kontakt-trin (tæller IKKE med) — ens for alle formularer */
+  var CONTACT = {
+    fields: [
+      { id: "name", type: "text", label: "Dit navn", placeholder: "Fx Jonas", autocomplete: "name" },
+      { id: "age", type: "number", label: "Din alder", placeholder: "Fx 24", min: 13, max: 99 },
+      {
+        id: "phone",
+        type: "tel",
+        label: "Telefonnummer",
+        placeholder: "Fx 12 34 56 78",
+        help: "jeg ringer ikke, kun til at sende lydbesked",
+        autocomplete: "tel",
+      },
+    ],
+    newsletterLabel: "Ja tak, send mig også værktøjer og råd på mail",
+  };
+
+  var COUNT = QUESTIONS.length; // antal tællende spørgsmål
+  var LAST = COUNT; // index for kontakt-trinet (det sidste)
+  var STORAGE_KEY = "nw_form_" + SOURCE + "_v1";
+
+  /* ---- Byg skelettet (samme markup for alle formularer) ---- */
+  var skeleton =
+    '<header class="fb-top">' +
+    '<div class="fb-main" style="padding: 0; justify-content: flex-start">' +
+    '<div class="fb-top-row">' +
+    '<a class="brand" href="/" aria-label="Niels Wahlberg Coaching">' +
+    '<span class="brand-mark" aria-hidden="true"></span>' +
+    '<span class="brand-text">' +
+    '<span class="brand-name">Niels Wahlberg</span>' +
+    '<span class="brand-subtitle">Coaching</span>' +
+    "</span>" +
+    "</a>" +
+    '<span class="fb-counter" id="fbCounter" hidden></span>' +
+    "</div>" +
+    '<div class="fb-progress" id="fbProgressWrap" role="progressbar" aria-valuemin="1" aria-valuemax="' +
+    COUNT +
+    '" hidden><div class="fb-progress-fill" id="fbProgressFill"></div></div>' +
+    '<p class="fb-subline" id="fbSubline" hidden></p>' +
+    "</div>" +
+    "</header>" +
+    '<main class="fb-main" id="fbMain">' +
+    '<form id="fbForm" novalidate>' +
+    '<div id="fbStepMount" aria-live="polite"></div>' +
+    '<div class="fb-hp" aria-hidden="true"><label>Udfyld ikke dette felt' +
+    '<input type="text" id="fbHp" name="company" tabindex="-1" autocomplete="off" /></label></div>' +
+    '<p class="fb-error" id="fbError" role="alert"></p>' +
+    '<div class="fb-nav">' +
+    '<button class="btn btn-secondary fb-back" id="fbBack" type="button" hidden>← Tilbage</button>' +
+    '<button class="btn btn-primary fb-next" id="fbNext" type="submit">Næste</button>' +
+    "</div>" +
+    '<p class="fb-hint">Tryk Enter for at gå videre.</p>' +
+    "</form>" +
+    "</main>";
+
+  document.body.insertAdjacentHTML("afterbegin", skeleton);
+
+  /* ---- DOM ---- */
+  var form = document.getElementById("fbForm");
+  var mount = document.getElementById("fbStepMount");
+  var counterEl = document.getElementById("fbCounter");
+  var progressWrap = document.getElementById("fbProgressWrap");
+  var progressFill = document.getElementById("fbProgressFill");
+  var sublineEl = document.getElementById("fbSubline");
+  var backBtn = document.getElementById("fbBack");
+  var nextBtn = document.getElementById("fbNext");
+  var errorEl = document.getElementById("fbError");
+  var hpInput = document.getElementById("fbHp");
+
+  progressWrap.setAttribute("aria-valuemax", String(COUNT));
+
+  /* ---- State ---- */
+  var state = { answers: {}, currentIdx: 0, started: false };
+
+  function load() {
+    try {
+      var raw = sessionStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && parsed.answers) {
+          state.answers = parsed.answers;
+          state.started = !!parsed.started;
+          state.currentIdx = typeof parsed.currentIdx === "number" ? parsed.currentIdx : 0;
+        }
+      }
+    } catch (e) {}
+  }
+  function save() {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
+  }
+  function clearSaved() {
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch (e) {}
+  }
+
+  function cap(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  /* ---- Progress ---- */
+  function sublineFor(idx) {
+    if (idx === COUNT - 1) return "Sidste spørgsmål";
+    if (idx >= COUNT - 2) return "Sidste to spørgsmål";
+    if (idx >= Math.floor(COUNT / 2)) return "Du er over halvvejs.";
+    return "";
+  }
+  function updateProgress(idx) {
+    if (idx < COUNT) {
+      var pct = Math.round(((idx + 1) / COUNT) * 100);
+      progressFill.style.width = pct + "%";
+      counterEl.textContent = "Spørgsmål " + (idx + 1) + " af " + COUNT;
+      counterEl.hidden = false;
+      progressWrap.setAttribute("aria-valuenow", String(idx + 1));
+      var sub = sublineFor(idx);
+      sublineEl.textContent = sub;
+      sublineEl.hidden = !sub;
+    } else {
+      // Kontakt-trin: baren er fuld, tælleren skjules
+      progressFill.style.width = "100%";
+      counterEl.hidden = true;
+      progressWrap.setAttribute("aria-valuenow", String(COUNT));
+      sublineEl.textContent = "Sidste trin";
+      sublineEl.hidden = false;
+    }
+    progressWrap.hidden = false;
+  }
+
+  /* ---- Validering ---- */
+  function normalizePhone(v) {
+    return String(v || "").replace(/\s+/g, "").replace(/^(\+45|0045)/, "");
+  }
+  function validateQuestion(step, val) {
+    switch (step.type) {
+      case "choice":
+        return !val || !val.key ? "Vælg en mulighed for at gå videre." : "";
+      case "scale":
+        return val === undefined || val === null || val === ""
+          ? "Vælg et tal fra " + step.min + " til " + step.max + "."
+          : "";
+      case "textarea":
+        return !val || !String(val).trim() ? "Skriv et kort svar." : "";
+    }
+    return "";
+  }
+
+  /* ---- Rendering af spørgsmål ---- */
+  function buildQuestionField(step) {
+    var val = state.answers[step.id];
+    var wrap = document.createElement("div");
+    wrap.className = "fb-field";
+
+    if (step.type === "textarea") {
+      var ta = document.createElement("textarea");
+      ta.id = "fbInput";
+      ta.placeholder = step.placeholder || "";
+      ta.rows = 4;
+      if (val) ta.value = val;
+      wrap.appendChild(ta);
+    } else if (step.type === "choice") {
+      wrap.className = "fb-options";
+      step.options.forEach(function (opt) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "fb-option";
+        if (val && val.key === opt.key) b.classList.add("is-selected");
+        b.innerHTML = '<span class="fb-key">' + opt.key + "</span><span>" + opt.label + "</span>";
+        b.addEventListener("click", function () {
+          Array.prototype.forEach.call(wrap.children, function (c) {
+            c.classList.remove("is-selected");
+          });
+          b.classList.add("is-selected");
+          state.answers[step.id] = { key: opt.key, label: opt.label };
+          save();
+          clearError();
+          setTimeout(goNext, 250);
+        });
+        wrap.appendChild(b);
+      });
+    } else if (step.type === "scale") {
+      var scale = document.createElement("div");
+      scale.className = "fb-scale";
+      for (var i = step.min; i <= step.max; i++) {
+        (function (num) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.textContent = num;
+          if (val === num) b.classList.add("is-selected");
+          b.addEventListener("click", function () {
+            Array.prototype.forEach.call(scale.children, function (c) {
+              c.classList.remove("is-selected");
+            });
+            b.classList.add("is-selected");
+            state.answers[step.id] = num;
+            save();
+            clearError();
+            setTimeout(goNext, 250);
+          });
+          scale.appendChild(b);
+        })(i);
+      }
+      wrap.appendChild(scale);
+      var legend = document.createElement("div");
+      legend.className = "fb-scale-legend";
+      legend.innerHTML = "<span>Slet ikke klar</span><span>Meget klar</span>";
+      wrap.appendChild(legend);
+    }
+    return wrap;
+  }
+
+  function renderQuestion(idx) {
+    var step = QUESTIONS[idx];
+    mount.innerHTML = "";
+    var container = document.createElement("div");
+    container.className = "fb-step";
+
+    var q = document.createElement("h2");
+    q.className = "fb-q";
+    q.textContent = step.question;
+    container.appendChild(q);
+
+    container.appendChild(buildQuestionField(step));
+    mount.appendChild(container);
+
+    backBtn.hidden = idx === 0;
+    nextBtn.textContent = "Næste";
+    clearError();
+    updateProgress(idx);
+
+    setTimeout(function () {
+      var focusable = mount.querySelector("textarea, input:not([type=checkbox])");
+      if (focusable) focusable.focus();
+    }, 40);
+  }
+
+  /* ---- Rendering af kontakt-trin ---- */
+  function renderContact() {
+    mount.innerHTML = "";
+    var a = state.answers;
+    var c = document.createElement("div");
+    c.className = "fb-step";
+
+    var h = document.createElement("h2");
+    h.className = "fb-q";
+    h.textContent = "Tak for dit svar.";
+    c.appendChild(h);
+
+    var help = document.createElement("p");
+    help.className = "fb-help";
+    help.textContent = "Udfyld lige, hvem jeg sender svaret til.";
+    c.appendChild(help);
+
+    CONTACT.fields.forEach(function (f) {
+      var wrap = document.createElement("div");
+      wrap.className = "fb-contact-field";
+
+      var lbl = document.createElement("label");
+      lbl.className = "fb-flabel";
+      lbl.setAttribute("for", "fb" + cap(f.id));
+      lbl.textContent = f.label;
+      wrap.appendChild(lbl);
+
+      var input = document.createElement("input");
+      input.id = "fb" + cap(f.id);
+      input.type = f.type === "number" ? "text" : f.type;
+      if (f.type === "number") input.inputMode = "numeric";
+      if (f.type === "tel") input.inputMode = "tel";
+      input.placeholder = f.placeholder || "";
+      if (f.autocomplete) input.autocomplete = f.autocomplete;
+      if (a[f.id]) input.value = a[f.id];
+      wrap.appendChild(input);
+
+      if (f.help) {
+        var fh = document.createElement("p");
+        fh.className = "fb-fhelp";
+        fh.textContent = f.help;
+        wrap.appendChild(fh);
+      }
+      var er = document.createElement("p");
+      er.className = "fb-ferr";
+      er.id = "err-" + f.id;
+      wrap.appendChild(er);
+      c.appendChild(wrap);
+    });
+
+    // Nyhedsbrev
+    var nl = a.newsletter || { optIn: false, email: "" };
+    var lblc = document.createElement("label");
+    lblc.className = "fb-consent";
+    var cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.id = "fbConsent";
+    cb.checked = !!nl.optIn;
+    var tx = document.createElement("span");
+    tx.textContent = CONTACT.newsletterLabel;
+    lblc.appendChild(cb);
+    lblc.appendChild(tx);
+    c.appendChild(lblc);
+
+    var ew = document.createElement("div");
+    ew.className = "fb-email-wrap" + (nl.optIn ? " is-open" : "");
+    var em = document.createElement("input");
+    em.type = "email";
+    em.id = "fbEmail";
+    em.placeholder = "Din e-mail";
+    em.autocomplete = "email";
+    if (nl.email) em.value = nl.email;
+    ew.appendChild(em);
+    var ee = document.createElement("p");
+    ee.className = "fb-ferr";
+    ee.id = "err-email";
+    ew.appendChild(ee);
+    c.appendChild(ew);
+
+    function syncNL() {
+      state.answers.newsletter = { optIn: cb.checked, email: em.value };
+      save();
+    }
+    cb.addEventListener("change", function () {
+      ew.classList.toggle("is-open", cb.checked);
+      syncNL();
+      if (cb.checked) setTimeout(function () { em.focus(); }, 60);
+    });
+    em.addEventListener("input", syncNL);
+
+    mount.appendChild(c);
+
+    backBtn.hidden = false;
+    nextBtn.textContent = "Send";
+    clearError();
+    updateProgress(LAST);
+
+    setTimeout(function () {
+      var f = document.getElementById("fbName");
+      if (f) f.focus();
+    }, 40);
+  }
+
+  function renderStep(idx) {
+    if (idx < COUNT) renderQuestion(idx);
+    else renderContact();
+  }
+
+  function clearError() {
+    errorEl.textContent = "";
+  }
+  function showError(msg) {
+    errorEl.textContent = msg;
+  }
+  function showFieldError(id, msg) {
+    var el = document.getElementById("err-" + id);
+    if (el) el.textContent = msg || "";
+  }
+
+  /* ---- Læs aktuelle felter ind i state ---- */
+  function captureCurrent() {
+    var idx = state.currentIdx;
+    if (idx < COUNT) {
+      var step = QUESTIONS[idx];
+      if (step.type === "textarea") {
+        var el = document.getElementById("fbInput");
+        if (el) {
+          state.answers[step.id] = el.value;
+          save();
+        }
+      }
+      // choice/scale gemmes ved klik
+    } else {
+      CONTACT.fields.forEach(function (f) {
+        var el = document.getElementById("fb" + cap(f.id));
+        if (el) state.answers[f.id] = el.value;
+      });
+      var cb = document.getElementById("fbConsent");
+      var em = document.getElementById("fbEmail");
+      if (cb) state.answers.newsletter = { optIn: cb.checked, email: em ? em.value : "" };
+      save();
+    }
+  }
+
+  function validateContact() {
+    captureCurrent();
+    var a = state.answers;
+    var firstInvalid = null;
+
+    var eName = !a.name || !a.name.trim() ? "Skriv dit navn." : "";
+    showFieldError("name", eName);
+    if (eName && !firstInvalid) firstInvalid = "fbName";
+
+    var eAge = "";
+    if (!a.age || !String(a.age).trim()) eAge = "Skriv din alder.";
+    else {
+      var n = parseInt(a.age, 10);
+      if (isNaN(n) || n < 13 || n > 99) eAge = "Alderen skal være mellem 13 og 99.";
+    }
+    showFieldError("age", eAge);
+    if (eAge && !firstInvalid) firstInvalid = "fbAge";
+
+    var eP = "";
+    if (!a.phone || !a.phone.trim()) eP = "Skriv dit telefonnummer.";
+    else if (!/^\d{8}$/.test(normalizePhone(a.phone))) eP = "Skriv et gyldigt dansk telefonnummer.";
+    showFieldError("phone", eP);
+    if (eP && !firstInvalid) firstInvalid = "fbPhone";
+
+    var nl = a.newsletter || {};
+    var eE = "";
+    if (nl.optIn) {
+      if (!nl.email || !nl.email.trim()) eE = "Skriv din e-mail.";
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nl.email)) eE = "Skriv en gyldig e-mail.";
+    }
+    showFieldError("email", eE);
+    if (eE && !firstInvalid) firstInvalid = "fbEmail";
+
+    if (firstInvalid) {
+      var f = document.getElementById(firstInvalid);
+      if (f) f.focus();
+      return false;
+    }
+    return true;
+  }
+
+  /* ---- Navigation ---- */
+  function goTo(idx, push) {
+    state.currentIdx = idx;
+    state.started = true;
+    save();
+    if (push) history.pushState({ fbIdx: idx }, "");
+    renderStep(idx);
+  }
+
+  function goNext() {
+    if (state.currentIdx === LAST) {
+      if (!validateContact()) return;
+      submitForm();
+      return;
+    }
+    captureCurrent();
+    var step = QUESTIONS[state.currentIdx];
+    var err = validateQuestion(step, state.answers[step.id]);
+    if (err) {
+      showError(err);
+      return;
+    }
+    goTo(state.currentIdx + 1, true);
+  }
+
+  function goBack() {
+    if (state.currentIdx > 0) {
+      captureCurrent();
+      history.back();
+    }
+  }
+
+  window.addEventListener("popstate", function (e) {
+    if (e.state && typeof e.state.fbIdx === "number") {
+      state.currentIdx = e.state.fbIdx;
+      save();
+      renderStep(e.state.fbIdx);
+    }
+  });
+
+  /* ---- Enter-håndtering ---- */
+  form.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter") return;
+    var t = e.target;
+    if (t && t.tagName === "TEXTAREA") {
+      if (e.shiftKey) return; // Shift+Enter = linjeskift
+      e.preventDefault();
+      goNext();
+    } else if (t && t.tagName === "INPUT" && t.type !== "checkbox") {
+      e.preventDefault();
+      if (state.currentIdx === LAST) {
+        // Kontakt-trin: hop til næste synlige felt, ellers send
+        var inputs = Array.prototype.slice.call(mount.querySelectorAll("input:not([type=checkbox])"));
+        var i = inputs.indexOf(t);
+        if (i > -1 && i < inputs.length - 1 && inputs[i + 1].offsetParent !== null) {
+          inputs[i + 1].focus();
+        } else {
+          goNext();
+        }
+      } else {
+        goNext();
+      }
+    }
+  });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    goNext();
+  });
+  backBtn.addEventListener("click", goBack);
+
+  /* ---- Afsendelse ---- */
+  function formatAnswer(step) {
+    var val = state.answers[step.id];
+    if (step.type === "choice") return val ? val.key + " – " + val.label : "";
+    if (step.type === "scale") return val != null ? val + " / " + step.max : "";
+    return val != null ? String(val).trim() : "";
+  }
+
+  function buildPayload() {
+    var lines = QUESTIONS.map(function (step) {
+      return { q: step.question, a: formatAnswer(step) };
+    });
+    lines.push({ q: "Alder", a: (state.answers.age || "").trim() });
+    var consent = state.answers.newsletter || {};
+    return {
+      source: SOURCE,
+      name: (state.answers.name || "").trim(),
+      phone: (state.answers.phone || "").trim(),
+      email: (consent.email || "").trim(),
+      newsletter: !!consent.optIn,
+      hp: hpInput.value,
+      lines: lines,
+    };
+  }
+
+  function submitForm() {
+    showError("");
+    nextBtn.disabled = true;
+    backBtn.disabled = true;
+    var original = nextBtn.textContent;
+    nextBtn.textContent = "Sender …";
+
+    fetch("/api/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(buildPayload()),
+    })
+      .then(function (res) {
+        return res.json().catch(function () {
+          return { ok: res.ok };
+        });
+      })
+      .then(function (data) {
+        if (data && data.ok) {
+          clearSaved();
+          window.location.href = "/tak";
+        } else {
+          throw new Error((data && data.error) || "fejl");
+        }
+      })
+      .catch(function () {
+        nextBtn.disabled = false;
+        backBtn.disabled = false;
+        nextBtn.textContent = original;
+        showError("Noget gik galt, og dine svar blev ikke sendt. Tjek din forbindelse og prøv igen.");
+      });
+  }
+
+  /* ---- Gå direkte til første spørgsmål (eller genoptag efter reload) ---- */
+  load();
+  var startIdx =
+    state.started && state.currentIdx > 0 && state.currentIdx <= LAST ? state.currentIdx : 0;
+  state.started = true;
+  save();
+  history.replaceState({ fbIdx: startIdx }, "");
+  renderStep(startIdx);
+})();

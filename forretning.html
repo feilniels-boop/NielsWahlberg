@@ -6,17 +6,17 @@
     <script>
       document.documentElement.classList.add("has-js");
     </script>
-    <title>Gratis feedback | Niels Wahlberg Coaching</title>
+    <title>Gratis forretningsfeedback | Niels Wahlberg Coaching</title>
     <meta
       name="description"
-      content="Svar på 5 hurtige spørgsmål. Så sender Niels dig en personlig lydbesked med, hvor han ville starte."
+      content="Svar på 4 hurtige spørgsmål. Så sender Niels dig en personlig lydbesked med, hvor han ville starte hvis han var dig."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="da_DK" />
-    <meta property="og:title" content="Gratis feedback | Niels Wahlberg Coaching" />
+    <meta property="og:title" content="Gratis forretningsfeedback | Niels Wahlberg Coaching" />
     <meta
       property="og:description"
-      content="Svar på 5 hurtige spørgsmål. Så sender Niels dig en personlig lydbesked."
+      content="Svar på 4 hurtige spørgsmål. Så sender Niels dig en personlig lydbesked med, hvor han ville starte hvis han var dig."
     />
     <meta property="og:image" content="/hero-niels.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -32,42 +32,36 @@
   <body class="page-form">
     <script>
       window.FeedbackFormConfig = {
-        source: "feedback",
+        source: "forretning",
         questions: [
           {
-            id: "situation",
+            id: "stage",
             type: "choice",
-            question: "Hvad passer bedst på din situation?",
+            question: "Hvor er du henne lige nu?",
             options: [
-              { key: "A", label: "Jeg ved godt hvad jeg burde gøre, men jeg gør det ikke" },
-              { key: "B", label: "Jeg mangler struktur og gode vaner" },
-              { key: "C", label: "Jeg mangler retning, jeg ved ikke rigtig hvad jeg vil" },
-              { key: "D", label: "Jeg kommer i gang, men falder af på den igen" },
+              { key: "A", label: "Jeg har en idé jeg ikke er kommet i gang med" },
+              { key: "B", label: "Jeg er i gang, men har ikke solgt noget endnu" },
+              { key: "C", label: "Jeg har solgt til de første, det vokser bare ikke" },
+              { key: "D", label: "Jeg tjener fast, jeg vil have det op" },
               { key: "E", label: "Noget andet" },
             ],
           },
           {
-            id: "change",
+            id: "idea",
             type: "textarea",
-            question: "Hvad er den ene ting du helst vil ændre lige nu?",
+            question: "Hvad er den idé du ikke kan slippe?",
             placeholder: "Skriv kort …",
           },
           {
-            id: "drain",
+            id: "hours",
             type: "textarea",
-            question: "Hvad dræner dig mest i hverdagen?",
-            placeholder: "Skriv kort …",
-          },
-          {
-            id: "future",
-            type: "textarea",
-            question: "Hvad ville du ønske, der var anderledes om 3 måneder?",
+            question: "Hvor mange timer om ugen har du til det de næste tre måneder?",
             placeholder: "Skriv kort …",
           },
           {
             id: "readiness",
             type: "scale",
-            question: "Hvor klar er du fra 1 til 10 på at investere i at nå dit mål?",
+            question: "Hvor klar er du fra 1 til 10 på at investere i at komme i gang?",
             min: 1,
             max: 10,
           },

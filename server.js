@@ -56,8 +56,14 @@ function sendJson(res, status, obj) {
   res.end(body);
 }
 
+function sourceLabel(source) {
+  return source === "forretning" ? "forretning" : "feedback";
+}
+
 function buildEmailText(data) {
+  const label = sourceLabel(data.source);
   const parts = [];
+  parts.push("Kilde: " + label + " (/" + label + ")");
   parts.push("Navn: " + (data.name || "(ikke oplyst)"));
   parts.push("Telefon: " + (data.phone || "(ikke oplyst)"));
   if (data.email) parts.push("E-mail: " + data.email);
@@ -119,7 +125,7 @@ function handleFeedback(req, res) {
     const payload = {
       from: from,
       to: [to],
-      subject: "Ny feedback-anmodning: " + data.name,
+      subject: "Ny " + sourceLabel(data.source) + "-anmodning: " + data.name,
       text: buildEmailText(data),
     };
     if (data.email) payload.reply_to = data.email;
