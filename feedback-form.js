@@ -121,6 +121,45 @@
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
+  /* ---- Tracking (adfærd, ingen persondata) — må aldrig vælte formularen ---- */
+  var seenSteps = {}; // dedupe af step_view
+  var formStarted = false;
+  var abandonSent = false;
+  var submitted = false;
+
+  function stepKey(idx) {
+    return idx < COUNT ? (QUESTIONS[idx] && QUESTIONS[idx].id) || "step_" + idx : "contact";
+  }
+  function trk(event, extra, opts) {
+    try {
+      if (!window.NWTrack) return;
+      extra = extra || {};
+      var meta = extra.meta || {};
+      meta.source = SOURCE; // så /feedback og /forretning kan adskilles i tabellen
+      extra.meta = meta;
+      window.NWTrack.track(event, extra, opts);
+    } catch (e) {}
+  }
+  function trackStepView(idx) {
+    if (seenSteps[idx]) return; // et re-render må ikke sende samme event igen
+    seenSteps[idx] = true;
+    trk("step_view", { step_index: idx, step_key: stepKey(idx) });
+  }
+  function markStarted() {
+    if (formStarted) return;
+    formStarted = true;
+    trk("form_start", { step_index: 0, step_key: stepKey(0) });
+  }
+  function maybeAbandon() {
+    if (abandonSent || submitted) return;
+    abandonSent = true;
+    trk(
+      "abandon",
+      { step_index: state.currentIdx, step_key: stepKey(state.currentIdx) },
+      { beacon: true }
+    );
+  }
+
   /* ---- Progress ---- */
   function sublineFor(idx) {
     if (idx === COUNT - 1) return "Sidste spørgsmål";
@@ -377,6 +416,7 @@
   }
 
   function renderStep(idx) {
+    trackStepView(idx);
     if (idx < COUNT) renderQuestion(idx);
     else renderContact();
   }
@@ -451,6 +491,16 @@
     if (eE && !firstInvalid) firstInvalid = "fbEmail";
 
     if (firstInvalid) {
+      var errs = {};
+      if (eName) errs.name = eName;
+      if (eAge) errs.age = eAge;
+      if (eP) errs.phone = eP;
+      if (eE) errs.email = eE;
+      trk("validation_error", {
+        step_index: COUNT,
+        step_key: "contact",
+        meta: { errors: errs },
+      });
       var f = document.getElementById(firstInvalid);
       if (f) f.focus();
       return false;
@@ -477,14 +527,27 @@
     var step = QUESTIONS[state.currentIdx];
     var err = validateQuestion(step, state.answers[step.id]);
     if (err) {
+      trk("validation_error", {
+        step_index: state.currentIdx,
+        step_key: stepKey(state.currentIdx),
+        meta: { message: err },
+      });
       showError(err);
       return;
     }
+    trk("step_complete", {
+      step_index: state.currentIdx,
+      step_key: stepKey(state.currentIdx),
+    });
     goTo(state.currentIdx + 1, true);
   }
 
   function goBack() {
     if (state.currentIdx > 0) {
+      trk("step_back", {
+        step_index: state.currentIdx,
+        step_key: stepKey(state.currentIdx),
+      });
       captureCurrent();
       history.back();
     }
@@ -529,6 +592,19 @@
   });
   backBtn.addEventListener("click", goBack);
 
+  /* form_start: første ægte brugerinteraktion (ikke vores autofokus).
+     pointerdown/input/keydown udløses ikke af programmatisk fokus. */
+  form.addEventListener("pointerdown", markStarted);
+  form.addEventListener("input", markStarted);
+  form.addEventListener("keydown", markStarted);
+
+  /* abandon: forlader siden uden submit_success. visibilitychange->hidden
+     er mere pålidelig end beforeunload på iOS Safari; pagehide som backup. */
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") maybeAbandon();
+  });
+  window.addEventListener("pagehide", maybeAbandon);
+
   /* ---- Afsendelse ---- */
   function formatAnswer(step) {
     var val = state.answers[step.id];
@@ -556,30 +632,40 @@
 
   function submitForm() {
     showError("");
+    trk("submit_attempt", { step_index: COUNT, step_key: "contact" });
     nextBtn.disabled = true;
     backBtn.disabled = true;
     var original = nextBtn.textContent;
     nextBtn.textContent = "Sender …";
 
+    var httpStatus = 0;
     fetch("/api/feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(buildPayload()),
     })
       .then(function (res) {
+        httpStatus = res.status;
         return res.json().catch(function () {
           return { ok: res.ok };
         });
       })
       .then(function (data) {
         if (data && data.ok) {
+          submitted = true; // så visibilitychange under redirect ikke sender abandon
+          trk("submit_success", { step_index: COUNT, step_key: "contact" });
           clearSaved();
           window.location.href = "/tak";
         } else {
           throw new Error((data && data.error) || "fejl");
         }
       })
-      .catch(function () {
+      .catch(function (err) {
+        trk("submit_error", {
+          step_index: COUNT,
+          step_key: "contact",
+          meta: { status: httpStatus || null, message: (err && err.message) || "fejl" },
+        });
         nextBtn.disabled = false;
         backBtn.disabled = false;
         nextBtn.textContent = original;
@@ -594,5 +680,6 @@
   state.started = true;
   save();
   history.replaceState({ fbIdx: startIdx }, "");
+  trk("page_view");
   renderStep(startIdx);
 })();
