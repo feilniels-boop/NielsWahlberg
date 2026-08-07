@@ -153,11 +153,7 @@
   function maybeAbandon() {
     if (abandonSent || submitted) return;
     abandonSent = true;
-    trk(
-      "abandon",
-      { step_index: state.currentIdx, step_key: stepKey(state.currentIdx) },
-      { beacon: true }
-    );
+    trk("abandon", { step_index: state.currentIdx, step_key: stepKey(state.currentIdx) });
   }
 
   /* ---- Progress ---- */

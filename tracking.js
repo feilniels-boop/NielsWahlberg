@@ -89,22 +89,14 @@
     return row;
   }
 
-  function send(row, useBeacon) {
+  function send(row) {
     var body = JSON.stringify(row);
-    if (useBeacon) {
-      try {
-        if (navigator.sendBeacon) {
-          var blob = new Blob([body], { type: "application/json" });
-          // apikey som query-param, da sendBeacon ikke kan sætte headers
-          var ok = navigator.sendBeacon(
-            ENDPOINT + "?apikey=" + encodeURIComponent(SUPABASE_ANON_KEY),
-            blob
-          );
-          if (ok) return;
-        }
-      } catch (e) {}
-      // Falder igennem til keepalive-fetch hvis beacon ikke er muligt
-    }
+    // Vi bruger fetch med keepalive:true — også til "abandon".
+    // Grunden: navigator.sendBeacon sender application/json, som ikke er en
+    // CORS-safelisted content-type, og kan ikke lave den preflight PostgREST
+    // kræver → beacon'en afvises lydløst. fetch({keepalive:true}) overlever
+    // page-unload (fungerer på visibilitychange->hidden og pagehide, også på
+    // iOS Safari 13+) OG kan sætte de nødvendige headers (apikey + JSON).
     try {
       fetch(ENDPOINT, {
         method: "POST",
@@ -122,11 +114,11 @@
     } catch (e) {}
   }
 
-  // track(event, extra?, opts?) — fire and forget, kan aldrig kaste
-  function track(event, extra, opts) {
+  // track(event, extra?) — fire and forget, kan aldrig kaste
+  function track(event, extra) {
     if (!sessionId || !event) return;
     try {
-      send(buildRow(event, extra), !!(opts && opts.beacon));
+      send(buildRow(event, extra));
     } catch (e) {}
   }
 

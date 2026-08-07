@@ -28,7 +28,7 @@ samtykkebanner.
 | `submit_attempt` | submit sendes | kontakt-trinnet | `{source}` |
 | `submit_success` | backend bekræfter | kontakt-trinnet | `{source}` |
 | `submit_error` | submit fejler | kontakt-trinnet | `{status, message}` |
-| `abandon` | siden forlades uden `submit_success` (sendBeacon på `visibilitychange`→hidden + `pagehide`) | nuværende trin | `{source}` |
+| `abandon` | siden forlades uden `submit_success` (`fetch` med `keepalive` på `visibilitychange`→hidden + `pagehide`) | nuværende trin | `{source}` |
 
 **`step_key`** er et kort, stabilt navn for spørgsmålet (spørgsmålets `id`), ikke
 teksten — så navnene ikke ændrer sig når spørgsmål omformuleres:
