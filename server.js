@@ -56,14 +56,16 @@ function sendJson(res, status, obj) {
   res.end(body);
 }
 
-function sourceLabel(source) {
-  return source === "forretning" ? "forretning" : "feedback";
+function sourceInfo(source) {
+  if (source === "forretning") return { label: "forretning", route: "/forretning" };
+  if (source === "feedback-en") return { label: "engelsk quiz", route: "/en/quiz" };
+  return { label: "feedback", route: "/feedback" };
 }
 
 function buildEmailText(data) {
-  const label = sourceLabel(data.source);
+  const info = sourceInfo(data.source);
   const parts = [];
-  parts.push("Kilde: " + label + " (/" + label + ")");
+  parts.push("Kilde: " + info.label + " (" + info.route + ")");
   parts.push("Navn: " + (data.name || "(ikke oplyst)"));
   parts.push("Telefon: " + (data.phone || "(ikke oplyst)"));
   if (data.email) parts.push("E-mail: " + data.email);
@@ -110,7 +112,9 @@ function handleFeedback(req, res) {
       return sendJson(res, 200, { ok: true });
     }
 
-    if (!data.name || !data.phone) {
+    // Kræv navn + mindst én kontaktkanal (telefon ELLER e-mail).
+    // Dansk quiz sender telefon; engelsk quiz sender e-mail.
+    if (!data.name || (!data.phone && !data.email)) {
       return sendJson(res, 400, { ok: false, error: "Manglende felter" });
     }
 
@@ -131,7 +135,7 @@ function handleFeedback(req, res) {
     const payload = {
       from: from,
       to: [to],
-      subject: "Ny " + sourceLabel(data.source) + "-anmodning: " + data.name,
+      subject: "Ny " + sourceInfo(data.source).label + "-anmodning: " + data.name,
       text: buildEmailText(data),
     };
     if (data.email) payload.reply_to = data.email;

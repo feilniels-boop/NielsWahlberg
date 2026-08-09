@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script>
+      document.documentElement.classList.add("has-js");
+    </script>
+    <title>Free feedback | Niels Wahlberg · Zero Dopamine</title>
+    <meta
+      name="description"
+      content="Answer 5 quick questions and Niels sends you a short personal message with where he'd start if he were you."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Free feedback | Niels Wahlberg · Zero Dopamine" />
+    <meta
+      property="og:description"
+      content="Answer 5 quick questions and Niels sends you a short personal message."
+    />
+    <meta property="og:image" content="/hero-niels.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/form.css" />
+  </head>
+  <body class="page-form">
+    <!-- Funnel-tracking (source feedback-en). Fejler den, kører formularen som før. -->
+    <script src="/tracking.js"></script>
+    <script>
+      window.FeedbackFormConfig = {
+        source: "feedback-en",
+        redirectTo: "/en/thanks",
+        homeHref: "/en",
+        text: {
+          brandName: "Niels Wahlberg",
+          brandSubtitle: "Zero Dopamine",
+          counterPrefix: "Question ",
+          counterMid: " of ",
+          sublineLast: "Last question",
+          sublineLastTwo: "Last two questions",
+          sublineHalf: "You're over halfway.",
+          sublineContact: "Last step",
+          btnNext: "Next",
+          btnSend: "Send",
+          btnBack: "← Back",
+          hint: "Press Enter to continue.",
+          scaleLow: "Not ready at all",
+          scaleHigh: "Very ready",
+          loading: "Sending …",
+          submitError:
+            "Something went wrong and your answers weren't sent. Check your connection and try again.",
+          valChoice: "Choose an option to continue.",
+          valTextarea: "Please write a short answer.",
+          valScale: "Pick a number from {min} to {max}.",
+        },
+        contact: {
+          heading: "Thanks for your answers.",
+          subtext: "Just let me know where to send it.",
+          newsletterLabel: "Yes, also send me tools and tips by email",
+          newsletterRevealsEmail: false,
+          fields: [
+            {
+              id: "name",
+              type: "text",
+              label: "Your name",
+              placeholder: "e.g. Jonas",
+              autocomplete: "name",
+              msgRequired: "Enter your name.",
+            },
+            {
+              id: "age",
+              type: "number",
+              label: "Your age",
+              placeholder: "e.g. 24",
+              min: 13,
+              max: 99,
+              payloadLabel: "Age",
+              msgRequired: "Enter your age.",
+              msgInvalid: "Age must be between {min} and {max}.",
+            },
+            {
+              id: "email",
+              type: "email",
+              label: "Email",
+              placeholder: "you@example.com",
+              autocomplete: "email",
+              msgRequired: "Enter your email.",
+              msgInvalid: "Enter a valid email.",
+            },
+          ],
+        },
+        questions: [
+          {
+            id: "situation",
+            type: "choice",
+            question: "Where are you right now?",
+            options: [
+              { key: "A", label: "I know what I should do, but I don't do it" },
+              { key: "B", label: "I lack structure and good habits" },
+              { key: "C", label: "I lack direction — I don't really know what I want" },
+              { key: "D", label: "I get started, but fall off again" },
+              { key: "E", label: "Something else" },
+            ],
+          },
+          {
+            id: "change",
+            type: "textarea",
+            question: "What's the one thing you most want to change right now?",
+            placeholder: "Keep it short …",
+          },
+          {
+            id: "drain",
+            type: "textarea",
+            question: "What drains you most day to day?",
+            placeholder: "Keep it short …",
+          },
+          {
+            id: "future",
+            type: "textarea",
+            question: "What would you want to be different in 3 months?",
+            placeholder: "Keep it short …",
+          },
+          {
+            id: "readiness",
+            type: "scale",
+            question: "How ready are you, from 1 to 5, to invest in reaching your goal?",
+            min: 1,
+            max: 5,
+          },
+        ],
+      };
+    </script>
+    <script src="/feedback-form.js"></script>
+  </body>
+</html>

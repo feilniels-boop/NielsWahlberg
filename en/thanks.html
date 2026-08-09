@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Thanks for your answers | Niels Wahlberg · Zero Dopamine</title>
+    <meta
+      name="description"
+      content="Thanks — your answers are in. Niels will get back to you with a personal message."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Thanks for your answers | Niels Wahlberg · Zero Dopamine" />
+    <meta
+      property="og:description"
+      content="Your answers are in. Niels will get back to you with a personal message."
+    />
+    <meta property="og:image" content="/hero-niels.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      /* Small confirmation up top — testimonials should fill the page */
+      .tak-confirm {
+        padding: 34px 0 6px;
+      }
+      .tak-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 8px;
+        font-size: 0.8rem;
+        font-weight: 900;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #101010;
+      }
+      .tak-line {
+        max-width: 46rem;
+        margin: 0;
+        color: var(--muted);
+        font-size: 1.02rem;
+        line-height: 1.55;
+      }
+      .tak-first {
+        padding-top: 30px;
+      }
+      .tak-bottom {
+        text-align: center;
+        padding-bottom: clamp(60px, 8vw, 100px);
+      }
+      .tak-bottom h2 {
+        margin-bottom: 22px;
+      }
+      .tak-cta-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      @media (max-width: 540px) {
+        .tak-cta-row .btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <nav class="nav" aria-label="Primary navigation">
+        <div class="container nav-inner">
+          <a class="brand" href="/en" aria-label="Niels Wahlberg · Zero Dopamine">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span class="brand-text">
+              <span class="brand-name">Niels Wahlberg</span>
+              <span class="brand-subtitle">Zero Dopamine</span>
+            </span>
+          </a>
+          <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book a call</a>
+        </div>
+      </nav>
+
+      <main id="top">
+        <!-- 1. Small confirmation -->
+        <header class="tak-confirm">
+          <div class="container">
+            <p class="tak-eyebrow">✓ Thanks — your answers are in</p>
+            <p class="tak-line">
+              I'll go through your answers and send you a short, personal message by email —
+              usually within a couple of days.
+            </p>
+          </div>
+        </header>
+
+        <!-- 2a. Video testimonials (shared source: testimonials.js) — Danish videos -->
+        <section class="clip-section split-section tak-first" id="klip">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <h2>Feedback from Danish clients</h2>
+              </div>
+            </div>
+
+            <div class="clip-showcase" id="tm-video-showcase"></div>
+            <div class="clip-grid" id="tm-video-grid" aria-label="Client clips"></div>
+          </div>
+        </section>
+
+        <!-- 2b. Written reviews with stars (shared source: testimonials.js) -->
+        <section class="split-section" id="anmeldelser">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">Reviews</p>
+                <h2>Real results from real clients.</h2>
+              </div>
+            </div>
+
+            <div class="review-grid" id="tm-reviews"></div>
+          </div>
+        </section>
+
+        <!-- 3. CTA -->
+        <section class="tak-bottom">
+          <div class="container">
+            <h2>Ready to get started?</h2>
+            <div class="tak-cta-row">
+              <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book a free call</a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="container footer-inner">
+          <span>Niels Wahlberg · Zero Dopamine</span>
+          <span>Terms & Support · Privacy Policy</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- English testimonials render immediately (no scroll-reveal here) -->
+    <script>
+      window.NW_LANG = "en";
+    </script>
+    <script src="/testimonials.js"></script>
+  </body>
+</html>

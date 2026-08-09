@@ -1,15 +1,20 @@
 /* ============================================================
    Fælles lead magnet-formular.
-   Bruges af både /feedback og /forretning. Konfiguration sættes
+   Bruges af /feedback, /forretning og /en/quiz. Konfiguration sættes
    via window.FeedbackFormConfig FØR dette script indlæses:
 
      window.FeedbackFormConfig = {
-       source: "feedback" | "forretning",  // spor til notifikationen
-       questions: [ ...tællende spørgsmål... ]
+       source: "feedback" | "forretning" | "feedback-en",
+       questions: [ ...tællende spørgsmål... ],
+       text:       { ...override af UI-tekster (default = dansk)... },
+       contact:    { ...override af kontakt-trin (default = dansk)... },
+       redirectTo: "/tak",     // hvor der sendes hen ved success
+       homeHref:   "/",        // brand-link
+       phoneMode:  "dk" | "intl"
      };
 
-   Kontakt-trin, honeypot, validering, tastaturnavigation,
-   afsendelse og kvittering (/tak) er ens for alle formularer.
+   Alt der ikke sættes i config falder tilbage til dansk, så
+   /feedback og /forretning er uændrede.
    ============================================================ */
 (function () {
   "use strict";
@@ -17,12 +22,76 @@
   var cfg = window.FeedbackFormConfig || {};
   var QUESTIONS = cfg.questions || [];
   var SOURCE = cfg.source || "feedback";
+  var REDIRECT_TO = cfg.redirectTo || "/tak";
+  var HOME_HREF = cfg.homeHref || "/";
+  var PHONE_MODE = cfg.phoneMode || "dk";
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  /* Kontakt-trin (tæller IKKE med) — ens for alle formularer */
-  var CONTACT = {
+  function merge(base, over) {
+    var out = {};
+    for (var k in base) if (Object.prototype.hasOwnProperty.call(base, k)) out[k] = base[k];
+    if (over) for (var j in over) if (Object.prototype.hasOwnProperty.call(over, j)) out[j] = over[j];
+    return out;
+  }
+  function fmt(tpl, vars) {
+    return String(tpl).replace(/\{(\w+)\}/g, function (_, key) {
+      return vars[key] != null ? vars[key] : "{" + key + "}";
+    });
+  }
+
+  /* ---- UI-tekster (dansk default; kan overrides via cfg.text) ---- */
+  var DEFAULT_TEXT = {
+    brandName: "Niels Wahlberg",
+    brandSubtitle: "Coaching",
+    counterPrefix: "Spørgsmål ",
+    counterMid: " af ",
+    sublineLast: "Sidste spørgsmål",
+    sublineLastTwo: "Sidste to spørgsmål",
+    sublineHalf: "Du er over halvvejs.",
+    sublineContact: "Sidste trin",
+    btnNext: "Næste",
+    btnSend: "Send",
+    btnBack: "← Tilbage",
+    hint: "Tryk Enter for at gå videre.",
+    scaleLow: "Slet ikke klar",
+    scaleHigh: "Meget klar",
+    loading: "Sender …",
+    submitError: "Noget gik galt, og dine svar blev ikke sendt. Tjek din forbindelse og prøv igen.",
+    valChoice: "Vælg en mulighed for at gå videre.",
+    valTextarea: "Skriv et kort svar.",
+    valScale: "Vælg et tal fra {min} til {max}.",
+  };
+  var T = merge(DEFAULT_TEXT, cfg.text);
+
+  /* ---- Kontakt-trin (dansk default; kan overrides via cfg.contact) ---- */
+  var DEFAULT_CONTACT = {
+    heading: "Tak for dit svar.",
+    subtext: "Udfyld lige, hvem jeg sender svaret til.",
+    newsletterLabel: "Ja tak, send mig også værktøjer og råd på mail",
+    newsletterRevealsEmail: true,
+    newsletterEmailPlaceholder: "Din e-mail",
+    newsletterEmailMsgRequired: "Skriv din e-mail.",
+    newsletterEmailMsgInvalid: "Skriv en gyldig e-mail.",
     fields: [
-      { id: "name", type: "text", label: "Dit navn", placeholder: "Fx Jonas", autocomplete: "name" },
-      { id: "age", type: "number", label: "Din alder", placeholder: "Fx 24", min: 13, max: 99 },
+      {
+        id: "name",
+        type: "text",
+        label: "Dit navn",
+        placeholder: "Fx Jonas",
+        autocomplete: "name",
+        msgRequired: "Skriv dit navn.",
+      },
+      {
+        id: "age",
+        type: "number",
+        label: "Din alder",
+        placeholder: "Fx 24",
+        min: 13,
+        max: 99,
+        payloadLabel: "Alder",
+        msgRequired: "Skriv din alder.",
+        msgInvalid: "Alderen skal være mellem {min} og {max}.",
+      },
       {
         id: "phone",
         type: "tel",
@@ -30,25 +99,31 @@
         placeholder: "Fx 12 34 56 78",
         help: "jeg ringer ikke, kun til at sende lydbesked",
         autocomplete: "tel",
+        msgRequired: "Skriv dit telefonnummer.",
+        msgInvalid: "Skriv et gyldigt dansk telefonnummer.",
       },
     ],
-    newsletterLabel: "Ja tak, send mig også værktøjer og råd på mail",
   };
+  var CONTACT = cfg.contact || DEFAULT_CONTACT;
 
   var COUNT = QUESTIONS.length; // antal tællende spørgsmål
   var LAST = COUNT; // index for kontakt-trinet (det sidste)
   var STORAGE_KEY = "nw_form_" + SOURCE + "_v1";
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
 
   /* ---- Byg skelettet (samme markup for alle formularer) ---- */
   var skeleton =
     '<header class="fb-top">' +
     '<div class="fb-main" style="padding: 0; justify-content: flex-start">' +
     '<div class="fb-top-row">' +
-    '<a class="brand" href="/" aria-label="Niels Wahlberg Coaching">' +
+    '<a class="brand" href="' + esc(HOME_HREF) + '" aria-label="' + esc(T.brandName + " " + T.brandSubtitle) + '">' +
     '<span class="brand-mark" aria-hidden="true"></span>' +
     '<span class="brand-text">' +
-    '<span class="brand-name">Niels Wahlberg</span>' +
-    '<span class="brand-subtitle">Coaching</span>' +
+    '<span class="brand-name">' + esc(T.brandName) + "</span>" +
+    '<span class="brand-subtitle">' + esc(T.brandSubtitle) + "</span>" +
     "</span>" +
     "</a>" +
     '<span class="fb-counter" id="fbCounter" hidden></span>' +
@@ -67,10 +142,10 @@
     'data-lpignore="true" data-1p-ignore="" data-form-type="other" /></label></div>' +
     '<p class="fb-error" id="fbError" role="alert"></p>' +
     '<div class="fb-nav">' +
-    '<button class="btn btn-secondary fb-back" id="fbBack" type="button" hidden>← Tilbage</button>' +
-    '<button class="btn btn-primary fb-next" id="fbNext" type="submit">Næste</button>' +
+    '<button class="btn btn-secondary fb-back" id="fbBack" type="button" hidden>' + esc(T.btnBack) + "</button>" +
+    '<button class="btn btn-primary fb-next" id="fbNext" type="submit">' + esc(T.btnNext) + "</button>" +
     "</div>" +
-    '<p class="fb-hint">Tryk Enter for at gå videre.</p>' +
+    '<p class="fb-hint">' + esc(T.hint) + "</p>" +
     "</form>" +
     "</main>";
 
@@ -135,7 +210,7 @@
       if (!window.NWTrack) return;
       extra = extra || {};
       var meta = extra.meta || {};
-      meta.source = SOURCE; // så /feedback og /forretning kan adskilles i tabellen
+      meta.source = SOURCE; // så de forskellige formularer kan adskilles i tabellen
       extra.meta = meta;
       window.NWTrack.track(event, extra, opts);
     } catch (e) {}
@@ -158,16 +233,16 @@
 
   /* ---- Progress ---- */
   function sublineFor(idx) {
-    if (idx === COUNT - 1) return "Sidste spørgsmål";
-    if (idx >= COUNT - 2) return "Sidste to spørgsmål";
-    if (idx >= Math.floor(COUNT / 2)) return "Du er over halvvejs.";
+    if (idx === COUNT - 1) return T.sublineLast;
+    if (idx >= COUNT - 2) return T.sublineLastTwo;
+    if (idx >= Math.floor(COUNT / 2)) return T.sublineHalf;
     return "";
   }
   function updateProgress(idx) {
     if (idx < COUNT) {
       var pct = Math.round(((idx + 1) / COUNT) * 100);
       progressFill.style.width = pct + "%";
-      counterEl.textContent = "Spørgsmål " + (idx + 1) + " af " + COUNT;
+      counterEl.textContent = T.counterPrefix + (idx + 1) + T.counterMid + COUNT;
       counterEl.hidden = false;
       progressWrap.setAttribute("aria-valuenow", String(idx + 1));
       var sub = sublineFor(idx);
@@ -178,27 +253,53 @@
       progressFill.style.width = "100%";
       counterEl.hidden = true;
       progressWrap.setAttribute("aria-valuenow", String(COUNT));
-      sublineEl.textContent = "Sidste trin";
+      sublineEl.textContent = T.sublineContact;
       sublineEl.hidden = false;
     }
     progressWrap.hidden = false;
   }
 
   /* ---- Validering ---- */
-  function normalizePhone(v) {
-    return String(v || "").replace(/\s+/g, "").replace(/^(\+45|0045)/, "");
+  function validPhone(v) {
+    if (PHONE_MODE === "intl") {
+      var d = String(v).replace(/[\s()\-]/g, "");
+      return /^\+?\d{7,15}$/.test(d);
+    }
+    var n = String(v).replace(/\s+/g, "").replace(/^(\+45|0045)/, "");
+    return /^\d{8}$/.test(n);
   }
   function validateQuestion(step, val) {
     switch (step.type) {
       case "choice":
-        return !val || !val.key ? "Vælg en mulighed for at gå videre." : "";
+        return !val || !val.key ? T.valChoice : "";
       case "scale":
         return val === undefined || val === null || val === ""
-          ? "Vælg et tal fra " + step.min + " til " + step.max + "."
+          ? fmt(T.valScale, { min: step.min, max: step.max })
           : "";
       case "textarea":
-        return !val || !String(val).trim() ? "Skriv et kort svar." : "";
+        return !val || !String(val).trim() ? T.valTextarea : "";
     }
+    return "";
+  }
+  function validateField(f, val) {
+    var v = String(val == null ? "" : val).trim();
+    if (f.type === "email") {
+      if (!v) return f.msgRequired;
+      if (!EMAIL_RE.test(v)) return f.msgInvalid;
+      return "";
+    }
+    if (f.type === "tel") {
+      if (!v) return f.msgRequired;
+      if (!validPhone(v)) return f.msgInvalid;
+      return "";
+    }
+    if (f.type === "number") {
+      if (!v) return f.msgRequired;
+      var n = parseInt(v, 10);
+      if (isNaN(n) || n < f.min || n > f.max) return fmt(f.msgInvalid, { min: f.min, max: f.max });
+      return "";
+    }
+    if (!v) return f.msgRequired;
     return "";
   }
 
@@ -239,7 +340,7 @@
         b.type = "button";
         b.className = "fb-option";
         if (val && val.key === opt.key) b.classList.add("is-selected");
-        b.innerHTML = '<span class="fb-key">' + opt.key + "</span><span>" + opt.label + "</span>";
+        b.innerHTML = '<span class="fb-key">' + esc(opt.key) + "</span><span>" + esc(opt.label) + "</span>";
         b.addEventListener("click", function () {
           Array.prototype.forEach.call(wrap.children, function (c) {
             c.classList.remove("is-selected");
@@ -277,7 +378,12 @@
       wrap.appendChild(scale);
       var legend = document.createElement("div");
       legend.className = "fb-scale-legend";
-      legend.innerHTML = "<span>Slet ikke klar</span><span>Meget klar</span>";
+      var lo = document.createElement("span");
+      lo.textContent = T.scaleLow;
+      var hi = document.createElement("span");
+      hi.textContent = T.scaleHigh;
+      legend.appendChild(lo);
+      legend.appendChild(hi);
       wrap.appendChild(legend);
     }
     return wrap;
@@ -298,7 +404,7 @@
     mount.appendChild(container);
 
     backBtn.hidden = idx === 0;
-    nextBtn.textContent = "Næste";
+    nextBtn.textContent = T.btnNext;
     clearError();
     updateProgress(idx);
 
@@ -317,12 +423,12 @@
 
     var h = document.createElement("h2");
     h.className = "fb-q";
-    h.textContent = "Tak for dit svar.";
+    h.textContent = CONTACT.heading;
     c.appendChild(h);
 
     var help = document.createElement("p");
     help.className = "fb-help";
-    help.textContent = "Udfyld lige, hvem jeg sender svaret til.";
+    help.textContent = CONTACT.subtext;
     c.appendChild(help);
 
     CONTACT.fields.forEach(function (f) {
@@ -337,9 +443,10 @@
 
       var input = document.createElement("input");
       input.id = "fb" + cap(f.id);
-      input.type = f.type === "number" ? "text" : f.type;
+      input.type = f.type === "number" ? "text" : f.type; // number som text -> pænere mobiltastatur
       if (f.type === "number") input.inputMode = "numeric";
       if (f.type === "tel") input.inputMode = "tel";
+      if (f.type === "email") input.inputMode = "email";
       input.placeholder = f.placeholder || "";
       if (f.autocomplete) input.autocomplete = f.autocomplete;
       if (a[f.id]) input.value = a[f.id];
@@ -372,41 +479,51 @@
     lblc.appendChild(tx);
     c.appendChild(lblc);
 
-    var ew = document.createElement("div");
-    ew.className = "fb-email-wrap" + (nl.optIn ? " is-open" : "");
-    var em = document.createElement("input");
-    em.type = "email";
-    em.id = "fbEmail";
-    em.placeholder = "Din e-mail";
-    em.autocomplete = "email";
-    if (nl.email) em.value = nl.email;
-    ew.appendChild(em);
-    var ee = document.createElement("p");
-    ee.className = "fb-ferr";
-    ee.id = "err-email";
-    ew.appendChild(ee);
-    c.appendChild(ew);
+    if (CONTACT.newsletterRevealsEmail) {
+      // Dansk: checkboxen folder et e-mailfelt ud
+      var ew = document.createElement("div");
+      ew.className = "fb-email-wrap" + (nl.optIn ? " is-open" : "");
+      var em = document.createElement("input");
+      em.type = "email";
+      em.id = "fbEmail";
+      em.placeholder = CONTACT.newsletterEmailPlaceholder;
+      em.autocomplete = "email";
+      if (nl.email) em.value = nl.email;
+      ew.appendChild(em);
+      var ee = document.createElement("p");
+      ee.className = "fb-ferr";
+      ee.id = "err-email";
+      ew.appendChild(ee);
+      c.appendChild(ew);
 
-    function syncNL() {
-      state.answers.newsletter = { optIn: cb.checked, email: em.value };
-      save();
+      cb.addEventListener("change", function () {
+        ew.classList.toggle("is-open", cb.checked);
+        state.answers.newsletter = { optIn: cb.checked, email: em.value };
+        save();
+        if (cb.checked) setTimeout(function () { em.focus(); }, 60);
+      });
+      em.addEventListener("input", function () {
+        state.answers.newsletter = { optIn: cb.checked, email: em.value };
+        save();
+      });
+    } else {
+      // Engelsk: e-mail er allerede et felt ovenfor — checkboxen er ren opt-in
+      cb.addEventListener("change", function () {
+        state.answers.newsletter = { optIn: cb.checked };
+        save();
+      });
     }
-    cb.addEventListener("change", function () {
-      ew.classList.toggle("is-open", cb.checked);
-      syncNL();
-      if (cb.checked) setTimeout(function () { em.focus(); }, 60);
-    });
-    em.addEventListener("input", syncNL);
 
     mount.appendChild(c);
 
     backBtn.hidden = false;
-    nextBtn.textContent = "Send";
+    nextBtn.textContent = T.btnSend;
     clearError();
     updateProgress(LAST);
 
     setTimeout(function () {
-      var f = document.getElementById("fbName");
+      var first = CONTACT.fields[0];
+      var f = first ? document.getElementById("fb" + cap(first.id)) : null;
       if (f) f.focus();
     }, 40);
   }
@@ -443,12 +560,18 @@
       // choice/scale gemmes ved klik
     } else {
       CONTACT.fields.forEach(function (f) {
-        var el = document.getElementById("fb" + cap(f.id));
-        if (el) state.answers[f.id] = el.value;
+        var fel = document.getElementById("fb" + cap(f.id));
+        if (fel) state.answers[f.id] = fel.value;
       });
       var cb = document.getElementById("fbConsent");
-      var em = document.getElementById("fbEmail");
-      if (cb) state.answers.newsletter = { optIn: cb.checked, email: em ? em.value : "" };
+      if (cb) {
+        if (CONTACT.newsletterRevealsEmail) {
+          var em = document.getElementById("fbEmail");
+          state.answers.newsletter = { optIn: cb.checked, email: em ? em.value : "" };
+        } else {
+          state.answers.newsletter = { optIn: cb.checked };
+        }
+      }
       save();
     }
   }
@@ -457,46 +580,34 @@
     captureCurrent();
     var a = state.answers;
     var firstInvalid = null;
+    var errs = {};
 
-    var eName = !a.name || !a.name.trim() ? "Skriv dit navn." : "";
-    showFieldError("name", eName);
-    if (eName && !firstInvalid) firstInvalid = "fbName";
+    CONTACT.fields.forEach(function (f) {
+      var msg = validateField(f, a[f.id]);
+      showFieldError(f.id, msg);
+      if (msg) {
+        errs[f.id] = msg;
+        if (!firstInvalid) firstInvalid = "fb" + cap(f.id);
+      }
+    });
 
-    var eAge = "";
-    if (!a.age || !String(a.age).trim()) eAge = "Skriv din alder.";
-    else {
-      var n = parseInt(a.age, 10);
-      if (isNaN(n) || n < 13 || n > 99) eAge = "Alderen skal være mellem 13 og 99.";
+    if (CONTACT.newsletterRevealsEmail) {
+      var nl = a.newsletter || {};
+      var eE = "";
+      if (nl.optIn) {
+        var v = String(nl.email || "").trim();
+        if (!v) eE = CONTACT.newsletterEmailMsgRequired;
+        else if (!EMAIL_RE.test(v)) eE = CONTACT.newsletterEmailMsgInvalid;
+      }
+      showFieldError("email", eE);
+      if (eE) {
+        errs.email = eE;
+        if (!firstInvalid) firstInvalid = "fbEmail";
+      }
     }
-    showFieldError("age", eAge);
-    if (eAge && !firstInvalid) firstInvalid = "fbAge";
-
-    var eP = "";
-    if (!a.phone || !a.phone.trim()) eP = "Skriv dit telefonnummer.";
-    else if (!/^\d{8}$/.test(normalizePhone(a.phone))) eP = "Skriv et gyldigt dansk telefonnummer.";
-    showFieldError("phone", eP);
-    if (eP && !firstInvalid) firstInvalid = "fbPhone";
-
-    var nl = a.newsletter || {};
-    var eE = "";
-    if (nl.optIn) {
-      if (!nl.email || !nl.email.trim()) eE = "Skriv din e-mail.";
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nl.email)) eE = "Skriv en gyldig e-mail.";
-    }
-    showFieldError("email", eE);
-    if (eE && !firstInvalid) firstInvalid = "fbEmail";
 
     if (firstInvalid) {
-      var errs = {};
-      if (eName) errs.name = eName;
-      if (eAge) errs.age = eAge;
-      if (eP) errs.phone = eP;
-      if (eE) errs.email = eE;
-      trk("validation_error", {
-        step_index: COUNT,
-        step_key: "contact",
-        meta: { errors: errs },
-      });
+      trk("validation_error", { step_index: COUNT, step_key: "contact", meta: { errors: errs } });
       var f = document.getElementById(firstInvalid);
       if (f) f.focus();
       return false;
@@ -613,13 +724,20 @@
     var lines = QUESTIONS.map(function (step) {
       return { q: step.question, a: formatAnswer(step) };
     });
-    lines.push({ q: "Alder", a: (state.answers.age || "").trim() });
+    // Kontakt-felter med payloadLabel (fx alder) tilføjes som linjer;
+    // navn/telefon/e-mail lægges i header-felterne herunder.
+    CONTACT.fields.forEach(function (f) {
+      if (f.payloadLabel) {
+        lines.push({ q: f.payloadLabel, a: String(state.answers[f.id] || "").trim() });
+      }
+    });
     var consent = state.answers.newsletter || {};
+    var email = state.answers.email || consent.email || "";
     return {
       source: SOURCE,
       name: (state.answers.name || "").trim(),
       phone: (state.answers.phone || "").trim(),
-      email: (consent.email || "").trim(),
+      email: String(email).trim(),
       newsletter: !!consent.optIn,
       hp: hpInput.value,
       lines: lines,
@@ -632,7 +750,7 @@
     nextBtn.disabled = true;
     backBtn.disabled = true;
     var original = nextBtn.textContent;
-    nextBtn.textContent = "Sender …";
+    nextBtn.textContent = T.loading;
 
     var httpStatus = 0;
     fetch("/api/feedback", {
@@ -651,7 +769,7 @@
           submitted = true; // så visibilitychange under redirect ikke sender abandon
           trk("submit_success", { step_index: COUNT, step_key: "contact" });
           clearSaved();
-          window.location.href = "/tak";
+          window.location.href = REDIRECT_TO;
         } else {
           throw new Error((data && data.error) || "fejl");
         }
@@ -665,7 +783,7 @@
         nextBtn.disabled = false;
         backBtn.disabled = false;
         nextBtn.textContent = original;
-        showError("Noget gik galt, og dine svar blev ikke sendt. Tjek din forbindelse og prøv igen.");
+        showError(T.submitError);
       });
   }
 

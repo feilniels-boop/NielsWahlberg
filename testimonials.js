@@ -8,7 +8,10 @@
 (function () {
   "use strict";
 
-  /* Video-testimonials (klip-sektionen på forsiden) */
+  // Sprog: sæt window.NW_LANG = "en" på en side FØR dette script indlæses.
+  var LANG = window.NW_LANG === "en" ? "en" : "da";
+
+  /* Video-testimonials (klip-sektionen på forsiden) — altid danske videoer */
   var videoFeature = {
     src: "/videos/hvorfor-niels.mp4#t=0.1",
     heading: "Hvorfor vælge Niels?",
@@ -97,6 +100,67 @@
     },
   ];
 
+  /* Engelske oversættelser af de skrevne anmeldelser (videoerne forbliver danske) */
+  var reviewsEn = [
+    {
+      name: "Kasper",
+      tag: "After the program",
+      stars: 5,
+      answers: [
+        {
+          h: "Biggest takeaway",
+          p: "Good habits, especially in the evening, and solid training advice.",
+        },
+        {
+          h: "Concrete results",
+          p: "I've gotten much stronger in every session, thanks to the right structure.",
+        },
+        {
+          h: "About Niels as a coach",
+          p: "Niels is a great coach — he sees you almost like a friend. He's easy to talk to and you can be honest without being judged; instead he finds a plan to get you back on track.",
+        },
+      ],
+    },
+    {
+      name: "Mikkel",
+      tag: "After the program",
+      stars: 5,
+      answers: [
+        { h: "Biggest takeaway", p: "Help with tracking my weight, plus training tips." },
+        {
+          h: "Concrete results",
+          p: "I can feel my chest better, and I've sorted out some social things.",
+        },
+        {
+          h: "About Niels as a coach",
+          p: "The way he does it is exactly what I like about Niels. He's a young guy who's been through the same as me, so I feel he understands me better than most. Great energy, and he really listens.",
+        },
+      ],
+    },
+    {
+      name: "Alfred",
+      tag: "After the program",
+      stars: 4,
+      answers: [
+        {
+          h: "Biggest takeaway",
+          p: "I've had many good conversations with Niels where we explored and developed ideas together, and it's helped me get clearer about the direction I want in life.",
+        },
+        {
+          h: "Concrete results",
+          p: "I didn't have many concrete goals like training five times a week, but through the sparring I've moved forward and made real progress.",
+        },
+        {
+          h: "About Niels as a coach",
+          p: "What I like about Niels is that he's down to earth — it feels like talking to a friend, which I really appreciate.",
+        },
+      ],
+    },
+  ];
+
+  var reviewsByLang = { da: reviews, en: reviewsEn };
+  var STARS_LABEL = { da: " ud af 5 stjerner", en: " out of 5 stars" };
+
   function esc(s) {
     return String(s)
       .replace(/&/g, "&amp;")
@@ -142,7 +206,8 @@
   }
 
   function renderReviews(el) {
-    el.innerHTML = reviews
+    var starsLabel = STARS_LABEL[LANG] || STARS_LABEL.da;
+    el.innerHTML = (reviewsByLang[LANG] || reviews)
       .map(function (r) {
         var answers = r.answers
           .map(function (a) {
@@ -159,7 +224,7 @@
           '<article class="review-card">' +
           '<div class="review-top">' +
           '<div class="review-person"><strong>' + esc(r.name) + "</strong><span>" + esc(r.tag) + "</span></div>" +
-          '<div class="review-stars" aria-label="' + r.stars + ' ud af 5 stjerner">' + starMarkup(r.stars) + "</div>" +
+          '<div class="review-stars" aria-label="' + r.stars + esc(starsLabel) + '">' + starMarkup(r.stars) + "</div>" +
           "</div>" +
           answers +
           "</article>"
