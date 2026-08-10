@@ -216,10 +216,11 @@ function serveStatic(req, res) {
       // Range-support er påkrævet for at video kan afspilles på mobil (iOS Safari).
       "Accept-Ranges": "bytes",
     };
-    // HTML/JS/CSS: revalidér altid, så nye versioner slår igennem efter deploy.
+    // HTML/JS/CSS: aldrig cache — så nye versioner altid slår igennem med det
+    // samme (no-cache var ikke nok; nogle browsere serverede en gammel kopi).
     // Billeder/video: må gerne caches længe (de er versioneret via filnavn).
     if (ext === ".html" || ext === ".js" || ext === ".css") {
-      headers["Cache-Control"] = "no-cache";
+      headers["Cache-Control"] = "no-store, must-revalidate";
     } else {
       headers["Cache-Control"] = "public, max-age=86400";
     }
