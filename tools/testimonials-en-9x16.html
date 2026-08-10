@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>English testimonials → 9:16 (download for Instagram)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root { --bg:#f4efe6; --ink:#101010; --muted:#6c655c; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+        padding: 32px 20px 80px;
+      }
+      .wrap { max-width: 1120px; margin: 0 auto; }
+      h1 { font-size: 1.5rem; letter-spacing: -0.02em; margin: 0 0 6px; }
+      p.sub { color: var(--muted); margin: 0 0 24px; line-height: 1.5; }
+      .toolbar { margin: 0 0 28px; }
+      button {
+        font: inherit; font-weight: 800; cursor: pointer;
+        border: 1px solid var(--ink); background: var(--ink); color: #fff;
+        border-radius: 999px; padding: 12px 22px;
+      }
+      button.ghost { background: transparent; color: var(--ink); }
+      .cards { display: flex; flex-wrap: wrap; gap: 28px; }
+      .card { width: 280px; }
+      .card canvas {
+        width: 280px; height: 498px; /* 9:16 preview */
+        border: 1px solid rgba(16,16,16,0.12); border-radius: 14px; display: block; background:#fff;
+      }
+      .card .row { display: flex; gap: 8px; margin-top: 12px; }
+      .card .row button { flex: 1; padding: 11px 10px; font-size: 0.9rem; }
+      .note { color: var(--muted); font-size: 0.9rem; margin-top: 26px; line-height: 1.55; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>English testimonials → 9:16 for Instagram</h1>
+      <p class="sub">
+        Each written English review rendered as a 1080×1920 (9:16) image. Click download and post
+        to your feed / story. (The video clips are Danish and not included here.)
+      </p>
+      <div class="toolbar">
+        <button id="dlAll">⬇ Download all (3)</button>
+      </div>
+      <div class="cards" id="cards"></div>
+      <p class="note" id="note">Rendering…</p>
+    </div>
+
+    <script>
+      // English written testimonials (same source of truth as testimonials.js reviewsEn).
+      var REVIEWS = [
+        {
+          name: "Kasper",
+          tag: "After the program",
+          stars: 5,
+          answers: [
+            { h: "Biggest takeaway", p: "Good habits, especially in the evening, and solid training advice." },
+            { h: "Concrete results", p: "I've gotten much stronger in every session, thanks to the right structure." },
+            { h: "About Niels as a coach", p: "Niels is a great coach — he sees you almost like a friend. He's easy to talk to and you can be honest without being judged; instead he finds a plan to get you back on track." },
+          ],
+        },
+        {
+          name: "Mikkel",
+          tag: "After the program",
+          stars: 5,
+          answers: [
+            { h: "Biggest takeaway", p: "Help with tracking my weight, plus training tips." },
+            { h: "Concrete results", p: "I can feel my chest better, and I've sorted out some social things." },
+            { h: "About Niels as a coach", p: "The way he does it is exactly what I like about Niels. He's a young guy who's been through the same as me, so I feel he understands me better than most. Great energy, and he really listens." },
+          ],
+        },
+        {
+          name: "Alfred",
+          tag: "After the program",
+          stars: 4,
+          answers: [
+            { h: "Biggest takeaway", p: "I've had many good conversations with Niels where we explored and developed ideas together, and it's helped me get clearer about the direction I want in life." },
+            { h: "Concrete results", p: "I didn't have many concrete goals like training five times a week, but through the sparring I've moved forward and made real progress." },
+            { h: "About Niels as a coach", p: "What I like about Niels is that he's down to earth — it feels like talking to a friend, which I really appreciate." },
+          ],
+        },
+      ];
+
+      var W = 1080, H = 1920;
+      var INK = "#101010", MUTED = "#6c655c", GOLD = "#ffb400", CREAM = "#f4efe6";
+
+      function setLS(ctx, v) {
+        try { ctx.letterSpacing = v; } catch (e) {}
+      }
+      function wrap(ctx, text, maxW) {
+        var words = String(text).split(/\s+/), lines = [], line = "";
+        for (var i = 0; i < words.length; i++) {
+          var test = line ? line + " " + words[i] : words[i];
+          if (ctx.measureText(test).width > maxW && line) {
+            lines.push(line);
+            line = words[i];
+          } else {
+            line = test;
+          }
+        }
+        if (line) lines.push(line);
+        return lines;
+      }
+
+      // Measure or draw the answers block; returns bottom Y used.
+      function answersBlock(ctx, answers, x, w, startY, bodyPx, draw) {
+        var headPx = Math.round(bodyPx * 0.64);
+        var bodyLH = Math.round(bodyPx * 1.34);
+        var headGap = Math.round(bodyPx * 0.55);
+        var blockGap = Math.round(bodyPx * 1.15);
+        var y = startY;
+        for (var a = 0; a < answers.length; a++) {
+          // heading
+          if (draw) {
+            ctx.font = "800 " + headPx + "px Inter, sans-serif";
+            ctx.fillStyle = MUTED;
+            setLS(ctx, "1.5px");
+            ctx.fillText(String(answers[a].h).toUpperCase(), x, y);
+            setLS(ctx, "0px");
+          }
+          y += headPx + headGap;
+          // body (wrapped)
+          ctx.font = "600 " + bodyPx + "px Inter, sans-serif";
+          var lines = wrap(ctx, answers[a].p, w);
+          for (var l = 0; l < lines.length; l++) {
+            if (draw) {
+              ctx.fillStyle = INK;
+              ctx.fillText(lines[l], x, y);
+            }
+            y += bodyLH;
+          }
+          y += blockGap;
+        }
+        return y;
+      }
+
+      function draw(canvas, r) {
+        var ctx = canvas.getContext("2d");
+        ctx.textBaseline = "top";
+        // background
+        ctx.fillStyle = CREAM;
+        ctx.fillRect(0, 0, W, H);
+
+        var pad = 96;
+        var x = pad;
+        var w = W - pad * 2;
+        var y = 132;
+
+        // brand
+        ctx.font = "900 30px Inter, sans-serif";
+        ctx.fillStyle = INK;
+        setLS(ctx, "2px");
+        ctx.fillText("NIELS WAHLBERG", x, y);
+        var bw = ctx.measureText("NIELS WAHLBERG").width;
+        ctx.font = "800 30px Inter, sans-serif";
+        ctx.fillStyle = MUTED;
+        ctx.fillText("  ·  ZERO DOPAMINE", x + bw, y);
+        setLS(ctx, "0px");
+        y += 96;
+
+        // stars
+        ctx.font = "72px Inter, sans-serif";
+        var starStr = "";
+        for (var s = 0; s < 5; s++) starStr += "★";
+        // gold filled part
+        ctx.fillStyle = GOLD;
+        ctx.fillText("★★★★★".slice(0, r.stars), x, y);
+        var fw = ctx.measureText("★★★★★".slice(0, r.stars)).width;
+        if (r.stars < 5) {
+          ctx.fillStyle = "rgba(16,16,16,0.16)";
+          ctx.fillText("★★★★★".slice(0, 5 - r.stars), x + fw, y);
+        }
+        y += 104;
+
+        // name
+        ctx.font = "900 92px Inter, sans-serif";
+        ctx.fillStyle = INK;
+        setLS(ctx, "-2px");
+        ctx.fillText(r.name, x, y);
+        setLS(ctx, "0px");
+        y += 104;
+
+        // tag
+        ctx.font = "800 28px Inter, sans-serif";
+        ctx.fillStyle = MUTED;
+        setLS(ctx, "2px");
+        ctx.fillText(String(r.tag).toUpperCase(), x, y);
+        setLS(ctx, "0px");
+        y += 58;
+
+        // divider
+        ctx.strokeStyle = "rgba(16,16,16,0.14)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + w, y);
+        ctx.stroke();
+        y += 52;
+
+        // answers — shrink body font until it fits the remaining space
+        var budgetBottom = H - 128; // leave room for footer
+        var bodyPx = 42;
+        while (bodyPx > 24 && answersBlock(ctx, r.answers, x, w, y, bodyPx, false) > budgetBottom) {
+          bodyPx -= 2;
+        }
+        answersBlock(ctx, r.answers, x, w, y, bodyPx, true);
+
+        // footer
+        ctx.font = "800 26px Inter, sans-serif";
+        ctx.fillStyle = MUTED;
+        setLS(ctx, "1.5px");
+        ctx.fillText("NIELSWAHLBERG.DK", x, H - 92);
+        setLS(ctx, "0px");
+      }
+
+      function fileName(r) {
+        return "testimonial-" + r.name.toLowerCase() + "-en-9x16.png";
+      }
+      function download(canvas, name) {
+        canvas.toBlob(function (blob) {
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function () {
+            URL.revokeObjectURL(a.href);
+            a.remove();
+          }, 1000);
+        }, "image/png");
+      }
+
+      var canvases = [];
+      function build() {
+        var cardsEl = document.getElementById("cards");
+        REVIEWS.forEach(function (r, i) {
+          var canvas = document.createElement("canvas");
+          canvas.width = W;
+          canvas.height = H;
+          draw(canvas, r);
+          canvases.push(canvas);
+
+          var card = document.createElement("div");
+          card.className = "card";
+          card.appendChild(canvas);
+          var row = document.createElement("div");
+          row.className = "row";
+          var b = document.createElement("button");
+          b.textContent = "⬇ " + r.name;
+          b.addEventListener("click", function () { download(canvas, fileName(r)); });
+          row.appendChild(b);
+          card.appendChild(row);
+          cardsEl.appendChild(card);
+        });
+        document.getElementById("note").textContent =
+          "Tip: images are 1080×1920 PNG (Instagram 9:16). If the text ever changes on the site, tell Claude and this tool is updated too.";
+        document.getElementById("dlAll").addEventListener("click", function () {
+          canvases.forEach(function (c, i) {
+            setTimeout(function () { download(c, fileName(REVIEWS[i])); }, i * 400);
+          });
+        });
+      }
+
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(build);
+        // safety fallback if fonts hang
+        setTimeout(function () { if (!canvases.length) build(); }, 2500);
+      } else {
+        build();
+      }
+    </script>
+  </body>
+</html>
