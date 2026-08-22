@@ -292,6 +292,16 @@ const server = http.createServer(function (req, res) {
     return handleFeedback(req, res);
   }
 
+  // Funnel-plan: nyt lead → Supabase + Claude-plan (se lib/quiz.js)
+  if (urlPath === "/api/quiz") {
+    if (req.method !== "POST") {
+      res.writeHead(405, { Allow: "POST" });
+      res.end("Method Not Allowed");
+      return;
+    }
+    return require("./lib/quiz").handleQuiz(req, res);
+  }
+
   serveStatic(req, res);
 });
 
