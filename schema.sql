@@ -62,11 +62,26 @@ create table if not exists public.page_views (
 create index if not exists page_views_lead_id_idx on public.page_views (lead_id);
 create index if not exists page_views_created_at_idx on public.page_views (created_at desc);
 
+-- Kanal-tal til /en/thanks. Niels udfylder én række om ugen (mandagstal).
+-- Siden læser den nyeste række; er tabellen tom, vises kun leads-tallene.
+create table if not exists public.channel_stats (
+  id           bigserial primary key,
+  recorded_at  date not null default current_date,
+  videos       integer not null,
+  views        integer not null,
+  subscribers  integer,
+  note         text
+);
+
+create index if not exists channel_stats_recorded_at_idx on public.channel_stats (recorded_at desc);
+
 -- RLS slået til, INGEN policies → anon/authenticated kan intet.
 -- service_role bypasser RLS, så serveren har fuld adgang.
 alter table public.leads enable row level security;
 alter table public.page_views enable row level security;
+alter table public.channel_stats enable row level security;
 
 -- Fjern enhver default-adgang for de offentlige roller (bælte + seler).
 revoke all on table public.leads from anon, authenticated;
 revoke all on table public.page_views from anon, authenticated;
+revoke all on table public.channel_stats from anon, authenticated;
