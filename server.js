@@ -313,6 +313,13 @@ const server = http.createServer(function (req, res) {
     return require("./lib/plan").handlePlanPage(req, res, decodeURIComponent(planMatch[1]));
   }
 
+  // Admin: /admin/lead/<id> (beskyttet med ADMIN_PASSWORD)
+  const adminMatch = urlPath.match(/^\/admin\/lead\/(\d+)$/);
+  if (adminMatch) {
+    const query = Object.fromEntries(new URLSearchParams(req.url.split("?")[1] || ""));
+    return require("./lib/admin").handleAdminLead(req, res, adminMatch[1], query);
+  }
+
   serveStatic(req, res);
 });
 
