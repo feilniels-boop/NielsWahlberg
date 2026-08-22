@@ -325,6 +325,16 @@ const server = http.createServer(function (req, res) {
     return require("./lib/admin").handleRunCron(req, res);
   }
 
+  // Takkeside: server-renderet (fornavn fra cookie, tal, video, booking)
+  if (urlPath === "/en/thanks") {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      res.writeHead(405, { Allow: "GET" });
+      res.end("Method Not Allowed");
+      return;
+    }
+    return require("./lib/thanks").handleThanksPage(req, res);
+  }
+
   serveStatic(req, res);
 });
 
