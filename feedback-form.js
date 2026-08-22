@@ -26,6 +26,7 @@
   var SUBMIT_TO = cfg.submitTo || "/api/feedback";
   var HOME_HREF = cfg.homeHref || "/";
   var PHONE_MODE = cfg.phoneMode || "dk";
+  var INTRO = cfg.intro || null; // valgfri landingssektion før quizzen starter
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   function merge(base, over) {
@@ -809,13 +810,59 @@
       });
   }
 
-  /* ---- Gå direkte til første spørgsmål (eller genoptag efter reload) ---- */
+  /* ---- Landingssektion (valgfri): quizzen starter først på START ---- */
+  function showIntro() {
+    var I = INTRO;
+    var sec = document.createElement("section");
+    sec.className = "fb-intro";
+    sec.innerHTML =
+      '<div class="fb-intro-inner">' +
+      '<h1 class="fb-intro-h">' + esc(I.heading) + "</h1>" +
+      (I.subline ? '<p class="fb-intro-sub">' + esc(I.subline) + "</p>" : "") +
+      (I.bullets && I.bullets.length
+        ? '<ul class="fb-intro-list">' +
+          I.bullets
+            .map(function (b) {
+              return "<li>" + esc(b) + "</li>";
+            })
+            .join("") +
+          "</ul>"
+        : "") +
+      (I.ceiling ? '<p class="fb-intro-ceiling">' + esc(I.ceiling) + "</p>" : "") +
+      (I.image
+        ? '<img class="fb-intro-img" src="' + esc(I.image) + '" alt="' + esc(I.imageAlt || "") + '" />'
+        : "") +
+      '<button type="button" class="btn btn-primary fb-intro-btn" id="fbIntroStart">' +
+      esc(I.button || "START") +
+      "</button>" +
+      (I.note ? '<p class="fb-intro-note">' + esc(I.note) + "</p>" : "") +
+      "</div>";
+    document.body.insertBefore(sec, document.body.firstChild);
+    document.body.classList.add("fb-intro-on");
+    var startBtn = document.getElementById("fbIntroStart");
+    startBtn.addEventListener("click", function () {
+      markStarted();
+      document.body.classList.remove("fb-intro-on");
+      if (sec.parentNode) sec.parentNode.removeChild(sec);
+      beginForm(0);
+    });
+  }
+
+  function beginForm(idx) {
+    state.started = true;
+    save();
+    history.replaceState({ fbIdx: idx }, "");
+    renderStep(idx);
+  }
+
+  /* ---- Start: vis intro, genoptag efter reload, eller gå direkte i gang ---- */
   load();
   var startIdx =
     state.started && state.currentIdx > 0 && state.currentIdx <= LAST ? state.currentIdx : 0;
-  state.started = true;
-  save();
-  history.replaceState({ fbIdx: startIdx }, "");
   trk("page_view");
-  renderStep(startIdx);
+  if (INTRO && startIdx === 0) {
+    showIntro();
+  } else {
+    beginForm(startIdx);
+  }
 })();
