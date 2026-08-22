@@ -23,6 +23,7 @@
   var QUESTIONS = cfg.questions || [];
   var SOURCE = cfg.source || "feedback";
   var REDIRECT_TO = cfg.redirectTo || "/tak";
+  var SUBMIT_TO = cfg.submitTo || "/api/feedback";
   var HOME_HREF = cfg.homeHref || "/";
   var PHONE_MODE = cfg.phoneMode || "dk";
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -53,6 +54,7 @@
     btnSend: "Send",
     btnBack: "← Tilbage",
     hint: "Tryk Enter for at gå videre.",
+    hpLabel: "Udfyld ikke dette felt",
     scaleLow: "Slet ikke klar",
     scaleHigh: "Meget klar",
     loading: "Sender …",
@@ -137,7 +139,7 @@
     '<main class="fb-main" id="fbMain">' +
     '<form id="fbForm" novalidate>' +
     '<div id="fbStepMount" aria-live="polite"></div>' +
-    '<div class="fb-hp" aria-hidden="true"><label>Udfyld ikke dette felt' +
+    '<div class="fb-hp" aria-hidden="true"><label>' + esc(T.hpLabel) +
     '<input type="text" id="fbHp" name="fb_hp_field" tabindex="-1" autocomplete="off" ' +
     'data-lpignore="true" data-1p-ignore="" data-form-type="other" /></label></div>' +
     '<p class="fb-error" id="fbError" role="alert"></p>' +
@@ -283,6 +285,8 @@
   }
   function validateField(f, val) {
     var v = String(val == null ? "" : val).trim();
+    // Valgfrit felt uden værdi er altid ok. Har det en værdi, valideres formatet nedenfor.
+    if (f.optional && !v) return "";
     if (f.type === "email") {
       if (!v) return f.msgRequired;
       if (!EMAIL_RE.test(v)) return f.msgInvalid;
@@ -731,6 +735,22 @@
         lines.push({ q: f.payloadLabel, a: String(state.answers[f.id] || "").trim() });
       }
     });
+    // Struktureret svar-array (id/type/rå værdi) — bruges af server-routes
+    // (fx /api/quiz → Claude). Display-strengen ligger stadig i "lines".
+    var answers = QUESTIONS.map(function (step) {
+      return {
+        id: step.id,
+        type: step.type,
+        question: step.question,
+        value: state.answers[step.id] != null ? state.answers[step.id] : null,
+        display: formatAnswer(step),
+      };
+    });
+    // Alle kontaktfelter samlet efter id (fx contact.company).
+    var contact = {};
+    CONTACT.fields.forEach(function (f) {
+      contact[f.id] = String(state.answers[f.id] || "").trim();
+    });
     var consent = state.answers.newsletter || {};
     var email = state.answers.email || consent.email || "";
     return {
@@ -741,6 +761,8 @@
       newsletter: !!consent.optIn,
       hp: hpInput.value,
       lines: lines,
+      contact: contact,
+      answers: answers,
     };
   }
 
@@ -753,7 +775,7 @@
     nextBtn.textContent = T.loading;
 
     var httpStatus = 0;
-    fetch("/api/feedback", {
+    fetch(SUBMIT_TO, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(buildPayload()),

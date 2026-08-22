@@ -6,17 +6,17 @@
     <script>
       document.documentElement.classList.add("has-js");
     </script>
-    <title>Free feedback | Niels Wahlberg · Zero Dopamine</title>
+    <title>Free funnel plan | Niels Wahlberg</title>
     <meta
       name="description"
-      content="Answer 5 quick questions and Niels sends you a short personal message with where he'd start if he were you."
+      content="Tell me what you sell and who buys it. I send you the funnel I would build for you, as a video. Five a week, free."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:title" content="Free feedback | Niels Wahlberg · Zero Dopamine" />
+    <meta property="og:title" content="Free funnel plan | Niels Wahlberg" />
     <meta
       property="og:description"
-      content="Answer 5 quick questions and Niels sends you a short personal message."
+      content="Tell me what you sell and who buys it. I send you the funnel I would build for you, as a video. Five a week, free."
     />
     <meta property="og:image" content="/hero-niels.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -30,16 +30,17 @@
     <link rel="stylesheet" href="/form.css" />
   </head>
   <body class="page-form">
-    <!-- Funnel-tracking (source feedback-en). Fejler den, kører formularen som før. -->
+    <!-- Funnel-tracking (source funnel-en). Fejler den, kører formularen som før. -->
     <script src="/tracking.js"></script>
     <script>
       window.FeedbackFormConfig = {
-        source: "feedback-en",
+        source: "funnel-en",
         redirectTo: "/en/thanks",
         homeHref: "/en",
+        phoneMode: "intl",
         text: {
           brandName: "Niels Wahlberg",
-          brandSubtitle: "Zero Dopamine",
+          brandSubtitle: "Unedited",
           counterPrefix: "Question ",
           counterMid: " of ",
           sublineLast: "Last question",
@@ -50,6 +51,7 @@
           btnSend: "Send",
           btnBack: "← Back",
           hint: "Press Enter to continue.",
+          hpLabel: "Do not fill in this field",
           scaleLow: "Not ready at all",
           scaleHigh: "Very ready",
           loading: "Sending …",
@@ -61,8 +63,10 @@
         },
         contact: {
           heading: "Thanks for your answers.",
-          subtext: "Just let me know where to send it.",
-          newsletterLabel: "Yes, also send me tools and tips by email",
+          subtext:
+            "Your plan lands in your inbox in a few minutes. A video from me follows within 48 hours.",
+          newsletterLabel:
+            "Yes, send me my numbers every Monday: views, leads, calls booked.",
           newsletterRevealsEmail: false,
           fields: [
             {
@@ -74,15 +78,13 @@
               msgRequired: "Enter your name.",
             },
             {
-              id: "age",
-              type: "number",
-              label: "Your age",
-              placeholder: "e.g. 24",
-              min: 13,
-              max: 99,
-              payloadLabel: "Age",
-              msgRequired: "Enter your age.",
-              msgInvalid: "Age must be between {min} and {max}.",
+              id: "company",
+              type: "text",
+              label: "Company or website",
+              placeholder: "e.g. acme.com",
+              optional: true,
+              autocomplete: "organization",
+              payloadLabel: "Company / website",
             },
             {
               id: "email",
@@ -93,6 +95,16 @@
               msgRequired: "Enter your email.",
               msgInvalid: "Enter a valid email.",
             },
+            {
+              id: "phone",
+              type: "tel",
+              label: "Phone or WhatsApp",
+              placeholder: "+45 12 34 56 78",
+              optional: true,
+              help: "optional, if you would rather get this as a voice note",
+              autocomplete: "tel",
+              msgInvalid: "Enter a valid phone number.",
+            },
           ],
         },
         questions: [
@@ -101,35 +113,41 @@
             type: "choice",
             question: "Where are you right now?",
             options: [
-              { key: "A", label: "I know what I should do, but I don't do it" },
-              { key: "B", label: "I lack structure and good habits" },
-              { key: "C", label: "I lack direction — I don't really know what I want" },
-              { key: "D", label: "I get started, but fall off again" },
-              { key: "E", label: "Something else" },
+              { key: "A", label: "I have a business and clients, but nobody finds me online" },
+              { key: "B", label: "I have a business, and every client comes from referrals" },
+              { key: "C", label: "I run ads and I want a channel that costs less" },
+              { key: "D", label: "I have something to sell and I have never posted" },
+              { key: "E", label: "I haven't started anything yet" },
             ],
           },
           {
-            id: "change",
+            id: "offer",
             type: "textarea",
-            question: "What's the one thing you most want to change right now?",
+            question: "What do you sell, and who buys it?",
             placeholder: "Keep it short …",
           },
           {
-            id: "drain",
-            type: "textarea",
-            question: "What drains you most day to day?",
-            placeholder: "Keep it short …",
+            id: "price",
+            type: "choice",
+            question: "What does it cost?",
+            options: [
+              { key: "A", label: "Under $500" },
+              { key: "B", label: "$500 to $2,000" },
+              { key: "C", label: "$2,000 to $10,000" },
+              { key: "D", label: "Over $10,000" },
+              { key: "E", label: "I am not selling anything yet" },
+            ],
           },
           {
-            id: "future",
+            id: "blocker",
             type: "textarea",
-            question: "What would you want to be different in 3 months?",
+            question: "What has stopped you from posting?",
             placeholder: "Keep it short …",
           },
           {
             id: "readiness",
             type: "scale",
-            question: "How ready are you, from 1 to 5, to invest in reaching your goal?",
+            question: "How ready are you, from 1 to 5, to invest in fixing this?",
             min: 1,
             max: 5,
           },

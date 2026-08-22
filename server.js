@@ -59,6 +59,7 @@ function sendJson(res, status, obj) {
 function sourceInfo(source) {
   if (source === "forretning") return { label: "forretning", route: "/forretning" };
   if (source === "feedback-en") return { label: "engelsk quiz", route: "/en/quiz" };
+  if (source === "funnel-en") return { label: "funnel", route: "/en/quiz" };
   return { label: "feedback", route: "/feedback" };
 }
 
