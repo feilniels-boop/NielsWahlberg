@@ -318,8 +318,10 @@
       var ta = document.createElement("textarea");
       ta.id = "fbInput";
       ta.placeholder = step.placeholder || "";
-      ta.rows = 4;
+      ta.rows = step.rows != null ? step.rows : 4;
       if (val) ta.value = val;
+      // Ryd fejlen så snart brugeren skriver noget.
+      ta.addEventListener("input", clearError);
       wrap.appendChild(ta);
 
       // Valgfri "spring over"-knap (fx "Har ikke nogen")
@@ -455,6 +457,10 @@
       input.placeholder = f.placeholder || "";
       if (f.autocomplete) input.autocomplete = f.autocomplete;
       if (a[f.id]) input.value = a[f.id];
+      // Ryd feltfejlen så snart feltet får indhold.
+      input.addEventListener("input", function () {
+        showFieldError(f.id, "");
+      });
       wrap.appendChild(input);
 
       if (f.help) {
@@ -483,6 +489,12 @@
     lblc.appendChild(cb);
     lblc.appendChild(tx);
     c.appendChild(lblc);
+
+    // Fejlplads til (evt. obligatorisk) samtykke.
+    var consentErr = document.createElement("p");
+    consentErr.className = "fb-ferr";
+    consentErr.id = "err-consent";
+    c.appendChild(consentErr);
 
     if (CONTACT.newsletterRevealsEmail) {
       // Dansk: checkboxen folder et e-mailfelt ud
@@ -516,6 +528,7 @@
       cb.addEventListener("change", function () {
         state.answers.newsletter = { optIn: cb.checked };
         save();
+        if (cb.checked) showFieldError("consent", "");
       });
     }
 
@@ -608,6 +621,19 @@
       if (eE) {
         errs.email = eE;
         if (!firstInvalid) firstInvalid = "fbEmail";
+      }
+    }
+
+    // Obligatorisk tilmelding: kan ikke sende uden at have sat fluebenet.
+    if (CONTACT.newsletterRequired) {
+      var consent = a.newsletter || {};
+      var cE = consent.optIn
+        ? ""
+        : CONTACT.newsletterMsgRequired || "Please tick the box to continue.";
+      showFieldError("consent", cE);
+      if (cE) {
+        errs.consent = cE;
+        if (!firstInvalid) firstInvalid = "fbConsent";
       }
     }
 

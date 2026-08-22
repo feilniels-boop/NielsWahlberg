@@ -61,7 +61,7 @@
           counterMid: " of ",
           sublineLast: "Last question",
           sublineLastTwo: "Last two questions",
-          sublineHalf: "You're over halfway.",
+          sublineHalf: "You're over halfway",
           sublineContact: "Last step",
           btnNext: "Next",
           btnSend: "Send",
@@ -82,14 +82,17 @@
           subtext:
             "Your plan lands in your inbox in a few minutes. A video from me follows within 48 hours.",
           newsletterLabel:
-            "Yes, send me my numbers every Monday: views, leads, calls booked.",
+            "Yes, email me my results and add me to your mailing list.",
           newsletterRevealsEmail: false,
+          newsletterRequired: true,
+          newsletterMsgRequired:
+            "Tick the box so I can email you your results.",
           fields: [
             {
               id: "name",
               type: "text",
               label: "Your name",
-              placeholder: "e.g. Jonas",
+              placeholder: "e.g. Sarah",
               autocomplete: "name",
               msgRequired: "Enter your name.",
             },
@@ -115,7 +118,7 @@
               id: "phone",
               type: "tel",
               label: "Phone or WhatsApp",
-              placeholder: "+45 12 34 56 78",
+              placeholder: "",
               optional: true,
               help: "optional, if you would rather get this as a voice note",
               autocomplete: "tel",
@@ -141,11 +144,12 @@
             type: "textarea",
             question: "What do you sell, and who buys it?",
             placeholder: "Keep it short …",
+            rows: 2,
           },
           {
             id: "price",
             type: "choice",
-            question: "What does it cost?",
+            question: "What does your product or service cost?",
             options: [
               { key: "A", label: "Under $500" },
               { key: "B", label: "$500 to $2,000" },
@@ -159,11 +163,12 @@
             type: "textarea",
             question: "What has stopped you from posting?",
             placeholder: "Keep it short …",
+            rows: 2,
           },
           {
             id: "readiness",
             type: "scale",
-            question: "How ready are you, from 1 to 5, to invest in fixing this?",
+            question: "How ready are you to get this fixed in the next 90 days?",
             min: 1,
             max: 5,
           },
