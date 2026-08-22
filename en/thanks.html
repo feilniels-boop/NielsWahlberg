@@ -4,17 +4,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>Thanks for your answers | Niels Wahlberg · Zero Dopamine</title>
+    <title>Thanks — your funnel plan is on its way | Niels Wahlberg</title>
     <meta
       name="description"
-      content="Thanks — your answers are in. Niels will get back to you with a personal message."
+      content="Your plan lands in your inbox in a few minutes. A video from me follows within 48 hours."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:title" content="Thanks for your answers | Niels Wahlberg · Zero Dopamine" />
+    <meta property="og:title" content="Thanks — your funnel plan is on its way | Niels Wahlberg" />
     <meta
       property="og:description"
-      content="Your answers are in. Niels will get back to you with a personal message."
+      content="Your plan lands in your inbox in a few minutes. A video from me follows within 48 hours."
     />
     <meta property="og:image" content="/hero-niels.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -27,13 +27,13 @@
     <style>
       /* Small confirmation up top — testimonials should fill the page */
       .tak-confirm {
-        padding: 34px 0 6px;
+        padding: 40px 0 6px;
       }
       .tak-eyebrow {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        margin: 0 0 8px;
+        margin: 0 0 10px;
         font-size: 0.8rem;
         font-weight: 900;
         letter-spacing: 0.14em;
@@ -44,29 +44,44 @@
         max-width: 46rem;
         margin: 0;
         color: var(--muted);
-        font-size: 1.02rem;
+        font-size: 1.05rem;
         line-height: 1.55;
       }
+
+      /* Primary booking CTA */
+      .tak-book {
+        padding: 26px 0 6px;
+      }
+      .tak-book p {
+        max-width: 46rem;
+        margin: 0 0 16px;
+        font-size: 1.05rem;
+        line-height: 1.5;
+      }
+
       .tak-first {
-        padding-top: 30px;
+        padding-top: 34px;
       }
-      .tak-bottom {
+
+      /* Skool link — deliberately quieter than the booking CTA */
+      .tak-skool {
         text-align: center;
-        padding-bottom: clamp(60px, 8vw, 100px);
+        padding: 8px 0 clamp(60px, 8vw, 100px);
       }
-      .tak-bottom h2 {
-        margin-bottom: 22px;
+      .tak-skool p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.98rem;
+        line-height: 1.55;
       }
-      .tak-cta-row {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 12px;
+      .tak-skool a {
+        color: var(--muted);
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 3px;
       }
-      @media (max-width: 540px) {
-        .tak-cta-row .btn {
-          width: 100%;
-        }
+      .tak-skool a:hover {
+        color: #101010;
       }
     </style>
   </head>
@@ -74,50 +89,48 @@
     <div class="page">
       <nav class="nav" aria-label="Primary navigation">
         <div class="container nav-inner">
-          <a class="brand" href="/en" aria-label="Niels Wahlberg · Zero Dopamine">
+          <a class="brand" href="/en" aria-label="Niels Wahlberg">
             <span class="brand-mark" aria-hidden="true"></span>
             <span class="brand-text">
               <span class="brand-name">Niels Wahlberg</span>
-              <span class="brand-subtitle">Zero Dopamine</span>
+              <span class="brand-subtitle">Unedited</span>
             </span>
           </a>
-          <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book a call</a>
+          <!-- PLACEHOLDER BOOKING URL — replace https://cal.com/nielswahlberg with your real Cal.com link -->
+          <a class="btn btn-primary" href="https://cal.com/nielswahlberg">Book a call</a>
         </div>
       </nav>
 
       <main id="top">
-        <!-- 1. Small confirmation -->
+        <!-- 1. Confirmation — same expectation as the form's last step -->
         <header class="tak-confirm">
           <div class="container">
             <p class="tak-eyebrow">✓ Thanks — your answers are in</p>
             <p class="tak-line">
-              I'll go through your answers and send you a short, personal message by email —
-              usually within a couple of days.
+              Your plan lands in your inbox in a few minutes. A video from me follows within
+              48 hours.
             </p>
           </div>
         </header>
 
-        <!-- 2a. Video testimonials (shared source: testimonials.js) — Danish videos -->
-        <section class="clip-section split-section tak-first" id="klip">
+        <!-- 2. Booking CTA — for people who already know they want it built -->
+        <section class="tak-book">
           <div class="container">
-            <div class="section-head">
-              <div>
-                <h2>Feedback from Danish clients</h2>
-              </div>
-            </div>
-
-            <div class="clip-showcase" id="tm-video-showcase"></div>
-            <div class="clip-grid" id="tm-video-grid" aria-label="Client clips"></div>
+            <p>If you already know you want it built, book a call here.</p>
+            <!-- PLACEHOLDER BOOKING URL — replace https://cal.com/nielswahlberg with your real Cal.com link -->
+            <a class="btn btn-primary" href="https://cal.com/nielswahlberg">Book a call</a>
           </div>
         </section>
 
-        <!-- 2b. Written reviews with stars (shared source: testimonials.js) -->
-        <section class="split-section" id="anmeldelser">
+        <!-- 3. Testimonials (shared source: testimonials.js → reviewsEn) -->
+        <!-- NOTE: these are Niels' coaching testimonials. Swap for funnel/client-results
+             testimonials in testimonials.js (reviewsEn) when available. -->
+        <section class="split-section tak-first" id="anmeldelser">
           <div class="container">
             <div class="section-head">
               <div>
-                <p class="section-kicker">Reviews</p>
-                <h2>Real results from real clients.</h2>
+                <p class="section-kicker">Testimonials</p>
+                <h2>What people say about working with me.</h2>
               </div>
             </div>
 
@@ -125,21 +138,22 @@
           </div>
         </section>
 
-        <!-- 3. CTA -->
-        <section class="tak-bottom">
+        <!-- 4. Skool community — quieter than the booking CTA above -->
+        <section class="tak-skool">
           <div class="container">
-            <h2>Ready to get started?</h2>
-            <div class="tak-cta-row">
-              <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book a free call</a>
-            </div>
+            <!-- PLACEHOLDER SKOOL URL — replace https://www.skool.com/ with your real community link -->
+            <p>
+              Not ready for a call? <a href="https://www.skool.com/">Join the community on Skool</a>
+              and follow along.
+            </p>
           </div>
         </section>
       </main>
 
       <footer>
         <div class="container footer-inner">
-          <span>Niels Wahlberg · Zero Dopamine</span>
-          <span>Terms & Support · Privacy Policy</span>
+          <span>Niels Wahlberg</span>
+          <span>Terms &amp; Support · Privacy Policy</span>
         </div>
       </footer>
     </div>
