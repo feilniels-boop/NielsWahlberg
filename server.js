@@ -302,6 +302,17 @@ const server = http.createServer(function (req, res) {
     return require("./lib/quiz").handleQuiz(req, res);
   }
 
+  // Plan-side: /plan/<slug>
+  const planMatch = urlPath.match(/^\/plan\/([A-Za-z0-9-]+)$/);
+  if (planMatch) {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      res.writeHead(405, { Allow: "GET" });
+      res.end("Method Not Allowed");
+      return;
+    }
+    return require("./lib/plan").handlePlanPage(req, res, decodeURIComponent(planMatch[1]));
+  }
+
   serveStatic(req, res);
 });
 
