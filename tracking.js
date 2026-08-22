@@ -14,9 +14,9 @@
   "use strict";
 
   // --- Konfiguration (offentlig anon-nøgle; RLS tillader kun INSERT) ---
-  var SUPABASE_URL = "https://brskrvvnisnuslufkeqi.supabase.co";
+  var SUPABASE_URL = "https://qqaudfinexdtgwhkqlsz.supabase.co";
   var SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyc2tydnZuaXNudXNsdWZrZXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUwODM4NjcsImV4cCI6MjEwMDY1OTg2N30.rI--xergHz_q-rGBz3h_BsbUBDv_2jCkT83kF4uBou0";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxYXVkZmluZXhkdGd3aGtxbHN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0MDEwNzgsImV4cCI6MjEwMjk3NzA3OH0.mLdtXR7DhYxKqzARYSmZCEpV2vhO0S4VnFhNP1AV1ok";
   var ENDPOINT = SUPABASE_URL + "/rest/v1/form_events";
 
   var SID_KEY = "nw_track_sid";
