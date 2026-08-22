@@ -320,9 +320,21 @@ const server = http.createServer(function (req, res) {
     return require("./lib/admin").handleAdminLead(req, res, adminMatch[1], query);
   }
 
+  // Manuel kørsel af det daglige job (beskyttet med ADMIN_PASSWORD)
+  if (urlPath === "/admin/run-cron") {
+    return require("./lib/admin").handleRunCron(req, res);
+  }
+
   serveStatic(req, res);
 });
 
 server.listen(port, "0.0.0.0", function () {
   console.log("NielsWahlberg site running on port " + port);
+  // Dagligt job: mail 3 + Supabase keep-alive. Fejler det, påvirker det
+  // ikke web-serveren.
+  try {
+    require("./lib/cron").start();
+  } catch (e) {
+    console.error("Kunne ikke starte cron:", e && e.message);
+  }
 });
