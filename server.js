@@ -59,6 +59,7 @@ function sendJson(res, status, obj) {
 function sourceInfo(source) {
   if (source === "forretning") return { label: "forretning", route: "/forretning" };
   if (source === "feedback-en") return { label: "engelsk quiz", route: "/en/quiz" };
+  if (source === "funnel-en") return { label: "funnel", route: "/en/quiz" };
   return { label: "feedback", route: "/feedback" };
 }
 
@@ -291,9 +292,59 @@ const server = http.createServer(function (req, res) {
     return handleFeedback(req, res);
   }
 
+  // Funnel-plan: nyt lead → Supabase + Claude-plan (se lib/quiz.js)
+  if (urlPath === "/api/quiz") {
+    if (req.method !== "POST") {
+      res.writeHead(405, { Allow: "POST" });
+      res.end("Method Not Allowed");
+      return;
+    }
+    return require("./lib/quiz").handleQuiz(req, res);
+  }
+
+  // Plan-side: /plan/<slug>
+  const planMatch = urlPath.match(/^\/plan\/([A-Za-z0-9-]+)$/);
+  if (planMatch) {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      res.writeHead(405, { Allow: "GET" });
+      res.end("Method Not Allowed");
+      return;
+    }
+    return require("./lib/plan").handlePlanPage(req, res, decodeURIComponent(planMatch[1]));
+  }
+
+  // Admin: /admin/lead/<id> (beskyttet med ADMIN_PASSWORD)
+  const adminMatch = urlPath.match(/^\/admin\/lead\/(\d+)$/);
+  if (adminMatch) {
+    const query = Object.fromEntries(new URLSearchParams(req.url.split("?")[1] || ""));
+    return require("./lib/admin").handleAdminLead(req, res, adminMatch[1], query);
+  }
+
+  // Manuel kørsel af det daglige job (beskyttet med ADMIN_PASSWORD)
+  if (urlPath === "/admin/run-cron") {
+    return require("./lib/admin").handleRunCron(req, res);
+  }
+
+  // Takkeside: server-renderet (fornavn fra cookie, tal, video, booking)
+  if (urlPath === "/en/thanks") {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      res.writeHead(405, { Allow: "GET" });
+      res.end("Method Not Allowed");
+      return;
+    }
+    return require("./lib/thanks").handleThanksPage(req, res);
+  }
+
   serveStatic(req, res);
 });
 
 server.listen(port, "0.0.0.0", function () {
   console.log("NielsWahlberg site running on port " + port);
+  // Dagligt job: mail 3 + Supabase keep-alive. Fejler det, påvirker det
+  // ikke web-serveren.
+  try {
+    require("./lib/cron").start();
+  } catch (e) {
+    console.error("Kunne ikke starte cron:", e && e.message);
+  }
 });

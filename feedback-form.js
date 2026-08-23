@@ -23,8 +23,10 @@
   var QUESTIONS = cfg.questions || [];
   var SOURCE = cfg.source || "feedback";
   var REDIRECT_TO = cfg.redirectTo || "/tak";
+  var SUBMIT_TO = cfg.submitTo || "/api/feedback";
   var HOME_HREF = cfg.homeHref || "/";
   var PHONE_MODE = cfg.phoneMode || "dk";
+  var INTRO = cfg.intro || null; // valgfri landingssektion før quizzen starter
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   function merge(base, over) {
@@ -53,6 +55,7 @@
     btnSend: "Send",
     btnBack: "← Tilbage",
     hint: "Tryk Enter for at gå videre.",
+    hpLabel: "Udfyld ikke dette felt",
     scaleLow: "Slet ikke klar",
     scaleHigh: "Meget klar",
     loading: "Sender …",
@@ -137,7 +140,7 @@
     '<main class="fb-main" id="fbMain">' +
     '<form id="fbForm" novalidate>' +
     '<div id="fbStepMount" aria-live="polite"></div>' +
-    '<div class="fb-hp" aria-hidden="true"><label>Udfyld ikke dette felt' +
+    '<div class="fb-hp" aria-hidden="true"><label>' + esc(T.hpLabel) +
     '<input type="text" id="fbHp" name="fb_hp_field" tabindex="-1" autocomplete="off" ' +
     'data-lpignore="true" data-1p-ignore="" data-form-type="other" /></label></div>' +
     '<p class="fb-error" id="fbError" role="alert"></p>' +
@@ -283,6 +286,8 @@
   }
   function validateField(f, val) {
     var v = String(val == null ? "" : val).trim();
+    // Valgfrit felt uden værdi er altid ok. Har det en værdi, valideres formatet nedenfor.
+    if (f.optional && !v) return "";
     if (f.type === "email") {
       if (!v) return f.msgRequired;
       if (!EMAIL_RE.test(v)) return f.msgInvalid;
@@ -313,8 +318,10 @@
       var ta = document.createElement("textarea");
       ta.id = "fbInput";
       ta.placeholder = step.placeholder || "";
-      ta.rows = 4;
+      ta.rows = step.rows != null ? step.rows : 4;
       if (val) ta.value = val;
+      // Ryd fejlen så snart brugeren skriver noget.
+      ta.addEventListener("input", clearError);
       wrap.appendChild(ta);
 
       // Valgfri "spring over"-knap (fx "Har ikke nogen")
@@ -450,6 +457,10 @@
       input.placeholder = f.placeholder || "";
       if (f.autocomplete) input.autocomplete = f.autocomplete;
       if (a[f.id]) input.value = a[f.id];
+      // Ryd feltfejlen så snart feltet får indhold.
+      input.addEventListener("input", function () {
+        showFieldError(f.id, "");
+      });
       wrap.appendChild(input);
 
       if (f.help) {
@@ -478,6 +489,12 @@
     lblc.appendChild(cb);
     lblc.appendChild(tx);
     c.appendChild(lblc);
+
+    // Fejlplads til (evt. obligatorisk) samtykke.
+    var consentErr = document.createElement("p");
+    consentErr.className = "fb-ferr";
+    consentErr.id = "err-consent";
+    c.appendChild(consentErr);
 
     if (CONTACT.newsletterRevealsEmail) {
       // Dansk: checkboxen folder et e-mailfelt ud
@@ -511,6 +528,7 @@
       cb.addEventListener("change", function () {
         state.answers.newsletter = { optIn: cb.checked };
         save();
+        if (cb.checked) showFieldError("consent", "");
       });
     }
 
@@ -603,6 +621,19 @@
       if (eE) {
         errs.email = eE;
         if (!firstInvalid) firstInvalid = "fbEmail";
+      }
+    }
+
+    // Obligatorisk tilmelding: kan ikke sende uden at have sat fluebenet.
+    if (CONTACT.newsletterRequired) {
+      var consent = a.newsletter || {};
+      var cE = consent.optIn
+        ? ""
+        : CONTACT.newsletterMsgRequired || "Please tick the box to continue.";
+      showFieldError("consent", cE);
+      if (cE) {
+        errs.consent = cE;
+        if (!firstInvalid) firstInvalid = "fbConsent";
       }
     }
 
@@ -731,6 +762,22 @@
         lines.push({ q: f.payloadLabel, a: String(state.answers[f.id] || "").trim() });
       }
     });
+    // Struktureret svar-array (id/type/rå værdi) — bruges af server-routes
+    // (fx /api/quiz → Claude). Display-strengen ligger stadig i "lines".
+    var answers = QUESTIONS.map(function (step) {
+      return {
+        id: step.id,
+        type: step.type,
+        question: step.question,
+        value: state.answers[step.id] != null ? state.answers[step.id] : null,
+        display: formatAnswer(step),
+      };
+    });
+    // Alle kontaktfelter samlet efter id (fx contact.company).
+    var contact = {};
+    CONTACT.fields.forEach(function (f) {
+      contact[f.id] = String(state.answers[f.id] || "").trim();
+    });
     var consent = state.answers.newsletter || {};
     var email = state.answers.email || consent.email || "";
     return {
@@ -741,6 +788,8 @@
       newsletter: !!consent.optIn,
       hp: hpInput.value,
       lines: lines,
+      contact: contact,
+      answers: answers,
     };
   }
 
@@ -753,7 +802,7 @@
     nextBtn.textContent = T.loading;
 
     var httpStatus = 0;
-    fetch("/api/feedback", {
+    fetch(SUBMIT_TO, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(buildPayload()),
@@ -787,13 +836,59 @@
       });
   }
 
-  /* ---- Gå direkte til første spørgsmål (eller genoptag efter reload) ---- */
+  /* ---- Landingssektion (valgfri): quizzen starter først på START ---- */
+  function showIntro() {
+    var I = INTRO;
+    var sec = document.createElement("section");
+    sec.className = "fb-intro";
+    sec.innerHTML =
+      '<div class="fb-intro-inner">' +
+      '<h1 class="fb-intro-h">' + esc(I.heading) + "</h1>" +
+      (I.subline ? '<p class="fb-intro-sub">' + esc(I.subline) + "</p>" : "") +
+      (I.bullets && I.bullets.length
+        ? '<ul class="fb-intro-list">' +
+          I.bullets
+            .map(function (b) {
+              return "<li>" + esc(b) + "</li>";
+            })
+            .join("") +
+          "</ul>"
+        : "") +
+      (I.ceiling ? '<p class="fb-intro-ceiling">' + esc(I.ceiling) + "</p>" : "") +
+      (I.image
+        ? '<img class="fb-intro-img" src="' + esc(I.image) + '" alt="' + esc(I.imageAlt || "") + '" />'
+        : "") +
+      '<button type="button" class="btn btn-primary fb-intro-btn" id="fbIntroStart">' +
+      esc(I.button || "START") +
+      "</button>" +
+      (I.note ? '<p class="fb-intro-note">' + esc(I.note) + "</p>" : "") +
+      "</div>";
+    document.body.insertBefore(sec, document.body.firstChild);
+    document.body.classList.add("fb-intro-on");
+    var startBtn = document.getElementById("fbIntroStart");
+    startBtn.addEventListener("click", function () {
+      markStarted();
+      document.body.classList.remove("fb-intro-on");
+      if (sec.parentNode) sec.parentNode.removeChild(sec);
+      beginForm(0);
+    });
+  }
+
+  function beginForm(idx) {
+    state.started = true;
+    save();
+    history.replaceState({ fbIdx: idx }, "");
+    renderStep(idx);
+  }
+
+  /* ---- Start: vis intro, genoptag efter reload, eller gå direkte i gang ---- */
   load();
   var startIdx =
     state.started && state.currentIdx > 0 && state.currentIdx <= LAST ? state.currentIdx : 0;
-  state.started = true;
-  save();
-  history.replaceState({ fbIdx: startIdx }, "");
   trk("page_view");
-  renderStep(startIdx);
+  if (INTRO && startIdx === 0) {
+    showIntro();
+  } else {
+    beginForm(startIdx);
+  }
 })();

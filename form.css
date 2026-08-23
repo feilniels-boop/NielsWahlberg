@@ -333,6 +333,95 @@
   color: var(--muted);
 }
 
+/* ============================================================
+   Landingssektion (vises før quizzen; skjuler quiz-UI indtil START)
+   ============================================================ */
+body.fb-intro-on .fb-top,
+body.fb-intro-on .fb-main {
+  display: none;
+}
+.fb-intro {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0 64px;
+  animation: fbIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.fb-intro-inner {
+  width: min(620px, calc(100% - 40px));
+  text-align: center;
+}
+.fb-intro-h {
+  font-size: clamp(2rem, 6.5vw, 3.4rem);
+  line-height: 1.03;
+  letter-spacing: -0.045em;
+  margin: 0 0 16px;
+}
+.fb-intro-sub {
+  max-width: 34rem;
+  margin: 0 auto 26px;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+.fb-intro-list {
+  list-style: none;
+  margin: 0 auto 24px;
+  padding: 0;
+  display: inline-grid;
+  gap: 10px;
+  text-align: left;
+}
+.fb-intro-list li {
+  position: relative;
+  padding-left: 30px;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  font-weight: 600;
+}
+.fb-intro-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 900;
+  color: var(--warm, #101010);
+}
+.fb-intro-ceiling {
+  margin: 0 0 26px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--warm, #101010);
+}
+.fb-intro-img {
+  display: block;
+  width: min(440px, 88%);
+  height: auto;
+  margin: 0 auto 28px;
+  border-radius: 18px;
+  object-fit: cover;
+}
+.fb-intro-btn {
+  min-height: 58px;
+  min-width: 220px;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+}
+.fb-intro-note {
+  margin: 14px 0 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fb-intro {
+    animation: none;
+  }
+}
+
 /* Honeypot — skjult for mennesker */
 .fb-hp {
   position: absolute;
