@@ -9,6 +9,8 @@ Pladsholdere der udfyldes automatisk:
 - `{{name}}` — fulde navn
 - `{{plan_url}}` — link til plan-siden (SITE_URL/plan/slug)
 - `{{booking_url}}` — Cal.com bookinglink (BOOKING_URL)
+- `{{situation}}` — planens "situation"-blok (bruges som teaser i Mail 1)
+- `{{diagnosis}}` — planens "diagnosis"-blok (bruges som teaser i Mail 1)
 
 Hver mail starter med en linje `## MAIL N`, derefter `Subject:` og selve brødteksten.
 
@@ -20,15 +22,22 @@ Subject: {{first_name}}, here's the funnel I'd build for you
 
 Hi {{first_name}},
 
-You told me what you sell and who buys it. Here's the funnel I'd build for you,
-written out for your business:
+You told me what you sell and who buys it. Here's where I think you are:
+
+{{situation}}
+
+And the one thing holding it back:
+
+{{diagnosis}}
+
+I've written out the full funnel I'd build for you — the exact steps, three
+videos you could film this week, and where to start:
 
 {{plan_url}}
 
-Have a read. A short video from me — walking through this for your specific
-situation — follows within 48 hours.
-
-If you already know you want it built, you can book a call straight from that page.
+A short video from me — walking through this for your specific situation —
+follows within 48 hours. If you already know you want it built, you can book a
+call straight from that page.
 
 — Niels
 
