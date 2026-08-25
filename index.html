@@ -1,292 +1,420 @@
 <!doctype html>
 <html lang="da">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>
-      document.documentElement.classList.add("has-js");
-    </script>
-    <title>Niels Wahlberg Coaching | Struktur på 12 uger</title>
-    <meta
-      name="description"
-      content="12 ugers coachingforløb for dig, der ikke mangler motivation, men struktur."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="page page-home">
-      <nav class="nav" aria-label="Primær navigation">
-        <div class="container nav-inner">
-          <a class="brand" href="index.html#top" aria-label="Niels Wahlberg Coaching">
-            <span class="brand-mark" aria-hidden="true"></span>
-            <span class="brand-text">
-              <span class="brand-name">Niels Wahlberg</span>
-              <span class="brand-subtitle">Coaching</span>
-            </span>
-          </a>
-          <div class="nav-links nav-desktop">
-            <a href="#resultat">Fremgangsmåde</a>
-            <a href="#klip">Testimonials</a>
-            <a href="#anmeldelser">Anmeldelser</a>
-            <a href="/feedback">Gratis feedback</a>
-          </div>
-          <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book samtale</a>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Niels Wahlberg</title>
+<meta name="description" content="Niels Wahlberg bygger behandlingssider til danske tandklinikker: én side, én behandling, én tid der kan bookes. Fast pris, leveret på en uge.">
+
+<link rel="canonical" href="https://klinik.nielswahlberg.dk/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://klinik.nielswahlberg.dk/">
+<meta property="og:title" content="Niels Wahlberg">
+<meta property="og:description" content="Behandlingssider til danske tandklinikker. Den side patienten lander på, når de klikker på jeres annonce. Fast pris, leveret på en uge.">
+<meta property="og:locale" content="da_DK">
+<meta property="og:site_name" content="Niels Wahlberg">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Niels Wahlberg">
+<meta name="twitter:description" content="Behandlingssider til danske tandklinikker. Den side patienten lander på, når de klikker på jeres annonce. Fast pris, leveret på en uge.">
+
+<!-- Favicon: olivenfarvet kvadrat som inline SVG -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%234A5334'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;800&family=Lora:ital,wght@0,400;1,400&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:   #F2F1EB;   /* varm off-white, ikke cremet */
+  --surface: #FFFFFF;
+  --ink:     #16150F;
+  --muted:   #55564B;
+  --faint:   #85877A;
+  --line:    #DCDACF;
+  --olive:   #4A5334;   /* eneste accentfarve */
+  --olive-s: #E7E9DC;
+
+  --sans: "Libre Franklin", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --serif: "Lora", Georgia, "Times New Roman", serif;
+  --mono: "Azeret Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:   #131309;
+    --surface: #1B1B12;
+    --ink:     #EDEDE3;
+    --muted:   #A3A597;
+    --faint:   #7E8073;
+    --line:    #2C2C20;
+    --olive:   #A9BC7C;
+    --olive-s: #232616;
+  }
+}
+
+*{ box-sizing: border-box; }
+
+html{ -webkit-text-size-adjust: 100%; }
+
+body{
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.62;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap{
+  max-width: 640px;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 8vw, 4.75rem) clamp(1.25rem, 5vw, 1.75rem) clamp(3rem, 9vw, 5rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.75rem, 7vw, 3.75rem);
+}
+
+/* --- Header --- */
+header{
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.overline{
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: .78rem;
+  letter-spacing: .01em;
+  color: var(--faint);
+  margin: 0;
+}
+
+h1{
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 8vw, 3.6rem);
+  line-height: .98;
+  letter-spacing: -.038em;
+  margin: 0;
+  color: var(--ink);
+}
+
+.pitch{
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 3.6vw, 1.45rem);
+  line-height: 1.35;
+  margin: .35rem 0 0;
+  max-width: 34ch;
+}
+
+.pitch em{ font-style: italic; }
+
+.underline{
+  color: var(--muted);
+  margin: 0;
+  max-width: 46ch;
+}
+
+.rule{
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 0;
+}
+
+/* --- Sektioner --- */
+section{
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+}
+
+.label{
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: .74rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--olive);
+  margin: 0;
+}
+
+section p{ margin: 0; }
+
+.muted{ color: var(--muted); }
+
+/* --- Demo-kort --- */
+.card{
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1.4rem 1.5rem 1.5rem;
+  transition: border-color .18s ease, transform .18s ease;
+}
+
+.card:hover{ border-color: var(--olive); }
+.card:active{ transform: translateY(1px); }
+
+.card-label{
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: .76rem;
+  letter-spacing: .04em;
+  color: var(--olive);
+  margin: 0 0 .55rem;
+}
+
+.card-title{
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.32rem;
+  line-height: 1.2;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  margin: 0 0 .5rem;
+}
+
+.card-desc{
+  color: var(--muted);
+  font-size: .98rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.card-arrow{
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: .82rem;
+  letter-spacing: .04em;
+  color: var(--olive);
+  margin-top: 1rem;
+}
+
+.card-note{
+  color: var(--faint);
+  font-size: .92rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* --- Prisliste --- */
+.prices{
+  display: flex;
+  flex-direction: column;
+}
+
+.price-row{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 1.5rem;
+  align-items: start;
+  padding: 1.2rem 0;
+  border-top: 1px solid var(--line);
+}
+.price-row:first-child{ border-top: 0; padding-top: .2rem; }
+
+.price-title{
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.06rem;
+  letter-spacing: -.006em;
+  color: var(--ink);
+  margin: 0 0 .35rem;
+}
+
+.price-desc{
+  color: var(--muted);
+  font-size: .95rem;
+  line-height: 1.52;
+  margin: 0;
+  max-width: 42ch;
+}
+
+.price-amount{
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 1.02rem;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  color: var(--ink);
+  text-align: right;
+  white-space: nowrap;
+  line-height: 1.5;
+  padding-top: .05rem;
+}
+
+.callout{
+  background: var(--olive-s);
+  border-left: 3px solid var(--olive);
+  border-radius: 0 3px 3px 0;
+  padding: 1.1rem 1.25rem;
+  margin-top: .5rem;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: -.004em;
+  color: var(--ink);
+}
+
+/* --- Kontakt --- */
+.contact-links{
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+
+.contact-links a{
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: clamp(1.25rem, 5vw, 1.6rem);
+  letter-spacing: -.01em;
+  color: var(--ink);
+  text-decoration: none;
+  width: max-content;
+  max-width: 100%;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: .12rem;
+  transition: color .18s ease, border-color .18s ease;
+  word-break: break-word;
+}
+
+.contact-links a:hover{
+  color: var(--olive);
+  border-color: var(--olive);
+}
+
+.contact-note{
+  color: var(--muted);
+  margin: .35rem 0 0;
+  max-width: 46ch;
+}
+
+/* --- Footer --- */
+footer{
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+  font-family: var(--mono);
+  font-size: .8rem;
+  line-height: 1.7;
+  color: var(--faint);
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+
+/* --- Fokus --- */
+a:focus-visible,
+.card:focus-visible{
+  outline: 2px solid var(--olive);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ transition: none !important; }
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="overline">Aarhus &middot; behandlingssider til tandklinikker</p>
+    <h1>Niels Wahlberg</h1>
+    <p class="pitch">Jeg bygger den side patienten lander på, <em>når de klikker på jeres annonce.</em></p>
+    <p class="underline">Én side, én behandling, én tid der kan bookes. Jeg rører ikke resten af jeres hjemmeside, og jeg leverer på en uge.</p>
+  </header>
+
+  <hr class="rule">
+
+  <section>
+    <p class="label">Problemet</p>
+    <p>De fleste klinikker sender annoncetrafik ind i et login til journalsystemet eller en formular der lover et opkald. Patienten har truffet beslutningen, og så skal hun vente på en telefon der ikke bliver taget.</p>
+    <p>Jeg laver trinnet imellem: en kort test patienten selv tager, en pris hun kan se, og en tid hun kan vælge uden at ringe.</p>
+  </section>
+
+  <section>
+    <p class="label">Se en færdig side</p>
+    <a class="card" href="https://claude.ai/code/artifact/0137a7e2-69a1-4b3e-81e4-4264adb7e2e8">
+      <p class="card-label">Demo &middot; tandregulering</p>
+      <p class="card-title">Find ud af om det er noget for dig</p>
+      <p class="card-desc">Screening på fem spørgsmål, finansieringsberegner, før og efter, og en booking. Alt virker, prøv det på telefonen.</p>
+      <span class="card-arrow">Åbn demoen &rarr;</span>
+    </a>
+    <p class="card-note">Den er bygget inden for reglerne for markedsføring af sundhedsydelser: ingen rabatter, ingen nedtælling, ingen video på sociale medier.</p>
+  </section>
+
+  <section>
+    <p class="label">Hvad det koster</p>
+    <div class="prices">
+
+      <div class="price-row">
+        <div class="price-main">
+          <p class="price-title">Gennemgang af jeres nuværende side</p>
+          <p class="price-desc">Hvad kan I måle i dag, hvor lækker patientflowet, og hvad koster jeres tomme stoletid. Skriftligt plus en halv times gennemgang.</p>
         </div>
-      </nav>
+        <div class="price-amount">Gratis</div>
+      </div>
 
-      <main id="top">
-        <header class="hero">
-          <div class="container hero-grid">
-            <div>
-              <span class="eyebrow">15 min · Gratis · Uforpligtende</span>
-              <h1>Du mangler ikke motivation. <span class="highlight">Du mangler struktur.</span></h1>
-              <p class="lead">
-                Hvis dine dage sejler, og du spilder dit potentiale, hjælper jeg dig med at skabe
-                momentum på 12 uger.
-              </p>
-              <div class="hero-actions">
-                <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book gratis samtale</a>
-                <a class="btn btn-secondary nav-desktop-inline" href="#klip">Se testimonials</a>
-                <a class="btn btn-secondary nav-mobile-inline" href="klip.html">Se testimonials</a>
-              </div>
-            </div>
-
-            <aside class="hero-card" aria-label="Coach billede og budskab">
-              <img
-                class="hero-photo"
-                src="hero-niels.png"
-                alt="Niels Wahlberg"
-              />
-              <div class="coach-note">
-                <span class="note-label">Kort sagt</span>
-                <p>Vi gør din hverdag enkel nok til, at du faktisk følger den.</p>
-              </div>
-            </aside>
-          </div>
-
-          <div class="container hero-proof-below mini-proof" aria-label="Nøglepunkter">
-            <span class="proof-pill">12 ugers struktur</span>
-            <span class="proof-pill">Ugentlig 1:1 coaching</span>
-            <span class="proof-pill">Direkte feedback og ansvar</span>
-          </div>
-        </header>
-
-        <section class="clip-section split-section" id="klip">
-          <div class="container">
-            <div class="section-head">
-              <div>
-                <h2>Hvad tidligere klienter siger</h2>
-              </div>
-            </div>
-
-            <!-- Video-testimonials renderes fra testimonials.js (fælles kilde) -->
-            <div class="clip-showcase" id="tm-video-showcase"></div>
-
-            <div class="clip-grid" id="tm-video-grid" aria-label="Kundeclips"></div>
-          </div>
-        </section>
-
-        <section class="split-section" id="anmeldelser">
-          <div class="container">
-            <div class="section-head">
-              <div>
-                <p class="section-kicker">Anmeldelser</p>
-                <h2>Resultater fra rigtige forløb.</h2>
-              </div>
-            </div>
-
-            <!-- Anmeldelser renderes fra testimonials.js (fælles kilde) -->
-            <div class="review-grid" id="tm-reviews"></div>
-
-          </div>
-        </section>
-
-        <section class="offer-brief" aria-label="Kort om tilbuddet">
-          <div class="container offer-brief-panel">
-            <div>
-              <p class="section-kicker">Hvad jeg tilbyder</p>
-              <h2>12 ugers coaching til mere struktur i hverdagen.</h2>
-              <p>
-                Et konkret 1:1 forløb for dig, der godt ved hvad du burde gøre, men mangler et
-                system, sparring og ansvar til at gøre det konsekvent.
-              </p>
-              <div class="offer-brief-actions">
-                <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book gratis samtale</a>
-                <a class="btn btn-secondary nav-desktop-inline" href="#anmeldelser">Se anmeldelser</a>
-                <a class="btn btn-secondary nav-mobile-inline" href="anmeldelser.html">Se anmeldelser</a>
-              </div>
-            </div>
-
-            <div class="offer-brief-grid">
-              <div class="offer-point">
-                <strong>Ugentlig 1:1 coaching</strong>
-                <span>Fast sparring, feedback og justering af din plan.</span>
-                <figure class="offer-photo offer-photo--train">
-                  <img src="images/niels-training.png" alt="Niels Wahlberg træner med håndvægte" />
-                </figure>
-              </div>
-              <div class="offer-point">
-                <strong>Personlig struktur</strong>
-                <span>Et simpelt system til træning, vaner og hverdagsvalg.</span>
-                <figure class="offer-photo offer-photo--brush">
-                  <img src="images/niels-brushing-teeth.png" alt="Niels børster tænder som en del af morgenrutinen" />
-                </figure>
-              </div>
-              <div class="offer-point">
-                <strong>Ansvar og opfølgning</strong>
-                <span>Du bliver holdt fast, også når motivationen falder.</span>
-                <figure class="offer-photo offer-photo--kick">
-                  <img src="images/niels-kickboxing.png" alt="Niels Wahlberg under kickboxing-træning" />
-                </figure>
-              </div>
-              <div class="offer-point">
-                <strong>Klar retning</strong>
-                <span>Du ved hvad næste skridt er, uge for uge.</span>
-                <figure class="offer-photo offer-photo--win">
-                  <img src="images/niels-victory.png" alt="Niels får hævet armen efter kamp" />
-                </figure>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="feedback" class="cta split-section">
-          <div class="container cta-panel">
-            <div>
-              <p class="section-kicker">Gratis personlig struktur feedback</p>
-              <h2>Få en konkret retning.</h2>
-              <p class="section-copy">
-                Du svarer på 5 korte spørgsmål, cirka 1 minut. Jeg gennemgår din nuværende
-                situation personligt og sender dig en kort lydbesked med, hvor jeg ville starte,
-                hvis jeg var dig.
-              </p>
-              <ul class="list" style="margin-top: 22px">
-                <li>Du svarer på 5 korte spørgsmål</li>
-                <li>Jeg gennemgår dine svar personligt</li>
-                <li>Du får en konkret retning, ikke generelle råd</li>
-              </ul>
-            </div>
-
-            <div class="form">
-              <a class="btn btn-tally" href="/feedback">Start spørgeskemaet →</a>
-              <p class="section-copy" style="font-size: 0.9rem; margin-top: 14px">
-                5 hurtige spørgsmål · cirka 1 minut · Gratis · Hjælp til struktur
-              </p>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer>
-        <div class="container footer-inner">
-          <span>Niels Wahlberg coaching</span>
-          <span>Terms & Support · Privacy Policy</span>
+      <div class="price-row">
+        <div class="price-main">
+          <p class="price-title">Én behandlingsside</p>
+          <p class="price-desc">Screening, priser, finansiering, før og efter, og en booking der kan måles. Leveret på en uge.</p>
         </div>
-      </footer>
+        <div class="price-amount">15.000&nbsp;kr.</div>
+      </div>
 
-      <nav class="mobile-tabbar" aria-label="Mobil navigation">
-        <a href="#top" class="mobile-tab is-active" aria-current="page">Hjem</a>
-        <a href="#klip" class="mobile-tab">Testimonials</a>
-        <a href="#resultat" class="mobile-tab">Fremgangsmåde</a>
-        <a href="#anmeldelser" class="mobile-tab">Anmeldelser</a>
-        <a href="#feedback" class="mobile-tab">Feedback</a>
-      </nav>
+      <div class="price-row">
+        <div class="price-main">
+          <p class="price-title">Drift</p>
+          <p class="price-desc">Annoncer, måling og løbende justering. Først når siden har vist tal. I betaler mediebudgettet direkte til Meta fra jeres egen konto.</p>
+        </div>
+        <div class="price-amount">fra 6.000&nbsp;kr./md.</div>
+      </div>
+
     </div>
+    <p class="callout">Fast pris, og I betaler når siden står færdig og I har set den. Ingen binding, ingen opstartsgebyr, ingen betaling pr. patient.</p>
+  </section>
 
-    <!-- Fælles testimonials-kilde: renderes ind i #tm-* containere ovenfor -->
-    <script src="testimonials.js"></script>
+  <section>
+    <p class="label">Ring eller skriv</p>
+    <div class="contact-links">
+      <!-- TODO: udfyld telefonnummer — samme nummer i href (tel:) og i teksten -->
+      <a href="tel:+45XXXXXXXX">+45 XX XX XX XX</a>
+      <a href="mailto:niels@nielswahlberg.dk">niels@nielswahlberg.dk</a>
+    </div>
+    <p class="contact-note">Jeg sidder i Frederiksgade i Aarhus C og arbejder i hele landet. Møder foregår over video, medmindre I hellere vil have mig forbi.</p>
+  </section>
 
-    <script>
-      (function () {
-        var tabs = Array.prototype.slice.call(
-          document.querySelectorAll(".mobile-tabbar .mobile-tab")
-        );
-        if (!tabs.length || !("IntersectionObserver" in window)) return;
+  <footer>
+    <!-- TODO: udfyld firmanavn -->
+    <span>Firmanavn ApS</span>
+    <!-- TODO: udfyld CVR-nummer -->
+    <span>CVR 00 00 00 00</span>
+    <span>Frederiksgade, 8000 Aarhus C</span>
+  </footer>
 
-        var sections = tabs
-          .map(function (tab) {
-            var id = (tab.getAttribute("href") || "").replace("#", "");
-            var el = id ? document.getElementById(id) : null;
-            return el ? { tab: tab, el: el } : null;
-          })
-          .filter(Boolean);
+</div>
 
-        function setActive(tab) {
-          tabs.forEach(function (t) {
-            var on = t === tab;
-            t.classList.toggle("is-active", on);
-            if (on) t.setAttribute("aria-current", "page");
-            else t.removeAttribute("aria-current");
-          });
-        }
+<!--
+  Sporingsscript placeres her, når det bliver aktuelt.
+  AKTIVÉR IKKE før der er cookiesamtykke på plads (fx et samtykkebanner
+  der først loader scriptet efter accept). Indtil da holdes head fri for
+  tredjeparts-tags.
 
-        var observer = new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (entry) {
-              if (!entry.isIntersecting) return;
-              var match = sections.find(function (s) {
-                return s.el === entry.target;
-              });
-              if (match) setActive(match.tab);
-            });
-          },
-          { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
-        );
-
-        sections.forEach(function (s) {
-          observer.observe(s.el);
-        });
-      })();
-
-      /* Scroll reveal — fade/slide sections in as they enter the viewport */
-      (function () {
-        var reduce =
-          window.matchMedia &&
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        var targets = Array.prototype.slice.call(
-          document.querySelectorAll(
-            ".section-head, .clip-showcase, .clip-card, .offer-brief-panel, .offer-point, .review-card, .cta-panel"
-          )
-        );
-        if (!targets.length) return;
-
-        if (reduce || !("IntersectionObserver" in window)) {
-          targets.forEach(function (el) {
-            el.classList.add("is-visible");
-          });
-          return;
-        }
-
-        // Subtle stagger for grid siblings
-        targets.forEach(function (el) {
-          var parent = el.parentElement;
-          var idx = parent
-            ? Array.prototype.indexOf.call(parent.children, el)
-            : 0;
-          el.style.transitionDelay = Math.min(idx, 4) * 70 + "ms";
-        });
-
-        var revealer = new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (entry) {
-              if (!entry.isIntersecting) return;
-              entry.target.classList.add("is-visible");
-              revealer.unobserve(entry.target);
-            });
-          },
-          { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
-        );
-
-        targets.forEach(function (el) {
-          revealer.observe(el);
-        });
-      })();
-    </script>
-  </body>
+  <script src="..."></script>
+-->
+</body>
 </html>
