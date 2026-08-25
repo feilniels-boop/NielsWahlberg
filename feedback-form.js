@@ -26,7 +26,10 @@
   var SUBMIT_TO = cfg.submitTo || "/api/feedback";
   var HOME_HREF = cfg.homeHref || "/";
   var PHONE_MODE = cfg.phoneMode || "dk";
-  var INTRO = cfg.intro || null; // valgfri landingssektion før quizzen starter
+  // Valgfri landingssektion før quizzen. Sæt showIntro:false for at gå direkte
+  // til første spørgsmål (fx når man linker hertil fra YouTube). Intro-configen
+  // bevares — den er blot inaktiv, så den nemt kan slås til igen senere.
+  var INTRO = cfg.showIntro === false ? null : cfg.intro || null;
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   function merge(base, over) {
