@@ -326,13 +326,15 @@ const server = http.createServer(function (req, res) {
   }
 
   // Takkeside: server-renderet (fornavn fra cookie, tal, video, booking)
-  if (urlPath === "/en/thanks") {
+  // /en/thanks = engelsk, /forretning/tak = dansk (forretning-funnel).
+  if (urlPath === "/en/thanks" || urlPath === "/forretning/tak") {
     if (req.method !== "GET" && req.method !== "HEAD") {
       res.writeHead(405, { Allow: "GET" });
       res.end("Method Not Allowed");
       return;
     }
-    return require("./lib/thanks").handleThanksPage(req, res);
+    const lang = urlPath === "/forretning/tak" ? "da" : "en";
+    return require("./lib/thanks").handleThanksPage(req, res, lang);
   }
 
   serveStatic(req, res);

@@ -6,17 +6,17 @@
     <script>
       document.documentElement.classList.add("has-js");
     </script>
-    <title>Gratis forretningsfeedback | Niels Wahlberg Coaching</title>
+    <title>Gratis funnel-plan | Niels Wahlberg</title>
     <meta
       name="description"
-      content="Svar på 4 hurtige spørgsmål. Så sender Niels dig en personlig lydbesked med, hvor han ville starte hvis han var dig."
+      content="Fortæl mig hvad du sælger, og hvem der køber det. Så sender jeg dig den funnel, jeg ville bygge til dig — som en video. Fem om ugen, gratis."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="da_DK" />
-    <meta property="og:title" content="Gratis forretningsfeedback | Niels Wahlberg Coaching" />
+    <meta property="og:title" content="Gratis funnel-plan | Niels Wahlberg" />
     <meta
       property="og:description"
-      content="Svar på 4 hurtige spørgsmål. Så sender Niels dig en personlig lydbesked med, hvor han ville starte hvis han var dig."
+      content="Fortæl mig hvad du sælger, og hvem der køber det. Så sender jeg dig den funnel, jeg ville bygge til dig — som en video. Fem om ugen, gratis."
     />
     <meta property="og:image" content="/hero-niels.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -26,54 +26,154 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="form.css" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/form.css" />
   </head>
   <body class="page-form">
+    <!-- Funnel-tracking (source forretning-funnel). Fejler den, kører formularen som før. -->
+    <script src="/tracking.js"></script>
     <script>
       window.FeedbackFormConfig = {
-        source: "forretning",
+        source: "forretning-funnel",
+        submitTo: "/api/quiz",
+        redirectTo: "/forretning/tak",
+        homeHref: "/",
+        phoneMode: "dk",
+        intro: {
+          heading: "Jeg får kunder fra videoer med 200 visninger.",
+          subline:
+            "685 abonnenter på dansk, en median på 272 visninger pr. video på tværs af 263 videoer. Hver eneste kunde jeg har haft, kom fra indhold, og jeg har aldrig kørt en annonce.",
+          bullets: [
+            "den funnel jeg ville bygge til din forretning, lagt ud",
+            "tre videotitler skrevet til din niche, ikke generiske",
+            "en fire minutters video af mig, der går igennem det",
+          ],
+          ceiling: "Jeg laver fem af dem om ugen.",
+          image: "/hero-niels.png",
+          imageAlt: "Niels Wahlberg",
+          button: "START",
+          note: "tager cirka to minutter",
+        },
+        text: {
+          brandName: "Niels Wahlberg",
+          brandSubtitle: "Unedited",
+          counterPrefix: "Spørgsmål ",
+          counterMid: " af ",
+          sublineLast: "Sidste spørgsmål",
+          sublineLastTwo: "Sidste to spørgsmål",
+          sublineHalf: "Du er over halvvejs",
+          sublineContact: "Sidste skridt",
+          btnNext: "Videre",
+          btnSend: "Send",
+          btnBack: "← Tilbage",
+          hint: "Tryk Enter for at fortsætte.",
+          hpLabel: "Udfyld ikke dette felt",
+          scaleLow: "Slet ikke klar",
+          scaleHigh: "Meget klar",
+          loading: "Sender …",
+          submitError:
+            "Noget gik galt, og dine svar blev ikke sendt. Tjek din forbindelse og prøv igen.",
+          valChoice: "Vælg en mulighed for at fortsætte.",
+          valTextarea: "Skriv et kort svar.",
+          valScale: "Vælg et tal fra {min} til {max}.",
+        },
+        contact: {
+          heading: "Tak for dine svar.",
+          subtext:
+            "Din plan lander i din indbakke om få minutter. En video fra mig følger inden for 48 timer.",
+          newsletterLabel:
+            "Ja tak, send mig mine resultater og skriv mig op til dit nyhedsbrev.",
+          newsletterRevealsEmail: false,
+          newsletterRequired: true,
+          newsletterMsgRequired:
+            "Sæt flueben, så jeg må sende dig dine resultater.",
+          fields: [
+            {
+              id: "name",
+              type: "text",
+              label: "Dit navn",
+              placeholder: "fx Sarah",
+              autocomplete: "name",
+              msgRequired: "Skriv dit navn.",
+            },
+            {
+              id: "company",
+              type: "text",
+              label: "Virksomhed eller hjemmeside",
+              placeholder: "fx firma.dk",
+              optional: true,
+              autocomplete: "organization",
+              payloadLabel: "Virksomhed / hjemmeside",
+            },
+            {
+              id: "email",
+              type: "email",
+              label: "E-mail",
+              placeholder: "dig@eksempel.dk",
+              autocomplete: "email",
+              msgRequired: "Skriv din e-mail.",
+              msgInvalid: "Skriv en gyldig e-mail.",
+            },
+            {
+              id: "phone",
+              type: "tel",
+              label: "Telefonnummer",
+              placeholder: "",
+              autocomplete: "tel",
+              msgRequired: "Skriv dit telefonnummer.",
+              msgInvalid: "Skriv et gyldigt dansk telefonnummer.",
+            },
+          ],
+        },
         questions: [
           {
-            id: "stage",
+            id: "situation",
             type: "choice",
             question: "Hvor er du henne lige nu?",
             options: [
-              { key: "A", label: "Jeg har en idé jeg ikke er kommet i gang med" },
-              { key: "B", label: "Jeg er i gang, men har ikke solgt noget endnu" },
-              { key: "C", label: "Jeg har solgt til de første, det vokser bare ikke" },
-              { key: "D", label: "Jeg tjener fast, jeg vil have det op" },
-              { key: "E", label: "Noget andet" },
+              { key: "A", label: "Jeg har en forretning og kunder, men ingen finder mig online" },
+              { key: "B", label: "Jeg har en forretning, og alle kunder kommer via anbefalinger" },
+              { key: "C", label: "Jeg kører annoncer og vil have en kanal der koster mindre" },
+              { key: "D", label: "Jeg har noget at sælge og har aldrig postet" },
+              { key: "E", label: "Jeg er ikke gået i gang med noget endnu" },
             ],
           },
           {
-            id: "idea",
+            id: "offer",
             type: "textarea",
-            question: "Hvad er den idé du ikke kan slippe?",
+            question: "Hvad sælger du, og hvem køber det?",
             placeholder: "Skriv kort …",
-            skipLabel: "Har ikke nogen",
+            rows: 2,
           },
           {
-            id: "hours",
+            id: "price",
             type: "choice",
-            question: "Hvor mange timer om ugen har du til det de næste tre måneder?",
+            question: "Hvad koster dit produkt eller din ydelse?",
             options: [
-              { key: "A", label: "1–5 timer" },
-              { key: "B", label: "5–10 timer" },
-              { key: "C", label: "10–20 timer" },
-              { key: "D", label: "Mere end 20 timer" },
+              { key: "A", label: "Under 5.000 kr" },
+              { key: "B", label: "5.000–20.000 kr" },
+              { key: "C", label: "20.000–75.000 kr" },
+              { key: "D", label: "Over 75.000 kr" },
+              { key: "E", label: "Jeg sælger ikke noget endnu" },
             ],
+          },
+          {
+            id: "blocker",
+            type: "textarea",
+            question: "Hvad har stoppet dig fra at poste?",
+            placeholder: "Skriv kort …",
+            rows: 2,
           },
           {
             id: "readiness",
             type: "scale",
-            question: "Hvor klar er du fra 1 til 5 på at investere i at komme i gang?",
+            question: "Hvor klar er du til at få det her løst inden for 90 dage?",
             min: 1,
             max: 5,
           },
         ],
       };
     </script>
-    <script src="feedback-form.js"></script>
+    <script src="/feedback-form.js"></script>
   </body>
 </html>
