@@ -11,34 +11,42 @@
   // Sprog: sæt window.NW_LANG = "en" på en side FØR dette script indlæses.
   var LANG = window.NW_LANG === "en" ? "en" : "da";
 
-  /* Video-testimonials (klip-sektionen på forsiden) — altid danske videoer */
+  /* Video-testimonials (klip-sektionen på forsiden) — altid de samme danske
+     videoklip. UI-teksten (overskrift, knap, billedtekster) oversættes efter
+     LANG. Sæt subsEn til stien på en engelsk .vtt-fil, så vises engelske
+     undertekster på /en (tomt = ingen undertekster endnu). */
   var videoFeature = {
     src: "/videos/hvorfor-niels.mp4#t=0.1",
-    heading: "Hvorfor vælge Niels?",
+    subsEn: "/videos/hvorfor-niels.en.vtt",
+    heading: { da: "Hvorfor vælge Niels?", en: "Why choose Niels?" },
     ctaHref: "https://calendly.com/feilniels/15min",
-    ctaText: "Book gratis samtale",
+    ctaText: { da: "Book gratis samtale", en: "Book a free call" },
   };
 
   var videoClips = [
     {
       src: "/videos/anbefaling-elias.mp4#t=0.1",
-      strong: "Elias anbefaling",
-      span: "Hvad han fik ud af forløbet.",
+      subsEn: "/videos/anbefaling-elias.en.vtt",
+      strong: { da: "Elias anbefaling", en: "Elias's recommendation" },
+      span: { da: "Hvad han fik ud af forløbet.", en: "What he got out of the program." },
     },
     {
       src: "/videos/for-efter-elias.mp4#t=0.1",
-      strong: "Elias før / efter",
-      span: "Fra kaos til mere struktur.",
+      subsEn: "/videos/for-efter-elias.en.vtt",
+      strong: { da: "Elias før / efter", en: "Elias before / after" },
+      span: { da: "Fra kaos til mere struktur.", en: "From chaos to more structure." },
     },
     {
       src: "/videos/aziz-for-efter.mp4#t=0.1",
-      strong: "Aziz før / efter",
-      span: "Konkrete ændringer i hverdagen.",
+      subsEn: "/videos/aziz-for-efter.en.vtt",
+      strong: { da: "Aziz før / efter", en: "Aziz before / after" },
+      span: { da: "Konkrete ændringer i hverdagen.", en: "Concrete changes in everyday life." },
     },
     {
       src: "/videos/aziz-taknemlig.mp4#t=0.1",
-      strong: "Aziz taknemlig",
-      span: "En personlig anbefaling.",
+      subsEn: "/videos/aziz-taknemlig.en.vtt",
+      strong: { da: "Aziz taknemlig", en: "Aziz grateful" },
+      span: { da: "En personlig anbefaling.", en: "A personal recommendation." },
     },
   ];
 
@@ -174,16 +182,34 @@
     return filled + empty;
   }
 
+  // Vælg sprogvariant af et felt ({da, en}) — falder tilbage til dansk.
+  function pick(v) {
+    return v && typeof v === "object" ? (v[LANG] || v.da) : v;
+  }
+
+  // Engelske undertekster: vises kun på /en, og kun hvis en .vtt er angivet.
+  function subtitleTrack(item) {
+    if (LANG === "en" && item.subsEn) {
+      return (
+        '<track kind="subtitles" srclang="en" label="English" src="' +
+        item.subsEn +
+        '" default />'
+      );
+    }
+    return "";
+  }
+
   function renderVideoShowcase(el) {
     el.innerHTML =
       '<div class="clip-feature">' +
       '<video controls preload="metadata" playsinline>' +
       '<source src="' + videoFeature.src + '" type="video/mp4" />' +
+      subtitleTrack(videoFeature) +
       "</video>" +
       "</div>" +
       '<div class="clip-side">' +
-      "<h3>" + esc(videoFeature.heading) + "</h3>" +
-      '<a class="btn btn-primary" href="' + videoFeature.ctaHref + '">' + esc(videoFeature.ctaText) + "</a>" +
+      "<h3>" + esc(pick(videoFeature.heading)) + "</h3>" +
+      '<a class="btn btn-primary" href="' + videoFeature.ctaHref + '">' + esc(pick(videoFeature.ctaText)) + "</a>" +
       "</div>";
   }
 
@@ -194,10 +220,11 @@
           '<article class="clip-card">' +
           '<video controls preload="metadata" playsinline>' +
           '<source src="' + c.src + '" type="video/mp4" />' +
+          subtitleTrack(c) +
           "</video>" +
           '<div class="clip-meta">' +
-          "<strong>" + esc(c.strong) + "</strong>" +
-          "<span>" + esc(c.span) + "</span>" +
+          "<strong>" + esc(pick(c.strong)) + "</strong>" +
+          "<span>" + esc(pick(c.span)) + "</span>" +
           "</div>" +
           "</article>"
         );

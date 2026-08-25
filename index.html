@@ -42,41 +42,28 @@
       </nav>
 
       <main id="top">
-        <header class="hero">
-          <div class="container hero-grid">
-            <div>
-              <span class="eyebrow">15 min · Gratis · Uforpligtende</span>
-              <h1>Du mangler ikke motivation. <span class="highlight">Du mangler struktur.</span></h1>
-              <p class="lead">
-                Hvis dine dage sejler, og du spilder dit potentiale, hjælper jeg dig med at skabe
-                momentum på 12 uger.
-              </p>
-              <div class="hero-actions">
-                <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book gratis samtale</a>
-                <a class="btn btn-secondary nav-desktop-inline" href="#klip">Se testimonials</a>
-                <a class="btn btn-secondary nav-mobile-inline" href="klip.html">Se testimonials</a>
-              </div>
+        <!-- Funnel-hero: kompakt overskrift + mindre billede. Selve funnelen
+             ligger som sektionen lige under, så den er det øverste på siden. -->
+        <header class="funnel-hero">
+          <div class="container funnel-hero-inner">
+            <img class="funnel-hero-photo" src="hero-niels.png" alt="Niels Wahlberg" />
+            <span class="eyebrow">Gratis · 5 spørgsmål · Din funnel som video</span>
+            <h1>Forvandl få visninger til <span class="highlight">betalende kunder</span>.</h1>
+            <p class="lead">
+              Fortæl mig hvad du sælger, og hvem der køber det — så sender jeg dig
+              den funnel, jeg selv ville bygge til dig. Som en video. Gratis.
+            </p>
+            <div class="funnel-hero-proof mini-proof" aria-label="Nøgletal">
+              <span class="proof-pill">10+ betalende kunder</span>
+              <span class="proof-pill">0 kr. på annoncer</span>
+              <span class="proof-pill">Median 272 visninger pr. video</span>
             </div>
-
-            <aside class="hero-card" aria-label="Coach billede og budskab">
-              <img
-                class="hero-photo"
-                src="hero-niels.png"
-                alt="Niels Wahlberg"
-              />
-              <div class="coach-note">
-                <span class="note-label">Kort sagt</span>
-                <p>Vi gør din hverdag enkel nok til, at du faktisk følger den.</p>
-              </div>
-            </aside>
-          </div>
-
-          <div class="container hero-proof-below mini-proof" aria-label="Nøglepunkter">
-            <span class="proof-pill">12 ugers struktur</span>
-            <span class="proof-pill">Ugentlig 1:1 coaching</span>
-            <span class="proof-pill">Direkte feedback og ansvar</span>
           </div>
         </header>
+
+        <!-- Indlejret funnel-quiz (samme komponent som /forretning). Klik → næste
+             spørgsmål i samme sektion. Config + script i bunden af body. -->
+        <section id="feedback" class="funnel-embed"></section>
 
         <section class="clip-section split-section" id="klip">
           <div class="container">
@@ -108,7 +95,9 @@
           </div>
         </section>
 
-        <section class="offer-brief" aria-label="Kort om tilbuddet">
+        <!-- Skjult indtil videre — "hvad jeg tilbyder" vises ikke nu. Fjern
+             hidden-attributtet for at vise sektionen igen. -->
+        <section class="offer-brief" aria-label="Kort om tilbuddet" hidden>
           <div class="container offer-brief-panel">
             <div>
               <p class="section-kicker">Hvad jeg tilbyder</p>
@@ -156,10 +145,6 @@
             </div>
           </div>
         </section>
-
-        <!-- Indlejret funnel-quiz (samme komponent som /forretning). Klik → næste
-             spørgsmål i samme sektion. Config + script i bunden af body. -->
-        <section id="feedback" class="funnel-embed"></section>
       </main>
 
       <footer>

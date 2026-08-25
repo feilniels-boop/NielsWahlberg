@@ -4,10 +4,13 @@ Guidance for working in this repo. Read before making changes.
 
 ## What this is
 Marketing site + a **funnel** for Niels Wahlberg. Danish coaching pages already
-existed (`index.html`, `feedback.html`, `forretning.html`, `tak.html`, …). The
-new work is an **English lead/qualification funnel** at `/en/quiz` → `/en/thanks`,
-with a server backend that stores leads, generates a personal "funnel plan" with
-Claude, shows it at `/plan/[slug]`, and has an admin + emails + a daily cron.
+existed (`index.html`, `feedback.html`, `tak.html`, …). The new work is a
+**lead/qualification funnel** with a server backend that stores leads, generates
+a personal "funnel plan" with Claude, shows it at `/plan/[slug]`, and has an admin
++ emails + a daily cron. It runs in **two languages** sharing one backend: English
+at `/en/quiz` → `/en/thanks`, and Danish at `/forretning` → `/forretning/tak` (the
+Danish funnel replaced the old feedback form on `forretning.html`). Language is
+derived from each lead's `source` — see "Two funnels" below.
 
 Positioning: Niels gets high-ticket clients from videos with a couple hundred
 views. The offer: "send me what you sell and who buys it, I send you the funnel
@@ -37,12 +40,18 @@ checks are expected before committing UI changes.
 
 ## Routes (in `server.js` router, before static)
 - `POST /api/feedback` — old Danish forms (unchanged).
-- `POST /api/quiz` → `lib/quiz.js` — new funnel submit.
-- `GET /plan/<slug>` → `lib/plan.js` — generated plan page (noindex).
+- `POST /api/quiz` → `lib/quiz.js` — funnel submit for **both** funnels. The
+  submitted `source` decides language downstream (default `funnel-en`; the Danish
+  `/forretning` funnel sends `forretning*`). See "Two funnels" below.
+- `GET /plan/<slug>` → `lib/plan.js` — generated plan page (noindex). Language
+  from the lead's `source` (`forretning*` → Danish dictionary `T`, else English).
 - `GET|POST /admin/lead/<id>` → `lib/admin.js` — Basic-Auth admin.
 - `GET|POST /admin/run-cron` → manual daily-job trigger (Basic Auth).
-- `GET /en/thanks` → `lib/thanks.js` — server-rendered thank-you page.
+- `GET /en/thanks` → `lib/thanks.js` (`lang="en"`) — English thank-you page.
+- `GET /forretning/tak` → `lib/thanks.js` (`lang="da"`) — Danish thank-you page.
 - Everything else → static files. HTML/JS/CSS served `no-store`; images cached.
+  The two funnels' entry pages are static: `/en/quiz` (`en/quiz.html`, English)
+  and `/forretning` (`forretning.html`, Danish — replaced the old feedback form).
 
 ## The funnel flow
 1. `/en/quiz` (`en/quiz.html`) configures `window.FeedbackFormConfig` and loads
@@ -67,9 +76,40 @@ checks are expected before committing UI changes.
 6. `lib/cron.js`: one daily in-process job — pings Supabase (keeps the free tier
    alive) then sends Mail 3 to leads ≥4 days old that got Mail 2 and aren't booked.
 
-Emails (`lib/emails.js` + `mails.md`, sent via `lib/mailer.js`/Resend, from
-`MAIL_FROM`, reply-to `NOTIFY_EMAIL`): Mail 1 = plan link, Mail 2 = video is up,
-Mail 3 = day-4 nudge. Mail 1 & 3 are plain text.
+Emails (`lib/emails.js` + `mails.md`/`mails-da.md`, sent via `lib/mailer.js`/Resend,
+from `MAIL_FROM`, reply-to `NOTIFY_EMAIL`): Mail 1 = plan link, Mail 2 = video is
+up, Mail 3 = day-4 nudge. Mail 1 & 3 are plain text.
+
+### Two funnels — language is derived, not stored
+There are two funnels sharing one backend and one component; **no DB language
+column** — language is derived from `lead.source`:
+- **English:** `/en/quiz` (`en/quiz.html`), `source` defaults to `funnel-en`,
+  no phone field, prices in USD bands, thank-you at `/en/thanks`.
+- **Danish:** `/forretning` (`forretning.html`), `source` starts with
+  `forretning`, **has** a phone field, prices in kr. bands (Under 5.000 /
+  5.000–20.000 / 20.000–75.000 / Over 75.000), thank-you at `/forretning/tak`.
+
+The single source of truth is `claude.leadLang(lead)` in `lib/claude.js`:
+`source` beginning with `"forretning"` → `"da"`, otherwise `"en"`. It selects the
+system prompt (`plan-prompt.md` / `plan-prompt-da.md`), the label maps, the user
+message language, the plan-page dictionary `T` (`lib/plan.js`), the emails
+(`mails.md` / `mails-da.md`), and the thank-you page language.
+
+### Embedded quiz + component flags (`feedback-form.js`)
+The same component powers the standalone funnel pages, the embedded quiz on the
+front pages, and the old Danish `/feedback`. New behavior is behind config flags
+on `window.FeedbackFormConfig` (all backward-compatible / opt-in):
+- `mountSelector` (default `null`) — CSS selector of a container to mount the
+  quiz into as **one** full-height section (`.funnel-embed` in `form.css`)
+  instead of taking over the page. Used on `index.html` (Danish → `forretning`
+  funnel) and `en.html` (English) at `#feedback`. Missing container → warns and
+  no-ops rather than breaking the page.
+- `showIntro` (default: on) — set `showIntro:false` to skip the START landing
+  section and go straight to question 1 (e.g. links from YouTube). The `intro`
+  config is preserved (just inactive) so it can be re-enabled. Both funnel pages
+  currently set it `false`.
+- `phoneMode` — `"dk"` (Danish) vs `"intl"` (English); `newsletterRequired`
+  makes the mailing-list opt-in mandatory (funnels set it on).
 
 ## Data — Supabase
 - **Project `qqaudfinexdtgwhkqlsz`** ("NielsWahlberg", eu-west-1). This project is
@@ -103,8 +143,10 @@ confirm Deployments shows a green **Success**, not "Build Failed".
 - Danish code comments and **Danish commit messages**; end commits with
   `Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>`.
 - Branch off `main`; commit per logical step.
-- Keep the form component backward-compatible — it's shared with the Danish forms
-  (`/feedback`, `/forretning`). New behavior goes behind config flags.
+- Keep the form component backward-compatible — it's shared with the old Danish
+  `/feedback`, both funnels (`/forretning`, `/en/quiz`), and the embedded quizzes
+  on the front pages. New behavior goes behind config flags (`mountSelector`,
+  `showIntro`, `phoneMode`, `newsletterRequired` — see "The funnel flow").
 - Security: server-only secrets; the `/plan` slug IS the access control (16 random
   chars) — keep it unguessable; `/plan` and `/admin` send `X-Robots-Tag: noindex`.
 

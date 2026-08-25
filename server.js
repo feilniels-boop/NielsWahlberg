@@ -39,6 +39,7 @@ const types = {
   ".jpeg": "image/jpeg",
   ".webp": "image/webp",
   ".mp4": "video/mp4",
+  ".vtt": "text/vtt; charset=utf-8",
   ".svg": "image/svg+xml",
   ".ico": "image/x-icon",
 };
@@ -220,7 +221,7 @@ function serveStatic(req, res) {
     // HTML/JS/CSS: aldrig cache — så nye versioner altid slår igennem med det
     // samme (no-cache var ikke nok; nogle browsere serverede en gammel kopi).
     // Billeder/video: må gerne caches længe (de er versioneret via filnavn).
-    if (ext === ".html" || ext === ".js" || ext === ".css") {
+    if (ext === ".html" || ext === ".js" || ext === ".css" || ext === ".vtt") {
       headers["Cache-Control"] = "no-store, must-revalidate";
     } else {
       headers["Cache-Control"] = "public, max-age=86400";

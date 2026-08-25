@@ -50,36 +50,28 @@
       </nav>
 
       <main id="top">
-        <header class="hero">
-          <div class="container hero-grid">
-            <div>
-              <span class="eyebrow">15 min · Free · No obligation</span>
-              <h1>You don't lack motivation. <span class="highlight">You lack structure.</span></h1>
-              <p class="lead">
-                If your days are drifting and you're wasting your potential, I help you build
-                momentum in 12 weeks.
-              </p>
-              <div class="hero-actions">
-                <a class="btn btn-primary" href="https://calendly.com/feilniels/15min">Book a free call</a>
-                <a class="btn btn-secondary" href="#klip">See testimonials</a>
-              </div>
+        <!-- Funnel-hero: kompakt overskrift + mindre billede. Selve funnelen
+             ligger som sektionen lige under, så den er det øverste på siden. -->
+        <header class="funnel-hero">
+          <div class="container funnel-hero-inner">
+            <img class="funnel-hero-photo" src="/hero-niels.png" alt="Niels Wahlberg" />
+            <span class="eyebrow">Free · 5 questions · Your funnel as a video</span>
+            <h1>Turn a few views into <span class="highlight">paying clients</span>.</h1>
+            <p class="lead">
+              Tell me what you sell and who buys it — and I'll send you the exact
+              funnel I'd build for you. As a video. Free.
+            </p>
+            <div class="funnel-hero-proof mini-proof" aria-label="Key numbers">
+              <span class="proof-pill">10+ paying clients</span>
+              <span class="proof-pill">$0 spent on ads</span>
+              <span class="proof-pill">Median 272 views per video</span>
             </div>
-
-            <aside class="hero-card" aria-label="Coach photo and message">
-              <img class="hero-photo" src="/hero-niels.png" alt="Niels Wahlberg" />
-              <div class="coach-note">
-                <span class="note-label">In short</span>
-                <p>We make your everyday simple enough that you actually follow it.</p>
-              </div>
-            </aside>
-          </div>
-
-          <div class="container hero-proof-below mini-proof" aria-label="Key points">
-            <span class="proof-pill">12 weeks of structure</span>
-            <span class="proof-pill">Weekly 1:1 coaching</span>
-            <span class="proof-pill">Direct feedback and accountability</span>
           </div>
         </header>
+
+        <!-- Indlejret funnel-quiz (samme komponent som /en/quiz). Klik → næste
+             spørgsmål i samme sektion. Config + script i bunden af body. -->
+        <section id="feedback" class="funnel-embed"></section>
 
         <section class="clip-section split-section" id="klip">
           <div class="container">
@@ -110,7 +102,9 @@
           </div>
         </section>
 
-        <section class="offer-brief" aria-label="About the offer">
+        <!-- Skjult indtil videre — "hvad jeg tilbyder" vises ikke nu. Fjern
+             hidden-attributtet for at vise sektionen igen. -->
+        <section class="offer-brief" aria-label="About the offer" hidden>
           <div class="container offer-brief-panel">
             <div>
               <p class="section-kicker">What I offer</p>
@@ -157,10 +151,6 @@
             </div>
           </div>
         </section>
-
-        <!-- Indlejret funnel-quiz (samme komponent som /en/quiz). Klik → næste
-             spørgsmål i samme sektion. Config + script i bunden af body. -->
-        <section id="feedback" class="funnel-embed"></section>
       </main>
 
       <footer>
