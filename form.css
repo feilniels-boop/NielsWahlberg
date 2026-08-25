@@ -422,6 +422,36 @@ body.fb-intro-on .fb-main {
   }
 }
 
+/* ============================================================
+   Indlejret tilstand: quizzen som ÉN sektion på en normal side
+   (mountSelector sat). Headeren ruller med i sektionen i stedet for
+   at være fixed, og sektionen fylder mindst én skærmhøjde.
+   ============================================================ */
+.funnel-embed {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg, #f7f2ea);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.funnel-embed .fb-top {
+  position: static;
+  background: transparent;
+  border-bottom: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 28px 0 0;
+}
+/* Brand-logoet er overflødigt inde i en sektion på forsiden. */
+.funnel-embed .brand {
+  display: none;
+}
+/* Ingen fixed header at rydde plads til her. */
+.funnel-embed .fb-main {
+  padding: 24px 0 64px;
+}
+
 /* Honeypot — skjult for mennesker */
 .fb-hp {
   position: absolute;

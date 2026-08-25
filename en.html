@@ -27,6 +27,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/form.css" />
   </head>
   <body>
     <div class="page page-home">
@@ -157,30 +158,9 @@
           </div>
         </section>
 
-        <section id="feedback" class="cta split-section">
-          <div class="container cta-panel">
-            <div>
-              <p class="section-kicker">Free personal feedback</p>
-              <h2>Get a clear direction.</h2>
-              <p class="section-copy">
-                You answer 5 short questions, about 1 minute. I personally review your current
-                situation and send you a short message with where I'd start if I were you.
-              </p>
-              <ul class="list" style="margin-top: 22px">
-                <li>You answer 5 short questions</li>
-                <li>I review your answers personally</li>
-                <li>You get a clear direction, not generic advice</li>
-              </ul>
-            </div>
-
-            <div class="form">
-              <a class="btn btn-tally" href="/en/quiz">Start the quiz →</a>
-              <p class="section-copy" style="font-size: 0.9rem; margin-top: 14px">
-                5 quick questions · about 1 minute · Free
-              </p>
-            </div>
-          </div>
-        </section>
+        <!-- Indlejret funnel-quiz (samme komponent som /en/quiz). Klik → næste
+             spørgsmål i samme sektion. Config + script i bunden af body. -->
+        <section id="feedback" class="funnel-embed"></section>
       </main>
 
       <footer>
@@ -287,5 +267,127 @@
         });
       })();
     </script>
+
+    <!-- Indlejret funnel-quiz i #feedback-sektionen (samme komponent som /en/quiz,
+         men monteret som én sektion via mountSelector). -->
+    <script src="/tracking.js"></script>
+    <script>
+      window.FeedbackFormConfig = {
+        source: "funnel-en",
+        submitTo: "/api/quiz",
+        redirectTo: "/en/thanks",
+        homeHref: "/en",
+        phoneMode: "intl",
+        mountSelector: "#feedback",
+        text: {
+          brandName: "Niels Wahlberg",
+          brandSubtitle: "Unedited",
+          counterPrefix: "Question ",
+          counterMid: " of ",
+          sublineLast: "Last question",
+          sublineLastTwo: "Last two questions",
+          sublineHalf: "You're over halfway",
+          sublineContact: "Last step",
+          btnNext: "Next",
+          btnSend: "Send",
+          btnBack: "← Back",
+          hint: "Press Enter to continue.",
+          hpLabel: "Do not fill in this field",
+          scaleLow: "Not ready at all",
+          scaleHigh: "Very ready",
+          loading: "Sending …",
+          submitError:
+            "Something went wrong and your answers weren't sent. Check your connection and try again.",
+          valChoice: "Choose an option to continue.",
+          valTextarea: "Please write a short answer.",
+          valScale: "Pick a number from {min} to {max}.",
+        },
+        contact: {
+          heading: "Thanks for your answers.",
+          subtext:
+            "Your plan lands in your inbox in a few minutes. A video from me follows within 48 hours.",
+          newsletterLabel: "Yes, email me my results and add me to your mailing list.",
+          newsletterRevealsEmail: false,
+          newsletterRequired: true,
+          newsletterMsgRequired: "Tick the box so I can email you your results.",
+          fields: [
+            {
+              id: "name",
+              type: "text",
+              label: "Your name",
+              placeholder: "e.g. Sarah",
+              autocomplete: "name",
+              msgRequired: "Enter your name.",
+            },
+            {
+              id: "company",
+              type: "text",
+              label: "Company or website",
+              placeholder: "e.g. acme.com",
+              optional: true,
+              autocomplete: "organization",
+              payloadLabel: "Company / website",
+            },
+            {
+              id: "email",
+              type: "email",
+              label: "Email",
+              placeholder: "you@example.com",
+              autocomplete: "email",
+              msgRequired: "Enter your email.",
+              msgInvalid: "Enter a valid email.",
+            },
+          ],
+        },
+        questions: [
+          {
+            id: "situation",
+            type: "choice",
+            question: "Where are you right now?",
+            options: [
+              { key: "A", label: "I have a business and clients, but nobody finds me online" },
+              { key: "B", label: "I have a business, and every client comes from referrals" },
+              { key: "C", label: "I run ads and I want a channel that costs less" },
+              { key: "D", label: "I have something to sell and I have never posted" },
+              { key: "E", label: "I haven't started anything yet" },
+            ],
+          },
+          {
+            id: "offer",
+            type: "textarea",
+            question: "What do you sell, and who buys it?",
+            placeholder: "Keep it short …",
+            rows: 2,
+          },
+          {
+            id: "price",
+            type: "choice",
+            question: "What does your product or service cost?",
+            options: [
+              { key: "A", label: "Under $500" },
+              { key: "B", label: "$500 to $2,000" },
+              { key: "C", label: "$2,000 to $10,000" },
+              { key: "D", label: "Over $10,000" },
+              { key: "E", label: "I am not selling anything yet" },
+            ],
+          },
+          {
+            id: "blocker",
+            type: "textarea",
+            question: "What has stopped you from posting?",
+            placeholder: "Keep it short …",
+            rows: 2,
+          },
+          {
+            id: "readiness",
+            type: "scale",
+            question: "How ready are you to get this fixed in the next 90 days?",
+            min: 1,
+            max: 5,
+          },
+        ],
+      };
+    </script>
+    <script src="/feedback-form.js"></script>
   </body>
 </html>
