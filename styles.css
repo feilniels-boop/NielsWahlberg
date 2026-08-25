@@ -260,6 +260,73 @@
         letter-spacing: -0.04em;
       }
 
+      /* ============================================================
+         Forsidens funnel-hero (index.html + en.html): kompakt overskrift
+         + mindre billede, med den indlejrede funnel lige under. Clamp-
+         baseret, så den er responsiv uden egne breakpoints. Erstatter det
+         gamle coaching-hero.
+         ============================================================ */
+      .funnel-hero {
+        position: relative;
+        padding: clamp(30px, 5.5vw, 56px) 0 clamp(20px, 3vw, 34px);
+        text-align: center;
+      }
+      .funnel-hero-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+      }
+      .funnel-hero-photo {
+        width: clamp(92px, 14vw, 128px);
+        height: clamp(92px, 14vw, 128px);
+        object-fit: cover;
+        object-position: center 18%;
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        background: var(--panel-soft);
+        box-shadow: var(--shadow);
+      }
+      .funnel-hero h1 {
+        max-width: 16ch;
+        margin: 0 auto;
+        font-size: clamp(2.4rem, 6vw, 4.6rem);
+        line-height: 0.92;
+        letter-spacing: -0.05em;
+      }
+      .funnel-hero .lead {
+        margin: 0 auto;
+        max-width: 600px;
+      }
+      .funnel-hero-proof {
+        justify-content: center;
+        margin-top: 2px;
+      }
+
+      /* Forsiden: funnelen flyder direkte fra hero'en — ikke tvunget fuld
+         skærmhøjde, så første spørgsmål ligger højt oppe. */
+      .page-home .funnel-embed {
+        min-height: auto;
+      }
+      .page-home .funnel-embed .fb-top {
+        padding-top: 10px;
+      }
+
+      /* Sikker skjulning af "hvad jeg tilbyder" (hidden-attribut på sektionen). */
+      .offer-brief[hidden] {
+        display: none !important;
+      }
+
+      /* Engelske undertekster (track på /en): lettere og mindre end browserens
+         tunge standard-look — mindre skrift, dæmpet baggrund, sidens font. */
+      ::cue {
+        background-color: rgba(9, 11, 16, 0.72);
+        color: #f4f7fb;
+        font-family: Inter, system-ui, -apple-system, sans-serif;
+        font-size: 0.78em;
+        line-height: 1.32;
+      }
+
       section {
         padding: 62px 0;
       }
