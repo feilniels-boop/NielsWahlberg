@@ -26,6 +26,9 @@
   var SUBMIT_TO = cfg.submitTo || "/api/feedback";
   var HOME_HREF = cfg.homeHref || "/";
   var PHONE_MODE = cfg.phoneMode || "dk";
+  // Sæt mountSelector til en container (fx "#funnel") for at indlejre quizzen
+  // som én sektion på en normal side. Uden den overtager quizzen hele siden.
+  var MOUNT_SELECTOR = cfg.mountSelector || null;
   // Valgfri landingssektion før quizzen. Sæt showIntro:false for at gå direkte
   // til første spørgsmål (fx når man linker hertil fra YouTube). Intro-configen
   // bevares — den er blot inaktiv, så den nemt kan slås til igen senere.
@@ -155,7 +158,20 @@
     "</form>" +
     "</main>";
 
-  document.body.insertAdjacentHTML("afterbegin", skeleton);
+  // Monteringspunkt: enten en angivet container (indlejret sektion) eller hele
+  // body (fuldskærms-formular, standard).
+  var MOUNT_HOST = MOUNT_SELECTOR ? document.querySelector(MOUNT_SELECTOR) : null;
+  if (MOUNT_SELECTOR && !MOUNT_HOST) {
+    // Container mangler — gør intet frem for at ødelægge siden.
+    if (window.console) console.warn("FeedbackForm: mountSelector '" + MOUNT_SELECTOR + "' fandtes ikke.");
+    return;
+  }
+  if (MOUNT_HOST) {
+    MOUNT_HOST.classList.add("funnel-embed");
+    MOUNT_HOST.insertAdjacentHTML("afterbegin", skeleton);
+  } else {
+    document.body.insertAdjacentHTML("afterbegin", skeleton);
+  }
 
   /* ---- DOM ---- */
   var form = document.getElementById("fbForm");
@@ -889,7 +905,8 @@
   var startIdx =
     state.started && state.currentIdx > 0 && state.currentIdx <= LAST ? state.currentIdx : 0;
   trk("page_view");
-  if (INTRO && startIdx === 0) {
+  // Intro-skærmen vises aldrig i indlejret tilstand (quizzen er selv en sektion).
+  if (INTRO && !MOUNT_HOST && startIdx === 0) {
     showIntro();
   } else {
     beginForm(startIdx);

@@ -18,6 +18,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="form.css" />
   </head>
   <body>
     <div class="page page-home">
@@ -156,31 +157,9 @@
           </div>
         </section>
 
-        <section id="feedback" class="cta split-section">
-          <div class="container cta-panel">
-            <div>
-              <p class="section-kicker">Gratis personlig struktur feedback</p>
-              <h2>Få en konkret retning.</h2>
-              <p class="section-copy">
-                Du svarer på 5 korte spørgsmål, cirka 1 minut. Jeg gennemgår din nuværende
-                situation personligt og sender dig en kort lydbesked med, hvor jeg ville starte,
-                hvis jeg var dig.
-              </p>
-              <ul class="list" style="margin-top: 22px">
-                <li>Du svarer på 5 korte spørgsmål</li>
-                <li>Jeg gennemgår dine svar personligt</li>
-                <li>Du får en konkret retning, ikke generelle råd</li>
-              </ul>
-            </div>
-
-            <div class="form">
-              <a class="btn btn-tally" href="/feedback">Start spørgeskemaet →</a>
-              <p class="section-copy" style="font-size: 0.9rem; margin-top: 14px">
-                5 hurtige spørgsmål · cirka 1 minut · Gratis · Hjælp til struktur
-              </p>
-            </div>
-          </div>
-        </section>
+        <!-- Indlejret funnel-quiz (samme komponent som /forretning). Klik → næste
+             spørgsmål i samme sektion. Config + script i bunden af body. -->
+        <section id="feedback" class="funnel-embed"></section>
       </main>
 
       <footer>
@@ -288,5 +267,137 @@
         });
       })();
     </script>
+
+    <!-- Indlejret funnel-quiz i #feedback-sektionen (samme komponent som /forretning,
+         men monteret som én sektion via mountSelector). -->
+    <script src="tracking.js"></script>
+    <script>
+      window.FeedbackFormConfig = {
+        source: "forretning-funnel",
+        submitTo: "/api/quiz",
+        redirectTo: "/forretning/tak",
+        homeHref: "/",
+        phoneMode: "dk",
+        mountSelector: "#feedback",
+        text: {
+          brandName: "Niels Wahlberg",
+          brandSubtitle: "Unedited",
+          counterPrefix: "Spørgsmål ",
+          counterMid: " af ",
+          sublineLast: "Sidste spørgsmål",
+          sublineLastTwo: "Sidste to spørgsmål",
+          sublineHalf: "Du er over halvvejs",
+          sublineContact: "Sidste skridt",
+          btnNext: "Videre",
+          btnSend: "Send",
+          btnBack: "← Tilbage",
+          hint: "Tryk Enter for at fortsætte.",
+          hpLabel: "Udfyld ikke dette felt",
+          scaleLow: "Slet ikke klar",
+          scaleHigh: "Meget klar",
+          loading: "Sender …",
+          submitError:
+            "Noget gik galt, og dine svar blev ikke sendt. Tjek din forbindelse og prøv igen.",
+          valChoice: "Vælg en mulighed for at fortsætte.",
+          valTextarea: "Skriv et kort svar.",
+          valScale: "Vælg et tal fra {min} til {max}.",
+        },
+        contact: {
+          heading: "Tak for dine svar.",
+          subtext:
+            "Din plan lander i din indbakke om få minutter. En video fra mig følger inden for 48 timer.",
+          newsletterLabel:
+            "Ja tak, send mig mine resultater og skriv mig op til dit nyhedsbrev.",
+          newsletterRevealsEmail: false,
+          newsletterRequired: true,
+          newsletterMsgRequired: "Sæt flueben, så jeg må sende dig dine resultater.",
+          fields: [
+            {
+              id: "name",
+              type: "text",
+              label: "Dit navn",
+              placeholder: "fx Sarah",
+              autocomplete: "name",
+              msgRequired: "Skriv dit navn.",
+            },
+            {
+              id: "company",
+              type: "text",
+              label: "Virksomhed eller hjemmeside",
+              placeholder: "fx firma.dk",
+              optional: true,
+              autocomplete: "organization",
+              payloadLabel: "Virksomhed / hjemmeside",
+            },
+            {
+              id: "email",
+              type: "email",
+              label: "E-mail",
+              placeholder: "dig@eksempel.dk",
+              autocomplete: "email",
+              msgRequired: "Skriv din e-mail.",
+              msgInvalid: "Skriv en gyldig e-mail.",
+            },
+            {
+              id: "phone",
+              type: "tel",
+              label: "Telefonnummer",
+              placeholder: "",
+              autocomplete: "tel",
+              msgRequired: "Skriv dit telefonnummer.",
+              msgInvalid: "Skriv et gyldigt dansk telefonnummer.",
+            },
+          ],
+        },
+        questions: [
+          {
+            id: "situation",
+            type: "choice",
+            question: "Hvor er du henne lige nu?",
+            options: [
+              { key: "A", label: "Jeg har en forretning og kunder, men ingen finder mig online" },
+              { key: "B", label: "Jeg har en forretning, og alle kunder kommer via anbefalinger" },
+              { key: "C", label: "Jeg kører annoncer og vil have en kanal der koster mindre" },
+              { key: "D", label: "Jeg har noget at sælge og har aldrig postet" },
+              { key: "E", label: "Jeg er ikke gået i gang med noget endnu" },
+            ],
+          },
+          {
+            id: "offer",
+            type: "textarea",
+            question: "Hvad sælger du, og hvem køber det?",
+            placeholder: "Skriv kort …",
+            rows: 2,
+          },
+          {
+            id: "price",
+            type: "choice",
+            question: "Hvad koster dit produkt eller din ydelse?",
+            options: [
+              { key: "A", label: "Under 5.000 kr" },
+              { key: "B", label: "5.000–20.000 kr" },
+              { key: "C", label: "20.000–75.000 kr" },
+              { key: "D", label: "Over 75.000 kr" },
+              { key: "E", label: "Jeg sælger ikke noget endnu" },
+            ],
+          },
+          {
+            id: "blocker",
+            type: "textarea",
+            question: "Hvad har stoppet dig fra at poste?",
+            placeholder: "Skriv kort …",
+            rows: 2,
+          },
+          {
+            id: "readiness",
+            type: "scale",
+            question: "Hvor klar er du til at få det her løst inden for 90 dage?",
+            min: 1,
+            max: 5,
+          },
+        ],
+      };
+    </script>
+    <script src="feedback-form.js"></script>
   </body>
 </html>
