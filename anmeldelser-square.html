@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anmeldelser · 1:1 til download</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --bg-2: #eef1f9;
+        --ink: #0e1424;
+        --ink-soft: #3a4356;
+        --muted: #6b7385;
+        --line: rgba(20, 28, 50, 0.09);
+        --brand: #4f46e5;
+        --brand-2: #7c3aed;
+        --accent: #06b6d4;
+        --gold: #f5b50a;
+        --card-solid: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: #dfe3ee;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        padding: 48px 16px 96px;
+      }
+
+      /* ---- Kontrol-panel (vises ikke i eksport) ---- */
+      .panel {
+        width: 1080px;
+        max-width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        font-size: 15px;
+      }
+      .panel h1 {
+        width: 100%;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 22px;
+        margin-bottom: 4px;
+      }
+      .panel p {
+        width: 100%;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .panel button {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        border: 0;
+        border-radius: 999px;
+        padding: 11px 20px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+      }
+      .panel button.ghost {
+        background: #fff;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        box-shadow: none;
+      }
+
+      /* ---- Selve kvadratet ---- */
+      .square {
+        position: relative;
+        width: 1080px;
+        height: 1080px;
+        max-width: 100%;
+        flex: none;
+        background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        padding: 84px 84px 76px;
+      }
+
+      /* dekorativ brand-glow i hjørnet */
+      .square::before {
+        content: "";
+        position: absolute;
+        top: -240px;
+        right: -220px;
+        width: 620px;
+        height: 620px;
+        background: radial-gradient(
+          circle at center,
+          rgba(124, 58, 237, 0.18),
+          rgba(79, 70, 229, 0) 68%
+        );
+        pointer-events: none;
+      }
+
+      .sq-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+      }
+      .sq-brand {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .sq-mark {
+        width: 62px;
+        height: 62px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 800;
+        font-size: 22px;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        box-shadow: 0 12px 28px rgba(79, 70, 229, 0.34);
+      }
+      .sq-brand-text {
+        display: grid;
+        gap: 2px;
+      }
+      .sq-brand-text b {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 22px;
+        letter-spacing: -0.02em;
+      }
+      .sq-brand-text span {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+      .sq-stars {
+        color: var(--gold);
+        font-size: 40px;
+        line-height: 1;
+        white-space: nowrap;
+        letter-spacing: 2px;
+      }
+      .sq-stars .empty {
+        color: rgba(20, 28, 50, 0.16);
+      }
+
+      .sq-name {
+        margin-top: 54px;
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+      }
+      .sq-name h2 {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 58px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+      .sq-name span {
+        color: var(--brand);
+        font-size: 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .sq-body {
+        margin-top: 44px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        flex: 1;
+      }
+      .sq-answer {
+        display: grid;
+        gap: 10px;
+      }
+      .sq-answer h3 {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--brand);
+      }
+      .sq-answer p {
+        color: var(--ink-soft);
+        font-size: 27px;
+        line-height: 1.5;
+        letter-spacing: -0.01em;
+      }
+
+      .sq-foot {
+        margin-top: 40px;
+        padding-top: 26px;
+        border-top: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .sq-foot .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: inline-block;
+        margin: 0 10px;
+        vertical-align: middle;
+      }
+
+      /* Tættere/mindre tekst når kortet har meget indhold */
+      .square.dense .sq-body {
+        gap: 22px;
+      }
+      .square.dense .sq-answer p {
+        font-size: 24px;
+        line-height: 1.45;
+      }
+      .square.dense .sq-name {
+        margin-top: 40px;
+      }
+      .square.dense .sq-body {
+        margin-top: 34px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="panel">
+      <h1>Anmeldelser · 1:1 (1080×1080)</h1>
+      <p>
+        Højreklik på et kort → “Gem billede som…”, eller brug knappen for at
+        downloade som PNG. Til Instagram-feed, stories og opslag.
+      </p>
+      <button id="dl-all">Download alle 3 som PNG</button>
+      <button class="ghost" id="dl-0">Download Kasper</button>
+      <button class="ghost" id="dl-1">Download Mikkel</button>
+      <button class="ghost" id="dl-2">Download Alfred</button>
+    </div>
+
+    <!-- ============ KASPER ============ -->
+    <div class="square" id="card-0">
+      <div class="sq-head">
+        <div class="sq-brand">
+          <div class="sq-mark">NW</div>
+          <div class="sq-brand-text">
+            <b>Niels Wahlberg</b>
+            <span>Coaching</span>
+          </div>
+        </div>
+        <div class="sq-stars" aria-label="5 ud af 5 stjerner">★★★★★</div>
+      </div>
+
+      <div class="sq-name">
+        <h2>Kasper</h2>
+        <span>Efter forløbet</span>
+      </div>
+
+      <div class="sq-body">
+        <div class="sq-answer">
+          <h3>Vigtigste udbytte</h3>
+          <p>Gode vaner især om aftenen og gode træningsråd.</p>
+        </div>
+        <div class="sq-answer">
+          <h3>Konkrete resultater</h3>
+          <p>
+            Det jeg har opnået er at blive meget stærkere fra hver træning,
+            grundet den rette struktur.
+          </p>
+        </div>
+        <div class="sq-answer">
+          <h3>Om Niels som coach</h3>
+          <p>
+            Niels er en god coach, da han bl.a. ser en som ens ven. Han er god
+            at snakke med, og man kan være ærlig uden han dømmer en. Han finder
+            i stedet en plan for at komme på sporet igen.
+          </p>
+        </div>
+      </div>
+
+      <div class="sq-foot">
+        <span>Rigtig anmeldelse fra afsluttet forløb</span>
+        <span>nielswahlberg.dk</span>
+      </div>
+    </div>
+
+    <!-- ============ MIKKEL ============ -->
+    <div class="square" id="card-1">
+      <div class="sq-head">
+        <div class="sq-brand">
+          <div class="sq-mark">NW</div>
+          <div class="sq-brand-text">
+            <b>Niels Wahlberg</b>
+            <span>Coaching</span>
+          </div>
+        </div>
+        <div class="sq-stars" aria-label="5 ud af 5 stjerner">★★★★★</div>
+      </div>
+
+      <div class="sq-name">
+        <h2>Mikkel</h2>
+        <span>Efter forløbet</span>
+      </div>
+
+      <div class="sq-body">
+        <div class="sq-answer">
+          <h3>Vigtigste udbytte</h3>
+          <p>Hjælp til vejning og træningstips.</p>
+        </div>
+        <div class="sq-answer">
+          <h3>Konkrete resultater</h3>
+          <p>At kunne mærke mit bryst bedre, og har fået styr på nogen sociale ting.</p>
+        </div>
+        <div class="sq-answer">
+          <h3>Om Niels som coach</h3>
+          <p>
+            Måden han gør det på er faktisk det jeg rigtig godt kan lide ved
+            Niels. Han er en ung mand, der har gået gennem det samme som mig, så
+            tror han forstår mig bedre end en anden gør. Niels har god energi og
+            lytter på en.
+          </p>
+        </div>
+      </div>
+
+      <div class="sq-foot">
+        <span>Rigtig anmeldelse fra afsluttet forløb</span>
+        <span>nielswahlberg.dk</span>
+      </div>
+    </div>
+
+    <!-- ============ ALFRED ============ -->
+    <div class="square dense" id="card-2">
+      <div class="sq-head">
+        <div class="sq-brand">
+          <div class="sq-mark">NW</div>
+          <div class="sq-brand-text">
+            <b>Niels Wahlberg</b>
+            <span>Coaching</span>
+          </div>
+        </div>
+        <div class="sq-stars" aria-label="4 ud af 5 stjerner">
+          ★★★★<span class="empty">★</span>
+        </div>
+      </div>
+
+      <div class="sq-name">
+        <h2>Alfred</h2>
+        <span>Efter forløbet</span>
+      </div>
+
+      <div class="sq-body">
+        <div class="sq-answer">
+          <h3>Vigtigste udbytte</h3>
+          <p>
+            Jeg har haft mange gode samtaler med Niels, hvor jeg har vendt og
+            udviklet en række idéer sammen med ham, og det har hjulpet mig til
+            at blive mere afklaret omkring, hvilken retning jeg vil gå i mit liv.
+          </p>
+        </div>
+        <div class="sq-answer">
+          <h3>Konkrete resultater</h3>
+          <p>
+            Jeg havde personligt ikke mange konkrete målsætninger, som for
+            eksempel at træne fem gange om ugen. Til gengæld er jeg gennem
+            sparringen kommet videre og har gjort fremskridt i mit liv.
+          </p>
+        </div>
+        <div class="sq-answer">
+          <h3>Om Niels som coach</h3>
+          <p>
+            Det, jeg godt kan lide ved netop Niels, er, at han er nede på jorden,
+            og at det føles som at tale med en ven, hvilket jeg sætter pris på.
+          </p>
+        </div>
+      </div>
+
+      <div class="sq-foot">
+        <span>Rigtig anmeldelse fra afsluttet forløb</span>
+        <span>nielswahlberg.dk</span>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+    <script>
+      const names = ["kasper", "mikkel", "alfred"];
+
+      async function download(i) {
+        const node = document.getElementById("card-" + i);
+        // render i fuld 1080px opløsning uanset skærmens zoom
+        const dataUrl = await window.htmlToImage.toPng(node, {
+          width: 1080,
+          height: 1080,
+          pixelRatio: 1,
+          canvasWidth: 1080,
+          canvasHeight: 1080,
+        });
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = "anmeldelse-" + names[i] + ".png";
+        a.click();
+      }
+
+      document.getElementById("dl-0").onclick = () => download(0);
+      document.getElementById("dl-1").onclick = () => download(1);
+      document.getElementById("dl-2").onclick = () => download(2);
+      document.getElementById("dl-all").onclick = async () => {
+        for (let i = 0; i < 3; i++) {
+          await download(i);
+          await new Promise((r) => setTimeout(r, 400));
+        }
+      };
+    </script>
+  </body>
+</html>
