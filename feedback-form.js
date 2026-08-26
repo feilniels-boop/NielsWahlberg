@@ -467,6 +467,14 @@
       lbl.textContent = f.label;
       wrap.appendChild(lbl);
 
+      // Valgfri note OVER inputtet (fx tryghed ved at oplyse telefonnummer).
+      if (f.note) {
+        var fn = document.createElement("p");
+        fn.className = "fb-fnote";
+        fn.textContent = f.note;
+        wrap.appendChild(fn);
+      }
+
       var input = document.createElement("input");
       input.id = "fb" + cap(f.id);
       input.type = f.type === "number" ? "text" : f.type; // number som text -> pænere mobiltastatur
