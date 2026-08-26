@@ -188,20 +188,35 @@ function serveStatic(req, res) {
     urlPath = urlPath.slice(0, -1);
   }
 
-  let requestedPath;
+  // Kandidater for en pæn URL uden filendelse:
+  //   /feedback  → feedback.html
+  //   /klinik    → klinik.html  ELLER  klinik/index.html (mappe-index)
+  let candidates;
   if (urlPath === "/") {
-    requestedPath = "/index.html";
+    candidates = ["/index.html"];
   } else if (!path.extname(urlPath)) {
-    // Pæn URL uden filendelse → prøv tilsvarende .html
-    requestedPath = urlPath + ".html";
+    candidates = [urlPath + ".html", urlPath + "/index.html"];
   } else {
-    requestedPath = urlPath;
+    candidates = [urlPath];
   }
 
-  const filePath = path.normalize(path.join(root, requestedPath));
-  if (!filePath.startsWith(root)) {
-    res.writeHead(403);
-    res.end("Forbidden");
+  let filePath = null;
+  for (let i = 0; i < candidates.length; i++) {
+    const fp = path.normalize(path.join(root, candidates[i]));
+    if (!fp.startsWith(root)) continue; // path traversal-værn
+    try {
+      if (fs.statSync(fp).isFile()) {
+        filePath = fp;
+        break;
+      }
+    } catch (e) {
+      /* findes ikke — prøv næste kandidat */
+    }
+  }
+
+  if (!filePath) {
+    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end("Not found");
     return;
   }
 

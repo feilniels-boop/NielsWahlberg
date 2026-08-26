@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Niels Wahlberg</title>
+<meta name="description" content="Niels Wahlberg bygger behandlingssider til danske tandklinikker: én side, én behandling, én tid der kan bookes. Fast pris, leveret på en uge.">
+
+<link rel="canonical" href="https://nielswahlberg.dk/klinik/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nielswahlberg.dk/klinik/">
+<meta property="og:title" content="Niels Wahlberg">
+<meta property="og:description" content="Behandlingssider til danske tandklinikker. Den side patienten lander på, når de klikker på jeres annonce. Fast pris, leveret på en uge.">
+<meta property="og:locale" content="da_DK">
+<meta property="og:site_name" content="Niels Wahlberg">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Niels Wahlberg">
+<meta name="twitter:description" content="Behandlingssider til danske tandklinikker. Den side patienten lander på, når de klikker på jeres annonce. Fast pris, leveret på en uge.">
+
+<!-- Favicon: olivenfarvet kvadrat som inline SVG -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%234A5334'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;800&family=Lora:ital,wght@0,400;1,400&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:   #F2F1EB;   /* varm off-white, ikke cremet */
+  --surface: #FFFFFF;
+  --ink:     #16150F;
+  --muted:   #55564B;
+  --faint:   #85877A;
+  --line:    #DCDACF;
+  --olive:   #4A5334;   /* eneste accentfarve */
+  --olive-s: #E7E9DC;
+  --olive-g: #6E7A48;   /* lysere oliven til gradienter */
+
+  --sans: "Libre Franklin", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --serif: "Lora", Georgia, "Times New Roman", serif;
+  --mono: "Azeret Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:   #131309;
+    --surface: #1B1B12;
+    --ink:     #EDEDE3;
+    --muted:   #A3A597;
+    --faint:   #7E8073;
+    --line:    #2C2C20;
+    --olive:   #A9BC7C;
+    --olive-s: #232616;
+    --olive-g: #8A9C5A;
+  }
+}
+
+*{ box-sizing: border-box; }
+
+html{ -webkit-text-size-adjust: 100%; }
+
+body{
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.62;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* --- Atmosfære: drivende olivenfarvede orbs --- */
+.bg{
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.orb{
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: .55;
+  will-change: transform;
+}
+.orb-1{
+  width: 46vw; height: 46vw;
+  top: -12vw; left: -10vw;
+  background: radial-gradient(circle at 30% 30%, var(--olive-g), transparent 68%);
+  animation: drift1 26s ease-in-out infinite;
+}
+.orb-2{
+  width: 40vw; height: 40vw;
+  bottom: -14vw; right: -8vw;
+  background: radial-gradient(circle at 60% 40%, var(--olive), transparent 66%);
+  opacity: .4;
+  animation: drift2 32s ease-in-out infinite;
+}
+.orb-3{
+  width: 26vw; height: 26vw;
+  top: 42%; left: 55%;
+  background: radial-gradient(circle at 50% 50%, var(--olive-g), transparent 70%);
+  opacity: .28;
+  animation: drift3 38s ease-in-out infinite;
+}
+@keyframes drift1{
+  0%,100%{ transform: translate(0,0) scale(1); }
+  50%{ transform: translate(8vw, 6vw) scale(1.12); }
+}
+@keyframes drift2{
+  0%,100%{ transform: translate(0,0) scale(1); }
+  50%{ transform: translate(-7vw, -5vw) scale(1.08); }
+}
+@keyframes drift3{
+  0%,100%{ transform: translate(0,0) scale(1); }
+  50%{ transform: translate(-6vw, 4vw) scale(.9); }
+}
+
+/* --- Grain-overlay --- */
+.grain{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark){
+  .grain{ mix-blend-mode: screen; opacity: .045; }
+}
+
+.wrap{
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 8vw, 4.75rem) clamp(1.25rem, 5vw, 1.75rem) clamp(3rem, 9vw, 5rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.75rem, 7vw, 3.75rem);
+}
+
+/* --- Header --- */
+header{
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.status{
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  width: max-content;
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--olive);
+  padding: .38rem .7rem;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  backdrop-filter: blur(6px);
+}
+.status .dot{
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--olive);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--olive) 70%, transparent);
+  animation: pulse 2.4s ease-out infinite;
+}
+@keyframes pulse{
+  0%{ box-shadow: 0 0 0 0 color-mix(in srgb, var(--olive) 55%, transparent); }
+  70%{ box-shadow: 0 0 0 9px color-mix(in srgb, var(--olive) 0%, transparent); }
+  100%{ box-shadow: 0 0 0 0 color-mix(in srgb, var(--olive) 0%, transparent); }
+}
+
+.namerow{
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 4vw, 1.5rem);
+}
+.namerow h1{ flex: 1 1 auto; min-width: 0; }
+
+.portrait{
+  flex: 0 0 auto;
+  display: block;
+  width: clamp(110px, 30vw, 150px);
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background-image: url("niels-portrait.png");
+  background-size: 300%;
+  background-position: 52% 18%;
+  background-repeat: no-repeat;
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 34px -18px color-mix(in srgb, var(--olive) 60%, transparent);
+}
+
+.overline{
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: .78rem;
+  letter-spacing: .01em;
+  color: var(--faint);
+  margin: 0;
+}
+
+h1{
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 8vw, 3.6rem);
+  line-height: .98;
+  letter-spacing: -.038em;
+  margin: 0;
+  color: var(--ink);
+}
+h1 .line{ display: block; overflow: hidden; }
+h1 .line > span{ display: block; }
+
+.pitch{
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 3.6vw, 1.45rem);
+  line-height: 1.35;
+  margin: .35rem 0 0;
+  max-width: 34ch;
+}
+
+.pitch em{
+  font-style: italic;
+  color: var(--olive);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--olive) 35%, transparent);
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+}
+
+.underline{
+  color: var(--muted);
+  margin: 0;
+  max-width: 46ch;
+}
+
+.rule{
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 0;
+}
+
+/* --- Løbende keyword-bånd (full-bleed) --- */
+.marquee{
+  position: relative;
+  margin-left: calc(50% - 50vw);
+  width: 100vw;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: .85rem 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.marquee-track{
+  display: inline-flex;
+  gap: 2.5rem;
+  white-space: nowrap;
+  will-change: transform;
+  animation: scroll 30s linear infinite;
+}
+.marquee:hover .marquee-track{ animation-play-state: paused; }
+.marquee span{
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.marquee span.o{ color: var(--olive); }
+.marquee .star{ color: var(--faint); font-weight: 400; }
+@keyframes scroll{
+  from{ transform: translateX(0); }
+  to{ transform: translateX(-50%); }
+}
+
+/* --- Stats-bånd --- */
+.stats{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.stat{
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  padding: 1.35rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+.stat-num{
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 6vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: var(--olive);
+  font-variant-numeric: tabular-nums;
+}
+.stat-num .u{ font-size: .5em; color: var(--muted); font-weight: 600; margin-left: .12em; }
+.stat-cap{
+  font-family: var(--mono);
+  font-size: .72rem;
+  line-height: 1.4;
+  letter-spacing: .02em;
+  color: var(--muted);
+}
+
+/* --- Sektioner --- */
+section{
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+}
+
+.label{
+  display: inline-flex;
+  align-items: baseline;
+  gap: .55rem;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: .74rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--olive);
+  margin: 0;
+}
+.label::before{
+  content: attr(data-i);
+  font-size: .68rem;
+  letter-spacing: .1em;
+  color: var(--faint);
+}
+
+section p{ margin: 0; }
+
+.muted{ color: var(--muted); }
+
+/* --- Demo-kort --- */
+.card{
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 1.5rem 1.6rem 1.6rem;
+  overflow: hidden;
+  transition: border-color .18s ease, transform .18s ease, box-shadow .3s ease;
+}
+.card::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 0%),
+              color-mix(in srgb, var(--olive) 12%, transparent), transparent 60%);
+  opacity: 0;
+  transition: opacity .3s ease;
+  pointer-events: none;
+}
+.card:hover{
+  border-color: var(--olive);
+  box-shadow: 0 14px 40px -22px color-mix(in srgb, var(--olive) 60%, transparent);
+}
+.card:hover::before{ opacity: 1; }
+.card:active{ transform: translateY(1px); }
+
+.card-label{
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: .76rem;
+  letter-spacing: .04em;
+  color: var(--olive);
+  margin: 0 0 .55rem;
+}
+
+.card-title{
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.32rem;
+  line-height: 1.2;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  margin: 0 0 .5rem;
+}
+
+.card-desc{
+  color: var(--muted);
+  font-size: .98rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.card-arrow{
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-family: var(--mono);
+  font-size: .82rem;
+  letter-spacing: .04em;
+  color: var(--olive);
+  margin-top: 1rem;
+}
+.card-arrow .a{ transition: transform .22s ease; }
+.card:hover .card-arrow .a{ transform: translateX(5px); }
+
+.card-note{
+  color: var(--faint);
+  font-size: .92rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* --- Prisliste --- */
+.prices{
+  display: flex;
+  flex-direction: column;
+}
+
+.price-row{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 1.5rem;
+  align-items: start;
+  padding: 1.2rem 1rem 1.2rem;
+  margin: 0 -1rem;
+  border-top: 1px solid var(--line);
+  border-radius: 4px;
+  transition: background .2s ease;
+}
+.price-row:first-child{ border-top: 0; }
+.price-row:hover{ background: color-mix(in srgb, var(--olive-s) 60%, transparent); }
+
+.price-title{
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.06rem;
+  letter-spacing: -.006em;
+  color: var(--ink);
+  margin: 0 0 .35rem;
+}
+
+.price-desc{
+  color: var(--muted);
+  font-size: .95rem;
+  line-height: 1.52;
+  margin: 0;
+  max-width: 42ch;
+}
+
+.price-amount{
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 1.02rem;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  color: var(--ink);
+  text-align: right;
+  white-space: nowrap;
+  line-height: 1.5;
+  padding-top: .05rem;
+}
+.price-amount .free{
+  color: var(--olive);
+  font-weight: 500;
+}
+
+.callout{
+  position: relative;
+  background: var(--olive-s);
+  border-left: 3px solid var(--olive);
+  border-radius: 0 4px 4px 0;
+  padding: 1.15rem 1.3rem;
+  margin-top: .75rem;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: -.004em;
+  color: var(--ink);
+  overflow: hidden;
+}
+
+/* --- Kontakt --- */
+.contact-links{
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+
+.contact-links a{
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: clamp(1.25rem, 5vw, 1.6rem);
+  letter-spacing: -.01em;
+  color: var(--ink);
+  text-decoration: none;
+  width: max-content;
+  max-width: 100%;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: .12rem;
+  transition: color .18s ease, border-color .18s ease;
+  word-break: break-word;
+}
+.contact-links a .ico{
+  color: var(--olive);
+  font-size: .7em;
+  transition: transform .2s ease;
+}
+.contact-links a:hover{
+  color: var(--olive);
+  border-color: var(--olive);
+}
+.contact-links a:hover .ico{ transform: translateX(3px); }
+
+.contact-note{
+  color: var(--muted);
+  margin: .35rem 0 0;
+  max-width: 46ch;
+}
+
+/* --- Footer --- */
+footer{
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+  font-family: var(--mono);
+  font-size: .8rem;
+  line-height: 1.7;
+  color: var(--faint);
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+
+/* --- Lead-formular: book gratis gennemgang --- */
+.lf-intro{
+  color: var(--muted);
+  margin: 0;
+  max-width: 48ch;
+}
+.lf{
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 1.5rem 1.6rem 1.6rem;
+  overflow: hidden;
+}
+.lf-top{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+.lf-count{
+  font-family: var(--mono);
+  font-size: .74rem;
+  letter-spacing: .14em;
+  color: var(--faint);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.lf-bar{
+  flex: 1;
+  height: 3px;
+  background: var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.lf-bar-fill{
+  display: block;
+  height: 100%;
+  width: 25%;
+  background: var(--olive);
+  border-radius: 999px;
+  transition: width .45s cubic-bezier(.2,.7,.2,1);
+}
+.lf-step{ animation: lfIn .35s ease both; }
+@keyframes lfIn{ from{ opacity:0; transform: translateY(10px); } to{ opacity:1; transform:none; } }
+.lf-q{
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: clamp(1.3rem, 4vw, 1.7rem);
+  line-height: 1.14;
+  letter-spacing: -.025em;
+  margin: 0 0 1.15rem;
+  color: var(--ink);
+}
+.lf-opts{ display: flex; flex-direction: column; gap: .55rem; }
+.lf-opt{
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  width: 100%;
+  text-align: left;
+  padding: .95rem 1.05rem;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, transform .1s ease;
+}
+.lf-opt:hover{ border-color: var(--olive); background: color-mix(in srgb, var(--olive-s) 55%, transparent); }
+.lf-opt:active{ transform: translateY(1px); }
+.lf-opt.sel{ border-color: var(--olive); background: var(--olive); color: var(--paper); }
+.lf-opt .k{
+  flex: 0 0 auto;
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  font-family: var(--mono);
+  font-size: .72rem;
+  color: var(--olive);
+}
+.lf-opt.sel .k{ border-color: color-mix(in srgb, var(--paper) 55%, transparent); color: var(--paper); }
+
+.lf-fields{ display: flex; flex-direction: column; gap: .95rem; }
+.lf-field label{
+  display: block;
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 0 .38rem;
+}
+.lf-field input{
+  width: 100%;
+  padding: .8rem .9rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.02rem;
+}
+.lf-field input::placeholder{ color: var(--faint); }
+.lf-field input:focus{
+  outline: none;
+  border-color: var(--olive);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--olive) 18%, transparent);
+}
+.lf-field .fe{ color: #C0392B; font-family: var(--mono); font-size: .72rem; margin: .35rem 0 0; min-height: 1em; }
+@media (prefers-color-scheme: dark){ .lf-field .fe{ color: #E88; } }
+
+.lf-err{
+  color: #C0392B;
+  font-family: var(--mono);
+  font-size: .74rem;
+  margin: .8rem 0 0;
+  min-height: 1em;
+}
+@media (prefers-color-scheme: dark){ .lf-err{ color: #E88; } }
+
+.lf-nav{ display: flex; gap: .7rem; margin-top: 1.5rem; }
+.lf-btn{
+  font-family: var(--mono);
+  font-size: .8rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: .9rem 1.3rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  transition: border-color .16s ease, background .16s ease, color .16s ease, transform .1s ease;
+}
+.lf-btn:active{ transform: translateY(1px); }
+.lf-primary{ flex: 1; background: var(--olive); border-color: var(--olive); color: var(--paper); font-weight: 500; }
+.lf-primary:hover{ background: color-mix(in srgb, var(--olive) 84%, #000); }
+.lf-ghost{ background: transparent; color: var(--muted); }
+.lf-ghost:hover{ border-color: var(--olive); color: var(--olive); }
+.lf-btn[hidden]{ display: none; }
+
+.lf-done{ text-align: center; padding: .6rem 0 .4rem; animation: lfIn .4s ease both; }
+.lf-check{
+  width: 54px; height: 54px;
+  margin: 0 auto 1.1rem;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--olive-s);
+  border: 1px solid var(--olive);
+  color: var(--olive);
+  font-size: 1.5rem;
+}
+.lf-done h3{
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 1.45rem;
+  letter-spacing: -.02em;
+  margin: 0 0 .55rem;
+  color: var(--ink);
+}
+.lf-done p{ color: var(--muted); margin: 0 auto 1.15rem; max-width: 36ch; }
+.lf-mail{
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: .8rem;
+  color: var(--olive);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: .1rem;
+  transition: border-color .16s ease;
+}
+.lf-mail:hover{ border-color: var(--olive); }
+
+.lf-hp{ position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* --- Fokus --- */
+a:focus-visible,
+.lf-opt:focus-visible,
+.lf-btn:focus-visible,
+.lf-field input:focus-visible,
+.card:focus-visible{
+  outline: 2px solid var(--olive);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* --- Scroll-reveal --- */
+.reveal{
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.in{ opacity: 1; transform: none; }
+
+/* Hero-load: linjer glider op */
+.load .line > span{
+  transform: translateY(105%);
+  animation: rise .9s cubic-bezier(.2,.8,.2,1) forwards;
+}
+.load .line:nth-child(2) > span{ animation-delay: .09s; }
+@keyframes rise{ to{ transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; }
+  .reveal{ opacity: 1; transform: none; }
+  .orb{ display: none; }
+  .load .line > span{ transform: none; }
+  .marquee-track{ transform: none; }
+}
+</style>
+</head>
+
+<body>
+<div class="bg" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <header>
+    <span class="status"><span class="dot"></span>Ledig for nye klinikker</span>
+    <p class="overline">Aarhus &middot; behandlingssider til tandklinikker</p>
+    <div class="namerow">
+      <h1 class="load"><span class="line"><span>Niels</span></span><span class="line"><span>Wahlberg</span></span></h1>
+      <div class="portrait" role="img" aria-label="Portræt af Niels Wahlberg"></div>
+    </div>
+    <p class="pitch reveal">Jeg bygger den side patienten lander på, <em>når de klikker på jeres annonce.</em></p>
+    <p class="underline reveal">Én side, én behandling, én tid der kan bookes. Jeg rører ikke resten af jeres hjemmeside, og jeg leverer på en uge.</p>
+  </header>
+
+  <div class="marquee reveal" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Én side</span><span class="star">&#10039;</span><span class="o">Én behandling</span><span class="star">&#10039;</span><span>Én tid der bookes</span><span class="star">&#10039;</span><span class="o">Fast pris</span><span class="star">&#10039;</span><span>Leveret på en uge</span><span class="star">&#10039;</span>
+      <span>Én side</span><span class="star">&#10039;</span><span class="o">Én behandling</span><span class="star">&#10039;</span><span>Én tid der bookes</span><span class="star">&#10039;</span><span class="o">Fast pris</span><span class="star">&#10039;</span><span>Leveret på en uge</span><span class="star">&#10039;</span>
+    </div>
+  </div>
+
+  <div class="stats reveal">
+    <div class="stat">
+      <span class="stat-num" data-count="1">1<span class="u">uge</span></span>
+      <span class="stat-cap">fra ja til færdig side</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num" data-count="5">5<span class="u">spm.</span></span>
+      <span class="stat-cap">patientens screening</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num" data-count="0">0<span class="u">kr.</span></span>
+      <span class="stat-cap">opstart &amp; binding</span>
+    </div>
+  </div>
+
+  <section class="reveal">
+    <p class="label" data-i="01">Problemet</p>
+    <p>De fleste klinikker sender annoncetrafik ind i et login til journalsystemet eller en formular der lover et opkald. Patienten har truffet beslutningen, og så skal hun vente på en telefon der ikke bliver taget.</p>
+    <p>Jeg laver trinnet imellem: en kort test patienten selv tager, en pris hun kan se, og en tid hun kan vælge uden at ringe.</p>
+  </section>
+
+  <section class="reveal">
+    <p class="label" data-i="02">Book gratis gennemgang</p>
+    <p class="lf-intro">Fire hurtige spørgsmål, så ved jeg nok til at kigge på jeres side, før vi taler sammen. Det tager under et minut &mdash; og det er cirka sådan her en af mine behandlingssider føles at udfylde for jeres patienter.</p>
+    <div class="lf" id="leadForm">
+      <div class="lf-hp" aria-hidden="true"><label>Lad dette felt være tomt<input type="text" id="lfHp" tabindex="-1" autocomplete="off" data-lpignore="true"></label></div>
+      <div class="lf-top">
+        <span class="lf-count" id="lfCount">01 / 04</span>
+        <span class="lf-bar" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1"><span class="lf-bar-fill" id="lfBar"></span></span>
+      </div>
+      <div id="lfMount" aria-live="polite"></div>
+      <p class="lf-err" id="lfErr" role="alert"></p>
+      <div class="lf-nav">
+        <button type="button" class="lf-btn lf-ghost" id="lfBack" hidden>&larr; Tilbage</button>
+        <button type="button" class="lf-btn lf-primary" id="lfNext" hidden>Send</button>
+      </div>
+    </div>
+    <noscript><p class="card-note">Slå JavaScript til for at bruge formularen &mdash; eller skriv direkte til <a href="mailto:feilniels@gmail.com">feilniels@gmail.com</a>.</p></noscript>
+  </section>
+
+  <section class="reveal">
+    <p class="label" data-i="03">Hvad det koster</p>
+    <div class="prices">
+
+      <div class="price-row">
+        <div class="price-main">
+          <p class="price-title">Gennemgang af jeres nuværende side</p>
+          <p class="price-desc">Hvad kan I måle i dag, hvor lækker patientflowet, og hvad koster jeres tomme stoletid. Skriftligt plus en halv times gennemgang.</p>
+        </div>
+        <div class="price-amount"><span class="free">Gratis</span></div>
+      </div>
+
+      <div class="price-row">
+        <div class="price-main">
+          <p class="price-title">Én behandlingsside</p>
+          <p class="price-desc">Screening, priser, finansiering, før og efter, og en booking der kan måles. Leveret på en uge.</p>
+        </div>
+        <div class="price-amount">15.000&nbsp;kr.</div>
+      </div>
+
+      <div class="price-row">
+        <div class="price-main">
+          <p class="price-title">Drift</p>
+          <p class="price-desc">Annoncer, måling og løbende justering. Først når siden har vist tal. I betaler mediebudgettet direkte til Meta fra jeres egen konto.</p>
+        </div>
+        <div class="price-amount">fra 6.000&nbsp;kr./md.</div>
+      </div>
+
+    </div>
+    <p class="callout">Fast pris, og I betaler når siden står færdig og I har set den. Ingen binding, ingen opstartsgebyr, ingen betaling pr. patient.</p>
+  </section>
+
+  <section class="reveal">
+    <p class="label" data-i="04">Se en færdig side</p>
+    <a class="card" href="tandregulering.html" target="_blank" rel="noopener">
+      <p class="card-label">Demo &middot; tandregulering</p>
+      <p class="card-title">Find ud af om det er noget for dig</p>
+      <p class="card-desc">Screening på fem spørgsmål, finansieringsberegner, før og efter, og en booking. Alt virker, prøv det på telefonen.</p>
+      <span class="card-arrow">Åbn demoen <span class="a">&rarr;</span></span>
+    </a>
+    <p class="card-note">Den er bygget inden for reglerne for markedsføring af sundhedsydelser: ingen rabatter, ingen nedtælling, ingen video på sociale medier.</p>
+  </section>
+
+  <section class="reveal">
+    <p class="label" data-i="05">Ring eller skriv</p>
+    <div class="contact-links">
+      <a href="tel:+4560880618"><span class="ico">&#9742;</span>+45 60 88 06 18</a>
+      <a href="mailto:feilniels@gmail.com"><span class="ico">&rarr;</span>feilniels@gmail.com</a>
+    </div>
+    <p class="contact-note">Jeg sidder i Frederiksgade i Aarhus C og arbejder i hele landet. Møder foregår over video, medmindre I hellere vil have mig forbi.</p>
+  </section>
+
+  <footer class="reveal">
+    <span>Niels Wahlberg</span>
+    <span>CVR 46655443</span>
+    <span>Frederiksgade 71, 1. sal &middot; 8000 Aarhus C</span>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Scroll-reveal */
+  var items = document.querySelectorAll('.reveal');
+  if (reduce || !('IntersectionObserver' in window)){
+    items.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .12 });
+    items.forEach(function(el){ io.observe(el); });
+  }
+
+  /* Tal-optælling når stats-båndet ses */
+  function countUp(el){
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    var unit = el.querySelector('.u');
+    var suffix = unit ? unit.outerHTML : '';
+    if (reduce || target === 0){ el.innerHTML = target + suffix; return; }
+    var start = null, dur = 900;
+    function step(ts){
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var val = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      el.innerHTML = val + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var nums = document.querySelectorAll('.stat-num[data-count]');
+  if (reduce || !('IntersectionObserver' in window)){
+    nums.forEach(countUp);
+  } else {
+    var io2 = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ countUp(e.target); io2.unobserve(e.target); }
+      });
+    }, { threshold: .6 });
+    nums.forEach(function(el){ io2.observe(el); });
+  }
+
+  /* Demo-kort: lys følger musen */
+  var card = document.querySelector('.card');
+  if (card && !reduce){
+    card.addEventListener('pointermove', function(e){
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+  }
+})();
+</script>
+
+<script>
+/* ============================================================
+   Lead-formular: "Book gratis gennemgang".
+   Multi-step i sidens eget design. Ingen backend, ingen tredjepart:
+   ved indsendelse bygges en forudfyldt mailto til Niels, som klinikken
+   selv trykker send på. Honeypot mod bots. Respekterer reduced-motion
+   via CSS. Alt inline — ingen netværkskald.
+   ============================================================ */
+(function(){
+  var root = document.getElementById('leadForm');
+  if (!root) return;
+
+  var mount   = document.getElementById('lfMount');
+  var countEl = document.getElementById('lfCount');
+  var barEl   = document.getElementById('lfBar');
+  var backBtn = document.getElementById('lfBack');
+  var nextBtn = document.getElementById('lfNext');
+  var errEl   = document.getElementById('lfErr');
+  var hp      = document.getElementById('lfHp');
+  var bar     = barEl.parentNode;
+
+  var MAILTO = 'feilniels@gmail.com';
+
+  var STEPS = [
+    { id:'behandling', q:'Hvilken behandling vil I fylde flere stole med?',
+      label:'Behandling', options:[
+      'Tandregulering / Invisalign',
+      'Implantater',
+      'Kosmetisk (facader, blegning)',
+      'Alment / noget andet'
+    ]},
+    { id:'kanal', q:'Hvordan får I nye patienter i dag?',
+      label:'Får patienter i dag', options:[
+      'Google-søgninger',
+      'Meta-annoncer (Facebook / Instagram)',
+      'Anbefalinger fra patienter',
+      'Ikke noget systematisk'
+    ]},
+    { id:'landing', q:'Når nogen klikker på en annonce i dag, hvor lander de?',
+      label:'Annonceklik lander', options:[
+      'På vores forside',
+      'I en kontaktformular',
+      'De skal ringe til os',
+      'Ved det ærligt talt ikke'
+    ]},
+    { id:'contact', q:'Hvor sender jeg gennemgangen hen?', contact:true, fields:[
+      { id:'klinik',  label:'Klinikkens navn',      ph:'Fx Tandlægerne på Torvet' },
+      { id:'navn',    label:'Dit navn',             ph:'Fx Mette' },
+      { id:'kontakt', label:'Telefon eller e-mail', ph:'Så jeg kan sende den til dig' }
+    ]}
+  ];
+  var TOTAL = STEPS.length;
+  var idx = 0;
+  var ans = {};
+  var KEYS = ['A','B','C','D','E','F'];
+  var lastMailto = '';
+
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function updateTop(){
+    countEl.textContent = pad(idx + 1) + ' / ' + pad(TOTAL);
+    barEl.style.width = Math.round((idx + 1) / TOTAL * 100) + '%';
+    bar.setAttribute('aria-valuenow', String(idx + 1));
+    backBtn.hidden = idx === 0;
+  }
+
+  function renderChoice(step){
+    var box = document.createElement('div');
+    box.className = 'lf-opts';
+    step.options.forEach(function(opt, i){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'lf-opt' + (ans[step.id] === opt ? ' sel' : '');
+      var k = document.createElement('span'); k.className = 'k'; k.textContent = KEYS[i];
+      var t = document.createElement('span'); t.textContent = opt;
+      b.appendChild(k); b.appendChild(t);
+      b.addEventListener('click', function(){
+        Array.prototype.forEach.call(box.children, function(c){ c.classList.remove('sel'); });
+        b.classList.add('sel');
+        ans[step.id] = opt;
+        errEl.textContent = '';
+        setTimeout(function(){ go(idx + 1); }, 240);
+      });
+      box.appendChild(b);
+    });
+    return box;
+  }
+
+  function renderContact(step){
+    var box = document.createElement('div');
+    box.className = 'lf-fields';
+    step.fields.forEach(function(f){
+      var w = document.createElement('div'); w.className = 'lf-field';
+      var lbl = document.createElement('label'); lbl.setAttribute('for', 'lf_' + f.id); lbl.textContent = f.label;
+      var inp = document.createElement('input');
+      inp.id = 'lf_' + f.id; inp.type = 'text'; inp.placeholder = f.ph || '';
+      inp.autocomplete = f.id === 'navn' ? 'name' : (f.id === 'klinik' ? 'organization' : 'on');
+      if (ans[f.id]) inp.value = ans[f.id];
+      inp.addEventListener('input', function(){ ans[f.id] = inp.value; var e = w.querySelector('.fe'); if (e) e.textContent = ''; });
+      inp.addEventListener('keydown', function(e){
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        var inputs = Array.prototype.slice.call(box.querySelectorAll('input'));
+        var pos = inputs.indexOf(inp);
+        if (pos > -1 && pos < inputs.length - 1) inputs[pos + 1].focus();
+        else submit();
+      });
+      var fe = document.createElement('p'); fe.className = 'fe';
+      w.appendChild(lbl); w.appendChild(inp); w.appendChild(fe);
+      box.appendChild(w);
+    });
+    return box;
+  }
+
+  function render(){
+    updateTop();
+    errEl.textContent = '';
+    var step = STEPS[idx];
+    mount.innerHTML = '';
+    var wrap = document.createElement('div'); wrap.className = 'lf-step';
+    var h = document.createElement('h3'); h.className = 'lf-q'; h.textContent = step.q;
+    wrap.appendChild(h);
+    wrap.appendChild(step.contact ? renderContact(step) : renderChoice(step));
+    mount.appendChild(wrap);
+    nextBtn.hidden = !step.contact;         // valg auto-videre; kun kontakt har en knap
+    nextBtn.textContent = 'Lav min mail til Niels';
+    if (step.contact){
+      setTimeout(function(){ var f = mount.querySelector('input'); if (f) f.focus(); }, 40);
+    }
+  }
+
+  function go(n){
+    if (n >= TOTAL){ submit(); return; }
+    idx = Math.max(0, Math.min(TOTAL - 1, n));
+    render();
+  }
+
+  function submit(){
+    var step = STEPS[TOTAL - 1];
+    var firstBad = null;
+    step.fields.forEach(function(f){
+      var v = String(ans[f.id] || '').trim();
+      var w = mount.querySelectorAll('.lf-field')[step.fields.indexOf(f)];
+      var fe = w && w.querySelector('.fe');
+      if (!v){ if (fe) fe.textContent = 'Udfyld dette felt.'; if (!firstBad) firstBad = 'lf_' + f.id; }
+    });
+    if (firstBad){ var el = document.getElementById(firstBad); if (el) el.focus(); return; }
+
+    if (hp && hp.value){ done(); return; } // bot: lad som om det lykkedes, byg ingen mail
+
+    var lines = [
+      'Hej Niels,',
+      '',
+      'Vi vil gerne have en gratis gennemgang af vores side.',
+      '',
+      'Klinik: ' + ans.klinik,
+      'Kontakt: ' + ans.navn + ' – ' + ans.kontakt,
+      ''
+    ];
+    STEPS.forEach(function(s){ if (!s.contact) lines.push(s.label + ': ' + (ans[s.id] || '—')); });
+    lines.push('', 'Mvh ' + ans.navn);
+
+    var subject = 'Gratis gennemgang – ' + ans.klinik;
+    lastMailto = 'mailto:' + MAILTO +
+      '?subject=' + encodeURIComponent(subject) +
+      '&body=' + encodeURIComponent(lines.join('\r\n'));
+    window.location.href = lastMailto;
+    done();
+  }
+
+  function done(){
+    updateTop();
+    barEl.style.width = '100%';
+    nextBtn.hidden = true;
+    backBtn.hidden = true;
+    errEl.textContent = '';
+    mount.innerHTML =
+      '<div class="lf-done">' +
+        '<div class="lf-check" aria-hidden="true">&#10003;</div>' +
+        '<h3>Din mail er klar</h3>' +
+        '<p>Jeg har åbnet en færdigskrevet mail i dit mailprogram med dine svar. Tryk send, så vender jeg tilbage med gennemgangen.</p>' +
+        (lastMailto ? '<a class="lf-mail" href="' + lastMailto + '">Åbnede den ikke? Klik her</a>' : '') +
+      '</div>';
+  }
+
+  nextBtn.addEventListener('click', function(){ if (STEPS[idx].contact) submit(); else go(idx + 1); });
+  backBtn.addEventListener('click', function(){ go(idx - 1); });
+
+  render();
+})();
+</script>
+
+<!--
+  Sporingsscript placeres her, når det bliver aktuelt.
+  AKTIVÉR IKKE før der er cookiesamtykke på plads (fx et samtykkebanner
+  der først loader scriptet efter accept). Indtil da holdes head fri for
+  tredjeparts-tags. Scriptet ovenfor er inline og udelukkende visuelt
+  (ingen netværkskald, ingen cookies, ingen tredjepart).
+-->
+</body>
+</html>

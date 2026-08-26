@@ -1,0 +1,912 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Tandregulering | [Klinikkens navn]</title>
+<meta name="description" content="Find ud af om skinnebehandling er noget for dig. Fem spørgsmål, to minutter, gratis og uforpligtende. Book en forundersøgelse hos [Klinikkens navn].">
+
+<!-- Sådan ser linket ud når det deles. Ret domænet og teksten. -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="da_DK">
+<meta property="og:url" content="https://klinikkens-domaene.dk/tandregulering">
+<meta property="og:title" content="Find ud af om tandregulering er noget for dig">
+<meta property="og:description" content="Fem spørgsmål, to minutter, gratis. Du får også et nej, hvis det er svaret.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://klinikkens-domaene.dk/tandregulering">
+
+<!-- Favicon. Skift farven til klinikkens. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232F5D50'/%3E%3Cpath d='M10 9c-2 0-3 1.6-3 4 0 4 2 10 3.6 10 1 0 1.4-1.6 2.2-3.4.6-1.4 1.4-2 3.2-2s2.6.6 3.2 2c.8 1.8 1.2 3.4 2.2 3.4C23 23 25 17 25 13c0-2.4-1-4-3-4-1.6 0-3 .9-6 .9S11.6 9 10 9z' fill='%23fff'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Public+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+
+<!--
+  SPORING
+  Læg først et script her når der er cookiesamtykke på plads.
+  Send konverteringer server-side og hold behandlingsnavnet ude af
+  URL og payload. En side som /behandlinger/tandregulering afslører
+  en helbredsinteresse, og det er særlig kategori efter GDPR art. 9.
+-->
+
+</head>
+<body>
+<style>
+:root {
+  /* ============================================================
+     KLINIKKENS FARVER — skift disse fire, resten følger med
+     --accent   hovedfarve, knapper og fremhævninger
+     --soft     lys udgave af hovedfarven
+     --paper    sidens baggrund
+     --sand     baggrund på hver anden sektion
+     ============================================================ */
+  --paper:   #F7F6F3;
+  --sand:    #EDE8DF;
+  --surface: #FFFFFF;
+  --ink:     #1C2320;
+  --muted:   #5E6B64;
+  --faint:   #8B968F;
+  --line:    #DCD9D1;
+  --accent:  #2F5D50;
+  --soft:    #E4EDE8;
+  --warn:    #8A5A2B;
+
+  --serif: "Instrument Serif", Georgia, serif;
+  --sans:  "Public Sans", system-ui, -apple-system, sans-serif;
+  --mono:  "DM Mono", ui-monospace, Menlo, monospace;
+
+  --r: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:   #141816;
+    --sand:    #1B211E;
+    --surface: #1C2220;
+    --ink:     #E8EDE9;
+    --muted:   #9CA9A2;
+    --faint:   #78847D;
+    --line:    #2C3532;
+    --accent:  #7FB8A4;
+    --soft:    #1E2C27;
+    --warn:    #D2A473;
+  }
+}
+:root[data-theme="dark"] {
+  --paper:   #141816;
+  --sand:    #1B211E;
+  --surface: #1C2220;
+  --ink:     #E8EDE9;
+  --muted:   #9CA9A2;
+  --faint:   #78847D;
+  --line:    #2C3532;
+  --accent:  #7FB8A4;
+  --soft:    #1E2C27;
+  --warn:    #D2A473;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ribbon {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-align: center;
+  padding: 7px 16px;
+}
+
+.band { padding: 0 24px; }
+.inner { max-width: 660px; margin: 0 auto; }
+.band.sand { background: var(--sand); }
+
+section.block { padding: 56px 0; display: flex; flex-direction: column; gap: 26px; }
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 8vw, 3.8rem);
+  line-height: 1.03;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 em { font-style: italic; color: var(--accent); }
+h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  line-height: 1.1;
+  margin: 0;
+  text-wrap: balance;
+}
+h3 { font-family: var(--sans); font-weight: 600; font-size: 1rem; margin: 0; }
+p { margin: 0; max-width: 60ch; }
+.lede { font-size: 1.14rem; color: var(--muted); }
+.small { font-size: 14px; color: var(--muted); }
+.tiny { font-size: 12.5px; color: var(--faint); line-height: 1.5; }
+
+/* ---------- hero ---------- */
+.hero { padding: 44px 0 34px; display: flex; flex-direction: column; gap: 22px; }
+
+.btnrow { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+.btn {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 14px 24px;
+  border-radius: var(--r);
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--paper);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity .15s ease;
+}
+.btn:hover { opacity: .88; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.promise {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+.promise span {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.promise span::before { content: "✓ "; color: var(--accent); }
+
+/* ---------- before / after ---------- */
+.bawrap { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.ba {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+  background: var(--surface);
+  aspect-ratio: 195 / 110;
+  touch-action: none;
+  cursor: ew-resize;
+}
+.baimg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+/* Rigtige før/efter-fotos. Udskift foer.jpg / efter.jpg med klinikkens
+   egne billeder af samme patient (høj opløsning, skriftligt samtykke). */
+.baimg.before {
+  background-color: #E7C9B8;
+  background-image: url("foer.jpg");
+}
+.baimg.after {
+  background-color: #E7C9B8;
+  background-image: url("efter.jpg");
+  clip-path: inset(0 0 0 50%);
+}
+.handle {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.3);
+  pointer-events: none;
+}
+.handle::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 28px; height: 28px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 8px rgba(0,0,0,.35);
+}
+.batag {
+  position: absolute;
+  bottom: 8px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(20,24,22,.82);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 2px;
+}
+.batag.l { left: 8px; }
+.batag.r { right: 8px; }
+
+/* ---------- card ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ---------- quiz ---------- */
+.qmeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.qback {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--muted);
+  padding: 4px 9px;
+  cursor: pointer;
+}
+.bar { height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; margin: 14px 0 22px; }
+.bar > i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .3s ease; }
+
+.qtext { font-family: var(--serif); font-size: 1.5rem; line-height: 1.18; margin: 0; }
+
+.opts { display: flex; flex-direction: column; gap: 9px; margin-top: 20px; }
+.opt {
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 16px;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color .12s ease, background .12s ease;
+}
+.opt:hover { border-color: var(--accent); background: var(--soft); }
+
+.result { display: none; flex-direction: column; gap: 18px; }
+.result.on { display: flex; }
+.verdict {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--soft);
+  padding: 5px 10px;
+  border-radius: 2px;
+  align-self: flex-start;
+}
+.rsum { font-family: var(--serif); font-size: 1.45rem; line-height: 1.2; }
+ul.checks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+ul.checks li { display: flex; align-items: flex-start; gap: 11px; font-size: 15.5px; }
+ul.checks li::before { content: "—"; color: var(--accent); flex: 0 0 auto; }
+ul.checks li > span { flex: 1 1 auto; min-width: 0; }
+
+/* ---------- calculator ---------- */
+.calcout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 26px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+#permonth {
+  font-family: var(--mono);
+  font-size: clamp(2.4rem, 9vw, 3.3rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+.calcfield { display: flex; flex-direction: column; gap: 8px; }
+.calclabel { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; color: var(--muted); }
+.calclabel b { font-family: var(--mono); font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
+  margin: 12px 0;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--line);
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px; height: 22px;
+  border: 3px solid var(--surface);
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+.seg { display: flex; flex-wrap: wrap; gap: 8px; }
+.seg button {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  padding: 9px 14px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  border-radius: var(--r);
+  cursor: pointer;
+}
+.seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--paper); }
+
+/* ---------- steps ---------- */
+ol.steps { margin: 0; padding: 0; list-style: none; }
+ol.steps li {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+ol.steps li:last-child { border-bottom: 0; }
+ol.steps .n { font-family: var(--mono); font-size: 13px; color: var(--faint); padding-top: 3px; }
+ol.steps .b { display: flex; flex-direction: column; gap: 4px; }
+
+/* ---------- faq ---------- */
+details.faq { border-bottom: 1px solid var(--line); }
+details.faq summary {
+  cursor: pointer;
+  padding: 17px 0;
+  font-weight: 500;
+  font-size: 16.5px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq summary::after { content: "+"; color: var(--accent); font-family: var(--mono); }
+details.faq[open] summary::after { content: "–"; }
+details.faq .a { padding: 0 0 17px; font-size: 15.5px; color: var(--muted); max-width: 60ch; }
+
+/* ---------- booking ---------- */
+form.book { display: flex; flex-direction: column; gap: 15px; }
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+label.f { display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; color: var(--muted); }
+label.f input, label.f select {
+  font-family: var(--sans);
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 12px 13px;
+  width: 100%;
+}
+.confirm { display: none; flex-direction: column; gap: 12px; }
+.confirm.on { display: flex; }
+
+footer { padding: 36px 0 52px; display: flex; flex-direction: column; gap: 13px; border-top: 1px solid var(--line); }
+.legal { font-size: 13px; color: var(--faint); max-width: 64ch; line-height: 1.55; }
+
+.sticky {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  padding: 11px 18px;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  z-index: 40;
+}
+.sticky .p { font-size: 13.5px; color: var(--muted); line-height: 1.3; }
+
+@media (max-width: 640px) {
+  section.block { padding: 44px 0; }
+  .hero { padding: 32px 0 28px; }
+  .card { padding: 22px 18px; }
+  .frow { grid-template-columns: 1fr; }
+  .sticky { display: flex; }
+  body { padding-bottom: 74px; }
+}
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<!-- SLET HELE DENNE LINJE når siden går i luften for en rigtig klinik -->
+<div class="ribbon">Demo og skabelon &middot; klinikkens navn, priser og billeder indsættes</div>
+
+<!-- ============ HERO ============
+     Skift [Klinikkens navn] her og fem andre steder. Søg og erstat.
+     ============================================================ -->
+<div class="band">
+  <div class="inner hero">
+    <div class="kicker">[Klinikkens navn] &middot; Tandregulering</div>
+    <h1>Find ud af om det er <em>noget for dig</em>.</h1>
+    <p class="lede">Fem spørgsmål om dine tænder, så får du et realistisk svar på om gennemsigtige skinner kan bruges på dig. Det tager to minutter, og du skal ikke oplyse andet end dine svar.</p>
+
+    <div class="btnrow">
+      <a class="btn" href="#test">Start testen, gratis</a>
+      <a class="btn ghost" href="#pris">Se hvad det koster</a>
+    </div>
+
+    <div class="promise">
+      <span>Gratis</span>
+      <span>Ingen tilmelding</span>
+      <span>2 minutter</span>
+      <span>Du får også et nej, hvis det er svaret</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FØR OG EFTER ============
+     Udskift de to billeder i CSS: .baimg.before og .baimg.after
+     (fx background-image med klinikkens egne fotos). Brug samme
+     patient, høj opløsning, tæt udsnit af mund og tænder, og hav
+     skriftligt samtykke fra patienten.
+     ============================================================ -->
+<div class="band">
+  <div class="inner" style="padding-bottom:44px;">
+    <div class="bawrap">
+      <div class="ba" id="ba" role="img" aria-label="Samme patient før og efter tandregulering. Træk i midten for at sammenligne.">
+        <div class="baimg before"></div>
+        <div class="baimg after"></div>
+        <div class="handle" id="bahandle"></div>
+        <span class="batag l">Før</span>
+        <span class="batag r">Efter</span>
+      </div>
+      <p class="tiny" style="text-align:center;max-width:44ch;">Træk i midten. Pladsholder, udskiftes med klinikkens eget billede af samme patient i høj opløsning og med skriftligt samtykke.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TESTEN ============ -->
+<div class="band sand" id="test">
+  <div class="inner">
+    <section class="block">
+      <div>
+        <div class="kicker">Testen</div>
+        <h2>Fem spørgsmål.</h2>
+      </div>
+      <p class="lede">Det er ikke en diagnose, og den erstatter ikke en undersøgelse. Men den giver dig et realistisk billede af hvor du står, inden du bruger tid på at komme ind.</p>
+
+      <div class="card">
+        <div id="quiz">
+          <div class="qmeta">
+            <span>Spørgsmål <span id="qnum">1</span> af 5</span>
+            <button type="button" id="qback" class="qback" style="display:none;">Tilbage</button>
+          </div>
+          <div class="bar"><i id="qbar"></i></div>
+          <p class="qtext" id="qtext">&nbsp;</p>
+          <div class="opts" id="qopts"></div>
+        </div>
+
+        <div class="result" id="qresult">
+          <span class="verdict" id="rverdict">Resultat</span>
+          <div class="rsum" id="rsum"></div>
+          <ul class="checks" id="rchecks"></ul>
+          <div class="btnrow">
+            <a class="btn" href="#book">Book forundersøgelse, 495 kr.</a>
+            <button class="btn ghost" type="button" id="qagain">Start forfra</button>
+          </div>
+          <p class="tiny">Tag gerne dit resultat med. Vi kan se dine svar når du booker.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ============ PRIS ============ -->
+<div class="band" id="pris">
+  <div class="inner">
+    <section class="block">
+      <div>
+        <div class="kicker">Pris</div>
+        <h2>Fra 19.995 kr. samlet. Eller 417 kr. om måneden.</h2>
+      </div>
+      <p class="lede">Prisen dækker skinnerne, alle kontroller undervejs og retaineren til sidst. Ingen efterregninger. De fleste deler beløbet op, så prøv beregneren.</p>
+
+      <div class="card">
+        <div class="calcout">
+          <div id="permonth">417 kr.</div>
+          <div>
+            <div class="small">pr. måned i <span id="mlabel">48</span> måneder</div>
+            <div class="small">samlet <span id="totlabel">19.995</span> kr.</div>
+          </div>
+        </div>
+
+        <div class="calcfield">
+          <div class="calclabel"><span>Behandlingens pris</span><b id="amtout">19.995 kr.</b></div>
+          <input type="range" id="amt" min="15000" max="50000" step="1000" value="20000" aria-label="Behandlingens pris i kroner">
+          <div class="calclabel" style="font-size:12.5px;color:var(--faint);"><span>15.000 kr.</span><span style="font-family:var(--sans);font-weight:400;color:var(--faint);">50.000 kr.</span></div>
+        </div>
+
+        <div class="calcfield">
+          <div class="calclabel"><span>Antal måneder</span></div>
+          <div class="seg" id="seg">
+            <button type="button" data-m="12" aria-pressed="false">12 mdr.</button>
+            <button type="button" data-m="24" aria-pressed="false">24 mdr.</button>
+            <button type="button" data-m="36" aria-pressed="false">36 mdr.</button>
+            <button type="button" data-m="48" aria-pressed="true">48 mdr.</button>
+            <button type="button" data-m="60" aria-pressed="false">60 mdr.</button>
+          </div>
+        </div>
+
+        <p class="tiny">Vejledende beregning uden renter og gebyrer. Den endelige ydelse, løbetid og kreditvurdering kommer fra finansieringsudbyderen, og du får det fulde tilbud inden du skriver under. Vi tjener ikke på finansieringen.</p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ============ FORLØBET ============ -->
+<div class="band sand">
+  <div class="inner">
+    <section class="block">
+      <div>
+        <div class="kicker">Forløbet</div>
+        <h2>Sådan foregår det.</h2>
+      </div>
+      <ol class="steps">
+        <li><span class="n">01</span><div class="b"><h3>Forundersøgelse, 45 minutter</h3><p class="small">Vi scanner dine tænder i 3D og ser på tandkød og knogle. Du får at vide om behandlingen kan laves på dig, hvor lang tid den tager, og hvad den koster. 495 kr., som modregnes hvis du starter inden for 6 måneder.</p></div></li>
+        <li><span class="n">02</span><div class="b"><h3>Du ser slutresultatet</h3><p class="small">Ud fra scanningen viser vi bevægelsen tand for tand, så du kan se hvor tænderne ender inden du beslutter dig.</p></div></li>
+        <li><span class="n">03</span><div class="b"><h3>Skinnerne laves</h3><p class="small">Der går typisk to til tre uger. Du får hele serien og skifter til den næste efter plan.</p></div></li>
+        <li><span class="n">04</span><div class="b"><h3>Kontrol undervejs</h3><p class="small">Vi ser dig med nogle ugers mellemrum og justerer hvis tænderne ikke følger planen. Kontrollerne er med i prisen.</p></div></li>
+        <li><span class="n">05</span><div class="b"><h3>Retainer</h3><p class="small">Til sidst får du en retainer, så tænderne bliver hvor de er. Den er også med i prisen. Tænder flytter sig hele livet, så retaineren er ikke midlertidig.</p></div></li>
+      </ol>
+    </section>
+  </div>
+</div>
+
+<!-- ============ FAQ ============ -->
+<div class="band">
+  <div class="inner">
+    <section class="block">
+      <div>
+        <div class="kicker">Spørgsmål</div>
+        <h2>Det folk plejer at spørge om.</h2>
+      </div>
+      <div>
+        <details class="faq"><summary>Gør det ondt?</summary><div class="a">Der er et pres de første dage efter hvert skinneskift, mest de to første. De fleste beskriver det som ømhed, ikke smerte, og det aftager.</div></details>
+        <details class="faq"><summary>Kan man se dem?</summary><div class="a">Skinnerne er gennemsigtige og sidder tæt. På tæt hold kan man se at der er noget. På almindelig samtaleafstand lægger folk sjældent mærke til det. Ved nogle behandlinger sættes små tandfarvede knapper på tænderne, og dem kan man se på nært hold.</div></details>
+        <details class="faq"><summary>Hvor mange timer om dagen?</summary><div class="a">22 timer i døgnet. Du tager dem ud når du spiser og børster tænder. Det er den ene faktor der afgør om behandlingen lykkes til tiden.</div></details>
+        <details class="faq"><summary>Jeg har haft bøjle som barn, og tænderne er flyttet sig igen</summary><div class="a">Det er en af de mest almindelige grunde til at voksne kommer. Det skyldes typisk at retaineren blev droppet. Behandlingen er ofte kortere anden gang, fordi der er mindre der skal flyttes.</div></details>
+        <details class="faq"><summary>Kan alle behandles med skinner?</summary><div class="a">Nej. Ved større bidproblemer, manglende tænder eller svækket knogle omkring tænderne kan der være behov for en anden løsning, eller for at behandle noget andet først. Det er præcis det forundersøgelsen skal afgøre, og du får et ærligt svar også hvis svaret er nej.</div></details>
+        <details class="faq"><summary>Hvad hvis jeg ikke har været til tandlæge i mange år?</summary><div class="a">Det er meget almindeligt, og det er ikke noget vi kommenterer. Vi starter med at se hvordan tænder og tandkød har det, og lægger en plan derfra.</div></details>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ============ BOOKING ============
+     Formularen sender ingen steder endnu. Se BOOKING i script-blokken
+     nederst for hvor du kobler den på klinikkens system.
+     ============================================================ -->
+<div class="band sand" id="book">
+  <div class="inner">
+    <section class="block">
+      <div>
+        <div class="kicker">Book</div>
+        <h2>Forundersøgelse, 495 kr.</h2>
+      </div>
+      <p class="lede">Skriv dig op her, så ringer vi og finder en tid der passer. Beløbet betales på klinikken og modregnes i behandlingen, hvis du starter inden for 6 måneder.</p>
+
+      <div class="card">
+        <form class="book" id="bookform" novalidate>
+          <div class="frow">
+            <label class="f">Navn<input type="text" name="navn" autocomplete="name" required></label>
+            <label class="f">Telefon<input type="tel" name="tlf" autocomplete="tel" required></label>
+          </div>
+          <div class="frow">
+            <label class="f">E-mail<input type="email" name="mail" autocomplete="email" required></label>
+            <label class="f">Hvornår passer det bedst?
+              <select name="tid">
+                <option>Formiddag på hverdage</option>
+                <option>Eftermiddag på hverdage</option>
+                <option>Sidst på dagen</option>
+                <option>Er fleksibel</option>
+              </select>
+            </label>
+          </div>
+          <label class="f">Noget vi skal vide på forhånd?<input type="text" name="note" id="booknote" placeholder="Valgfrit"></label>
+          <div class="btnrow">
+            <button class="btn" type="submit">Send og bliv ringet op</button>
+            <span class="tiny" style="max-width:24ch;">Vi ringer inden for én hverdag.</span>
+          </div>
+        </form>
+
+        <div class="confirm" id="bookconfirm">
+          <span class="verdict">Modtaget</span>
+          <div class="rsum">Tak. Vi ringer inden for én hverdag.</div>
+          <p class="small">Du hører fra os på det nummer du skrev. Passer det ikke, så ring til klinikken på [telefonnummer].</p>
+          <p class="tiny">Bemærk: dette er en demoside. Formularen er ikke koblet til et bookingsystem, og der er ikke sendt noget.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="band">
+  <div class="inner">
+    <footer>
+      <div class="kicker">[Klinikkens navn]</div>
+      <p class="small">[Adresse] &middot; [Telefonnummer] &middot; [E-mail]<br>Åbningstider: [indsæt]</p>
+      <p class="legal">Priser er vejledende og forudsætter en konkret vurdering på klinikken. Den endelige pris og behandlingstid afhænger af dine tænder og aftales inden behandlingen sættes i gang. Behandling af tandstilling udføres af tandlæge. Denne side er en demo og skabelon, ikke en rigtig klinik.</p>
+    </footer>
+  </div>
+</div>
+
+<div class="sticky">
+  <span class="p">Gratis test<br>2 minutter</span>
+  <a class="btn" href="#test" style="padding:12px 20px;font-size:15px;">Start testen</a>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ==============================================================
+     KONFIGURATION — det meste af det du skal ændre pr. klinik
+     ============================================================== */
+  var CONFIG = {
+    prisFra:        19995,   // laveste samlede pris, vises i heroen
+    beregnerMin:    15000,   // beregnerens laveste beløb
+    beregnerMax:    50000,   // beregnerens højeste beløb
+    beregnerStart:  20000,   // hvor skyderen står når siden åbner
+    maanederStart:  48       // valgt løbetid når siden åbner
+  };
+
+  /* Andre steder med tal, som skal søges og erstattes i HTML:
+     "19.995"     samlet pris i heroen og prissektionen
+     "417 kr."    månedsydelsen i heroen
+     "495 kr."    prisen på forundersøgelsen, står otte steder
+     "6 måneder"  fristen for modregning
+     "[Klinikkens navn]", "[Adresse]", "[Telefonnummer]", "[E-mail]"
+  */
+
+  var QS = [
+    { q: "Hvor meget generer dine tænders stilling dig?",
+      a: [ {t:"Jeg tænker på det hver dag", s:3, tag:"Det generer dig dagligt"},
+           {t:"Det irriterer mig, men jeg lever med det", s:2, tag:"Det har irriteret dig et stykke tid"},
+           {t:"Jeg er mest nysgerrig på hvad der kan gøres", s:1, tag:"Du er i orienteringsfasen"} ] },
+    { q: "Har du haft bøjle før?",
+      a: [ {t:"Ja, som barn eller ung", s:2, tag:"Tænderne er flyttet sig efter tidligere behandling, hvilket typisk gør forløbet kortere"},
+           {t:"Nej, aldrig", s:2, tag:"Første behandling"},
+           {t:"Ja, og jeg bruger stadig retainer", s:1, tag:"Du har retainer i forvejen"} ] },
+    { q: "Mangler du tænder, eller har du tænder der sidder løst?",
+      a: [ {t:"Nej", s:3, tag:null},
+           {t:"Ja, én eller flere", s:0, flag:"tand", tag:"Manglende tænder skal vurderes først, og kan kræve at der laves noget andet inden eller i stedet"},
+           {t:"Det ved jeg ikke", s:2, tag:"Det afklares ved undersøgelsen"} ] },
+    { q: "Har du blødende tandkød, eller er du i behandling for parodontose?",
+      a: [ {t:"Nej", s:3, tag:null},
+           {t:"Tandkødet bløder nogle gange når jeg børster", s:1, flag:"gingiv", tag:"Blødende tandkød behandles før tandregulering, ellers kan tænderne flytte sig forkert"},
+           {t:"Ja, jeg er eller har været i behandling", s:0, flag:"paro", tag:"Parodontose skal være under kontrol før tænderne må flyttes"} ] },
+    { q: "Hvad betyder mest for dig?",
+      a: [ {t:"At ingen kan se det undervejs", s:2, tag:"Vi tager udgangspunkt i at behandlingen skal være så usynlig som muligt"},
+           {t:"At det går hurtigst muligt", s:2, tag:"Vi kigger på den korteste realistiske behandlingstid"},
+           {t:"At prisen kan deles op", s:2, tag:"Vi gennemgår delbetaling ved forundersøgelsen"} ] }
+  ];
+
+  var i = 0, score = 0, flags = [], tags = [], history = [];
+
+  var elNum = document.getElementById("qnum"),
+      elBar = document.getElementById("qbar"),
+      elTxt = document.getElementById("qtext"),
+      elOpt = document.getElementById("qopts"),
+      elQuiz = document.getElementById("quiz"),
+      elRes = document.getElementById("qresult"),
+      elBack = document.getElementById("qback"),
+      elNote = document.getElementById("booknote");
+
+  function draw() {
+    var q = QS[i];
+    elNum.textContent = i + 1;
+    elBar.style.width = (i / QS.length * 100) + "%";
+    elTxt.textContent = q.q;
+    elBack.style.display = i > 0 ? "block" : "none";
+    elOpt.innerHTML = "";
+    q.a.forEach(function (opt, k) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "opt";
+      b.textContent = opt.t;
+      b.addEventListener("click", function () { pick(k); });
+      elOpt.appendChild(b);
+    });
+  }
+
+  function pick(k) {
+    var opt = QS[i].a[k];
+    history.push({ s: opt.s, flag: opt.flag || null, tag: opt.tag || null });
+    score += opt.s;
+    if (opt.flag) flags.push(opt.flag);
+    if (opt.tag) tags.push(opt.tag);
+    i++;
+    if (i < QS.length) { draw(); } else { finish(); }
+  }
+
+  elBack.addEventListener("click", function () {
+    if (i === 0) return;
+    i--;
+    var last = history.pop();
+    if (last) {
+      score -= last.s;
+      if (last.flag) flags.splice(flags.indexOf(last.flag), 1);
+      if (last.tag) tags.splice(tags.indexOf(last.tag), 1);
+    }
+    draw();
+  });
+
+  function finish() {
+    elBar.style.width = "100%";
+    elQuiz.style.display = "none";
+    elRes.classList.add("on");
+
+    var verdict, sum;
+    if (flags.indexOf("paro") > -1 || flags.indexOf("tand") > -1) {
+      verdict = "Skal vurderes først";
+      sum = "Skinnebehandling er sandsynligvis en mulighed for dig, men noget skal afklares inden.";
+    } else if (score >= 11) {
+      verdict = "Ser lovende ud";
+      sum = "Ud fra dine svar ser du ud til at være en typisk kandidat til skinnebehandling.";
+    } else {
+      verdict = "Sandsynligvis muligt";
+      sum = "Dine svar peger på at det kan lade sig gøre, men der er et par ting der skal ses på.";
+    }
+
+    document.getElementById("rverdict").textContent = verdict;
+    document.getElementById("rsum").textContent = sum;
+
+    var ul = document.getElementById("rchecks");
+    ul.innerHTML = "";
+    tags.concat(["Kun en undersøgelse med 3D-scan kan afgøre det endeligt. Det er hvad de 495 kr. dækker."]).forEach(function (t) {
+      var li = document.createElement("li");
+      var s = document.createElement("span");
+      s.textContent = t;
+      li.appendChild(s);
+      ul.appendChild(li);
+    });
+
+    if (elNote) elNote.value = "Fra testen: " + verdict.toLowerCase();
+  }
+
+  document.getElementById("qagain").addEventListener("click", function () {
+    i = 0; score = 0; flags = []; tags = []; history = [];
+    elRes.classList.remove("on");
+    elQuiz.style.display = "block";
+    draw();
+  });
+
+  draw();
+
+  /* ---------------- calculator ---------------- */
+  var amt = document.getElementById("amt"), seg = document.getElementById("seg"), months = CONFIG.maanederStart;
+  amt.min = CONFIG.beregnerMin;
+  amt.max = CONFIG.beregnerMax;
+  amt.value = CONFIG.beregnerStart;
+  Array.prototype.forEach.call(seg.querySelectorAll("button"), function (b) {
+    b.setAttribute("aria-pressed", parseInt(b.dataset.m, 10) === months ? "true" : "false");
+  });
+  function kr(n) { return n.toLocaleString("da-DK"); }
+  function calc() {
+    var total = parseInt(amt.value, 10);
+    document.getElementById("permonth").textContent = kr(Math.round(total / months)) + " kr.";
+    document.getElementById("amtout").textContent = kr(total) + " kr.";
+    document.getElementById("totlabel").textContent = kr(total);
+    document.getElementById("mlabel").textContent = months;
+  }
+  amt.addEventListener("input", calc);
+  seg.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-m]");
+    if (!b) return;
+    months = parseInt(b.dataset.m, 10);
+    Array.prototype.forEach.call(seg.querySelectorAll("button"), function (x) {
+      x.setAttribute("aria-pressed", x === b ? "true" : "false");
+    });
+    calc();
+  });
+  calc();
+
+  /* ---------------- before / after ---------------- */
+  var ba = document.getElementById("ba"),
+      after = ba.querySelector(".after"),
+      handle = document.getElementById("bahandle"),
+      dragging = false;
+
+  function setPos(clientX) {
+    var r = ba.getBoundingClientRect();
+    var p = Math.min(Math.max((clientX - r.left) / r.width, 0.02), 0.98);
+    after.style.clipPath = "inset(0 0 0 " + (p * 100) + "%)";
+    handle.style.left = (p * 100) + "%";
+  }
+  ba.addEventListener("pointerdown", function (e) { dragging = true; ba.setPointerCapture(e.pointerId); setPos(e.clientX); });
+  ba.addEventListener("pointermove", function (e) { if (dragging) setPos(e.clientX); });
+  ba.addEventListener("pointerup", function () { dragging = false; });
+  ba.addEventListener("pointercancel", function () { dragging = false; });
+
+  /* ---------------- booking ---------------- */
+  var form = document.getElementById("bookform");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var ok = true;
+    Array.prototype.forEach.call(form.querySelectorAll("[required]"), function (f) {
+      if (!f.value.trim()) { ok = false; f.style.borderColor = "var(--warn)"; }
+      else { f.style.borderColor = "var(--line)"; }
+    });
+    if (!ok) return;
+    /* ==========================================================
+       BOOKING — her kobler du formularen på klinikkens system.
+       Tre almindelige veje:
+         1. POST til klinikkens bookingsystem eller et endpoint
+            du selv hoster
+         2. POST til en formular-tjeneste, fx Formspree eller
+            en serverless funktion
+         3. Send som sms eller mail til klinikken
+       Eksempel:
+         fetch("/api/book", {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify(Object.fromEntries(new FormData(form)))
+         });
+       ==========================================================
+       MÅLEPUNKT: fyr konverteringen her. Gør det server-side og
+       hold behandlingsnavnet ude af payload, da en helbredsinteresse
+       er en særlig kategori efter GDPR artikel 9. Brug et neutralt
+       eventnavn som "Lead_Submit", ikke "Schedule".
+       ========================================================== */
+    form.style.display = "none";
+    document.getElementById("bookconfirm").classList.add("on");
+  });
+})();
+</script>
+</body>
+</html>
