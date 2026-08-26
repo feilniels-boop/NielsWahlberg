@@ -261,6 +261,13 @@
   font-size: 0.85rem;
   color: var(--muted);
 }
+/* Note OVER inputtet (mellem label og felt) — fx tryghed ved telefonnummer. */
+.fb-fnote {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
 .fb-ferr {
   margin: 6px 0 0;
   min-height: 0;
