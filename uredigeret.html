@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uredigeret, tilmelding</title>
+<meta name="description" content="Mails hver anden fredag med hvad jeg byggede, hvad det kostede, og hvad tallene faktisk viste.">
+<meta property="og:title" content="Uredigeret">
+<meta property="og:description" content="Mails hver anden fredag med hvad jeg byggede, hvad det kostede, og hvad tallene faktisk viste.">
+<meta property="og:image" content="https://i.ytimg.com/vi/YQfC3CCCqcg/maxresdefault.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap">
+<style>
+  :root{
+    --ink:#0c0e11; --cream:#f4f0e8; --cream-dim:#cfc7b8;
+    --accent:#c8842f; --accent-hi:#daa04a;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--ink); color:var(--cream);
+    font-family:"Source Serif 4",Georgia,serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100dvh; display:flex; flex-direction:column;
+    overflow-x:hidden;
+  }
+
+  /* ---------- baggrund: glød + søjlediagram (+ valgfri video) ---------- */
+  .bg{position:fixed; inset:0; z-index:0; overflow:hidden; background:var(--ink)}
+  .bg video{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:100vw; height:56.25vw; min-height:100dvh; min-width:177.78vh;
+    object-fit:cover; pointer-events:none;
+  }
+  /* varm radial glød — bag alt, hurter ikke læsbarheden */
+  .glow{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(58% 48% at 80% 84%, rgba(200,132,47,.18) 0%, rgba(200,132,47,0) 62%),
+      radial-gradient(70% 60% at 8% 24%, rgba(200,132,47,.07) 0%, rgba(12,14,17,0) 55%);
+  }
+  /* logo-bjælkerne skaleret op som søjlediagram, nede til højre */
+  .chart{
+    position:absolute; right:clamp(20px,7vw,120px); bottom:clamp(66px,15vh,150px);
+    display:flex; align-items:flex-end; gap:clamp(10px,1.7vw,20px); opacity:.92;
+  }
+  .chart i{display:block; width:clamp(16px,2.4vw,32px); border-radius:2px}
+  .chart i:nth-child(1){height:clamp(64px,15vh,150px); background:#8a8578}
+  .chart i:nth-child(2){height:clamp(112px,26vh,258px); background:#a9873f}
+  .chart i:nth-child(3){height:clamp(172px,40vh,392px); background:var(--accent)}
+  /* hårfin baselinje under søjlerne */
+  .chart::after{
+    content:""; position:absolute; left:-16px; right:-16px; bottom:-15px; height:1px;
+    background:rgba(244,240,232,.20);
+  }
+  /* når video er tændt: mørk gradient venstrefra så teksten holder */
+  .bg.has-video::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(90deg, rgba(12,14,17,.92) 0%, rgba(12,14,17,.6) 52%, rgba(12,14,17,.28) 100%);
+  }
+
+  /* ---------- indhold (venstrestillet) ---------- */
+  .wrap{
+    position:relative; z-index:1; flex:1;
+    display:flex; flex-direction:column;
+    width:100%; max-width:1120px; margin:0 auto;
+    padding:clamp(30px,5vw,54px) clamp(22px,6vw,72px) clamp(26px,5vw,46px);
+  }
+
+  .brand{display:flex; align-items:center; gap:12px}
+  .mark{display:flex; align-items:flex-end; gap:4px; height:32px}
+  .mark i{display:block; width:7px; border-radius:1.5px}
+  .mark i:nth-child(1){height:14px; background:#8a8578}
+  .mark i:nth-child(2){height:22px; background:#a9873f}
+  .mark i:nth-child(3){height:32px; background:var(--accent)}
+  .brand span{
+    font-family:"Archivo",system-ui,sans-serif; font-weight:700; font-size:25px;
+    letter-spacing:-0.02em; color:var(--cream);
+  }
+
+  .core{margin:auto 0; max-width:560px; display:flex; flex-direction:column; gap:26px}
+  h1{
+    font-family:"Archivo",system-ui,sans-serif; font-weight:800;
+    font-size:clamp(46px,10vw,84px); line-height:.96; letter-spacing:-0.04em;
+    white-space:nowrap; text-shadow:0 2px 40px rgba(0,0,0,.5);
+  }
+  .promise{
+    font-style:italic; font-size:clamp(17px,2.4vw,20px); line-height:1.6;
+    color:var(--cream-dim); max-width:34ch;
+  }
+
+  form{display:flex; flex-direction:column; gap:11px; width:100%; max-width:400px; margin-top:2px}
+  .row{display:flex; gap:9px; flex-wrap:wrap}
+  input[type=email]{
+    flex:1 1 190px; min-width:0;
+    font-family:"Archivo",system-ui,sans-serif; font-size:16px; color:var(--cream);
+    background:rgba(255,255,255,.06); border:1px solid rgba(244,240,232,.26);
+    padding:14px 16px; border-radius:2px; backdrop-filter:blur(6px);
+  }
+  input[type=email]::placeholder{color:rgba(244,240,232,.44)}
+  input[type=email]:focus{outline:none; border-color:var(--accent); background:rgba(255,255,255,.10)}
+  input[type=email]:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  button{
+    font-family:"Archivo",system-ui,sans-serif; font-weight:700; font-size:16px; letter-spacing:-0.01em;
+    color:#14100a; background:var(--accent); border:0; padding:14px 26px; border-radius:2px; cursor:pointer;
+    transition:background .15s ease;
+  }
+  button:hover{background:var(--accent-hi)}
+  button:focus-visible{outline:2px solid var(--cream); outline-offset:3px}
+  button[disabled]{opacity:.6; cursor:progress}
+  .fineprint{font-size:14px; color:rgba(244,240,232,.55); line-height:1.5}
+  .msg{font-size:14.5px; color:#e9a45f; min-height:0}
+  .hp{position:absolute; left:-9999px; width:1px; height:1px; opacity:0}
+
+  /* kvittering: citatblok med accentstreg (ingen flueben) */
+  .done{
+    display:none; flex-direction:column; gap:10px; max-width:40ch;
+    border-left:2px solid var(--accent); padding-left:20px;
+  }
+  .done p{font-family:"Archivo",system-ui,sans-serif; font-weight:700; font-size:clamp(20px,3vw,24px); line-height:1.3; color:var(--cream)}
+  .done .sub{font-family:"Source Serif 4",serif; font-style:italic; font-weight:400; font-size:16px; color:var(--cream-dim); line-height:1.55}
+  body.sent form{display:none}
+  body.sent .done{display:flex}
+  body.sent .promise{display:none}
+
+  footer{
+    position:relative; z-index:1; text-align:left; padding:0 clamp(22px,6vw,72px) clamp(20px,4vw,30px);
+    font-size:13px; color:rgba(244,240,232,.42); letter-spacing:.02em;
+    width:100%; max-width:1120px; margin:0 auto;
+  }
+
+  /* på smalle skærme: dæmp diagrammet så det ikke ligger under teksten */
+  @media (max-width:640px){
+    .chart{opacity:.5; right:14px; bottom:52px; gap:9px}
+    .chart i{width:clamp(13px,4vw,20px)}
+    .chart i:nth-child(1){height:56px}
+    .chart i:nth-child(2){height:96px}
+    .chart i:nth-child(3){height:150px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="bg" id="bg">
+  <div class="glow"></div>
+  <div class="chart" aria-hidden="true"><i></i><i></i><i></i></div>
+</div>
+
+<div class="wrap">
+  <header class="brand">
+    <span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span>Uredigeret</span>
+  </header>
+
+  <main class="core">
+    <h1>Tallene bag</h1>
+    <p class="promise">Mails hver anden fredag med hvad jeg byggede, hvad det kostede, og hvad tallene faktisk viste. Skrevet mens det sker, ikke fem år efter.</p>
+
+    <form id="signup" novalidate>
+      <div class="row">
+        <input type="email" name="email" id="email" placeholder="Din mail" aria-label="Din mail" autocomplete="email" required>
+        <button type="submit" id="submit">Skriv mig op</button>
+      </div>
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="fineprint">Ingen spam. Afmeld når du vil.</p>
+      <p class="msg" id="msg" role="status"></p>
+    </form>
+
+    <div class="done" id="done" role="status">
+      <p>Du er skrevet op til Uredigeret</p>
+      <p class="sub">Første mail lander fredag. Tjek gerne spam, og flyt den ind i indbakken.</p>
+    </div>
+  </main>
+</div>
+
+<footer>Niels Wahlberg · Aarhus</footer>
+
+<script>
+/* =======================================================================
+   RET KUN formEndpoint (og evt. video-felterne) HERUNDER
+   ======================================================================= */
+var CONFIG = {
+  // --- video (slået fra i v2) ---
+  // Tænd igen når der findes et klip der virker: intet indbrændt tekst, ét
+  // roligt motiv, plads i venstre side. Eksportér 10-20 sek. som mp4, læg
+  // filen ved siden af denne, og sæt videoUrl. Selvhostet mp4 > YouTube.
+  useVideo:     false,
+  videoUrl:     "",   // fx "uredigeret.mp4"
+  startAt:      0,    // sekundet videoen starter og looper tilbage til
+  posterUrl:    "",   // valgfrit stillbillede bag videoen
+
+  // MailerLite embedded-form URL (offentlig, må gerne stå i klientkoden). Form:
+  // https://assets.mailerlite.com/jsonp/<konto-id>/forms/<form-id>/subscribe
+  formEndpoint: ""
+};
+/* ===================================================================== */
+
+(function background(){
+  if (!CONFIG.useVideo || !CONFIG.videoUrl) return;
+
+  var bg = document.getElementById("bg");
+  var START = Math.max(0, parseInt(CONFIG.startAt, 10) || 0);
+
+  var v = document.createElement("video");
+  v.src = CONFIG.videoUrl + (START ? "#t=" + START : "");
+  v.autoplay = true; v.muted = true; v.playsInline = true;
+  v.setAttribute("playsinline",""); v.preload = "auto";
+  if (CONFIG.posterUrl) v.poster = CONFIG.posterUrl;
+  if (START) {
+    /* native loop springer tilbage til 0, så vi looper selv til START */
+    v.addEventListener("loadedmetadata", function(){ try { v.currentTime = START; } catch(e){} });
+    v.addEventListener("ended", function(){ v.currentTime = START; v.play().catch(function(){}); });
+  } else {
+    v.loop = true;
+  }
+  v.onerror = function(){ if (v.parentNode) v.parentNode.removeChild(v); bg.classList.remove("has-video"); };
+
+  bg.classList.add("has-video");
+  bg.insertBefore(v, bg.firstChild);
+  v.play().catch(function(){});
+})();
+
+(function form(){
+  var form = document.getElementById("signup");
+  var msg = document.getElementById("msg");
+  var btn = document.getElementById("submit");
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    msg.textContent = "";
+    var email = document.getElementById("email").value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) {
+      msg.textContent = "Den mail ser ikke rigtig ud. Tjek den lige.";
+      return;
+    }
+    if (form.website.value) { document.body.classList.add("sent"); return; }
+    if (!CONFIG.formEndpoint) {
+      msg.textContent = "Formularen er ikke koblet på endnu.";
+      return;
+    }
+
+    btn.disabled = true; btn.textContent = "Sender";
+
+    var done = function(){ document.body.classList.add("sent"); };
+    var failed = function(){
+      btn.disabled = false; btn.textContent = "Skriv mig op";
+      msg.textContent = "Noget gik galt. Prøv igen om et øjeblik.";
+    };
+
+    if (CONFIG.formEndpoint.indexOf("mailerlite") !== -1) {
+      var fd = new FormData();
+      fd.append("fields[email]", email);
+      fd.append("ml-submit", "1");
+      fd.append("anticsrf", "true");
+      fetch(CONFIG.formEndpoint, { method:"POST", body:fd, mode:"no-cors" })
+        .then(done).catch(failed);
+    } else {
+      fetch(CONFIG.formEndpoint, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ email: email })
+      }).then(function(r){ if(r.ok || r.type === "opaque") done(); else failed(); })
+        .catch(failed);
+    }
+  });
+})();
+</script>
+</body>
+</html>
