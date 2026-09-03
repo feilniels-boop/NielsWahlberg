@@ -274,7 +274,7 @@
       .book-inner .eyebrow { margin-inline: auto; }
       .book-inner h2 { margin: 0 0 12px; }
       .book-inner .lead { margin: 0 auto 32px; }
-      .calendly-inline-widget { border-radius: var(--r-card); overflow: hidden; border: 1px solid var(--line); background: var(--surface); }
+      .cal-embed { width: 100%; min-height: 720px; overflow: hidden; border-radius: var(--r-card); border: 1px solid var(--line); background: var(--surface); }
       .book-fallback { margin-top: 16px; color: var(--muted); font-size: 0.92rem; }
 
       /* ---------- Footer ---------- */
@@ -449,7 +449,7 @@
         </div>
       </section>
 
-      <!-- ============ BOOKING (Calendly, indlejret) ============ -->
+      <!-- ============ BOOKING (Cal.com, indlejret) ============ -->
       <section class="s-book" id="book">
         <div class="wrap book-inner">
           <span class="eyebrow">Book</span>
@@ -458,11 +458,7 @@
             Jeg viser dig et udkast til din side på skærmen. Du siger til
             undervejs når der er noget der skal være anderledes.
           </p>
-          <div
-            class="calendly-inline-widget"
-            data-url="https://calendly.com/feilniels/15min?primary_color=12574A&text_color=10161A&background_color=ffffff"
-            style="min-width:320px;height:720px;"
-          ></div>
+          <div class="cal-embed" id="cal-book"></div>
           <p class="book-fallback">Kan du ikke se kalenderen? Ring på [nummer]</p>
         </div>
       </section>
@@ -590,32 +586,41 @@
       window.addEventListener("scroll", onScroll, { passive: true });
       onScroll();
 
-      // Calendly: indlæs widget-scriptet DOVENT, kun når #book er inden for
-      // 400px af viewport. Ingen indlæsning ved sidestart (koster på loadtid).
-      (function lazyCalendly() {
+      // Cal.com: initialisér inline-embed DOVENT, kun når #book er inden for
+      // 400px af viewport. Cal-loaderen henter selv embed.js ved første kald,
+      // så intet indlæses ved sidestart (koster på loadtid).
+      (function lazyCal() {
         var book = document.getElementById("book");
         if (!book) return;
-        var loaded = false;
-        function load() {
-          if (loaded) return;
-          loaded = true;
-          var s = document.createElement("script");
-          s.src = "https://assets.calendly.com/assets/external/widget.js";
-          s.async = true;
-          document.body.appendChild(s);
+        var done = false;
+        function initCal() {
+          if (done) return;
+          done = true;
+          (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+          Cal("init", "klinik15", { origin: "https://app.cal.com" });
+          Cal.ns.klinik15("inline", {
+            elementOrSelector: "#cal-book",
+            config: { layout: "month_view" },
+            calLink: "niels-feil-3q5gpr/15min",
+          });
+          Cal.ns.klinik15("ui", {
+            hideEventTypeDetails: false,
+            layout: "month_view",
+            cssVarPerTheme: { light: { "cal-brand": "#12574a" } },
+          });
         }
         if ("IntersectionObserver" in window) {
           var io = new IntersectionObserver(
             function (entries) {
               entries.forEach(function (e) {
-                if (e.isIntersecting) { load(); io.disconnect(); }
+                if (e.isIntersecting) { initCal(); io.disconnect(); }
               });
             },
             { rootMargin: "400px 0px" }
           );
           io.observe(book);
         } else {
-          load();
+          initCal();
         }
       })();
 
