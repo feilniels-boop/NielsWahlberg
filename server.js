@@ -318,6 +318,17 @@ const server = http.createServer(function (req, res) {
     return require("./lib/quiz").handleQuiz(req, res);
   }
 
+  // Demo-klinikker: /demo/<slug> (server-renderet fra lib/demo.js)
+  const demoMatch = urlPath.match(/^\/demo\/([a-z0-9-]+)$/);
+  if (demoMatch) {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      res.writeHead(405, { Allow: "GET" });
+      res.end("Method Not Allowed");
+      return;
+    }
+    return require("./lib/demo").handleDemo(req, res, demoMatch[1]);
+  }
+
   // Plan-side: /plan/<slug>
   const planMatch = urlPath.match(/^\/plan\/([A-Za-z0-9-]+)$/);
   if (planMatch) {
