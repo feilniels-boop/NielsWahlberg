@@ -307,6 +307,49 @@
       .cookie .btn-solid:hover { background: #000; }
       .cookie[hidden] { display: none; }
 
+      /* ---------- Header telefon-knap (Apex-mønster) ---------- */
+      .btn-phone { background: var(--surface); border: 1px solid var(--line); color: var(--ink); padding: 11px 15px; }
+      .btn-phone:hover { border-color: var(--ink); }
+      .btn-phone[hidden] { display: none; }
+      @media (max-width: 520px) { .np-num { display: none; } }
+
+      /* ---------- Kunder (kompakt, små rammer, tættere layout) ---------- */
+      .s-kunder { margin-top: 6rem; }
+      .kunder-head { max-width: 640px; margin-bottom: 30px; }
+      .kunder-head h2 { margin: 0 0 10px; }
+      .kunder-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .kunde { display: block; color: inherit; }
+      a.kunde:hover .mini-frame { border-color: var(--ink); }
+      .mini-frame { border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; background: var(--surface); }
+      .mini-bar { display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; background: var(--ground); border-bottom: 1px solid var(--line); }
+      .mini-bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+      .mini-url { margin-left: 8px; font-size: 0.72rem; color: var(--muted); }
+      .mini-shot { height: 180px; background: var(--accent-soft); background-size: cover; background-position: top center; display: grid; place-items: center; }
+      .mini-shot .shot-name { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
+      .mini-shot.has-img .shot-name { display: none; }
+      .kunde-name { margin-top: 12px; font-weight: 600; }
+      .kunde-type { color: var(--muted); font-size: 0.9rem; }
+      .kunde-extra { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+      @media (max-width: 760px) { .kunder-grid { grid-template-columns: 1fr; max-width: 420px; } }
+
+      /* ---------- Klinikeksempler (prominent, store rammer, mere luft) ---------- */
+      .s-eksempler { margin-top: 7rem; }
+      .ex-head { max-width: 680px; margin-bottom: 44px; }
+      .ex-head h2 { margin: 0 0 12px; }
+      .ex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+      .ex-card { position: relative; }
+      .ex-link { position: absolute; inset: 0; z-index: 3; border-radius: var(--r-card); }
+      .ex-card:hover .ex-frame { border-color: var(--ink); }
+      .ex-frame { position: relative; border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; background: var(--surface); box-shadow: var(--shadow-soft); }
+      .ex-bar { display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; background: var(--ground); border-bottom: 1px solid var(--line); }
+      .ex-bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+      .ex-url { margin-left: 10px; font-size: 0.74rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .ex-view { position: relative; height: 320px; overflow: hidden; background: var(--surface); }
+      .ex-view iframe { position: absolute; top: 0; left: 0; width: 420px; height: 1100px; border: 0; transform-origin: top left; pointer-events: none; }
+      .ex-name { margin-top: 14px; font-weight: 600; font-size: 1.05rem; }
+      .ex-type { color: var(--muted); font-size: 0.92rem; }
+      @media (max-width: 860px) { .ex-grid { grid-template-columns: 1fr; max-width: 460px; } }
+
       /* ---------- Den ENESTE animation: hero-tekst ved indlæsning ---------- */
       .hero-rise { opacity: 0; transform: translateY(16px); animation: rise 0.8s var(--ease) forwards; }
       .hero-rise.d1 { animation-delay: 0.07s; }
@@ -333,6 +376,10 @@
           <a class="link" href="#hvorfor">Hvorfor</a>
           <a class="link" href="#proces">Sådan foregår det</a>
           <a class="link" href="#priser">Pakker</a>
+          <a class="btn btn-phone" id="navPhone" href="#" hidden aria-label="Ring til os">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span class="np-num"></span>
+          </a>
           <a class="btn btn-primary" href="#book">Få et gratis udkast</a>
         </nav>
       </div>
@@ -430,6 +477,86 @@
               <div class="num">04</div>
               <h3>Live</h3>
               <p>Vi sætter siden live, og jeg sørger for, at alt spiller. Bagefter er jeg her stadig.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ KUNDER (kompakt, bevis før pris) ============ -->
+      <section class="s-kunder" id="kunder">
+        <div class="wrap">
+          <div class="kunder-head">
+            <span class="eyebrow">Kunder</span>
+            <h2 class="h-section">Sider jeg har bygget for andre</h2>
+            <p class="lead">Tre af dem. Alle live, alle bygget af mig.</p>
+          </div>
+          <div class="kunder-grid">
+            <a class="kunde" href="https://www.apexmurer.dk/" target="_blank" rel="noopener">
+              <div class="mini-frame">
+                <div class="mini-bar"><i></i><i></i><i></i><span class="mini-url">apexmurer.dk</span></div>
+                <div class="mini-shot" data-shot="/kunder/apex.jpg"><span class="shot-name">Apex Murer</span></div>
+              </div>
+              <div class="kunde-name">Apex Murer</div>
+              <div class="kunde-type">Murer, tømrer og stillads, Køge</div>
+              <div class="kunde-extra">Prisberegner og AI-assistent indbygget.</div>
+            </a>
+            <div class="kunde">
+              <div class="mini-frame">
+                <div class="mini-bar"><i></i><i></i><i></i></div>
+                <div class="mini-shot" data-shot="/kunder/valkyrix.jpg"><span class="shot-name">Valkyrix</span></div>
+              </div>
+              <div class="kunde-name">Valkyrix</div>
+              <div class="kunde-type">Storformatslabs i porcelæn</div>
+              <div class="kunde-extra">Prisberegner og tilbudsliste.</div>
+            </div>
+            <a class="kunde" href="https://www.contentscale.dk/" target="_blank" rel="noopener">
+              <div class="mini-frame">
+                <div class="mini-bar"><i></i><i></i><i></i><span class="mini-url">contentscale.dk</span></div>
+                <div class="mini-shot" data-shot="/kunder/contentscale.jpg"><span class="shot-name">Content Scale</span></div>
+              </div>
+              <div class="kunde-name">Content Scale</div>
+              <div class="kunde-type">UGC-bureau, Aarhus</div>
+              <div class="kunde-extra">500+ videoer produceret.</div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ KLINIKEKSEMPLER (prominent, live demo-forhåndsvisninger) ============ -->
+      <section class="s-eksempler" id="eksempler">
+        <div class="wrap">
+          <div class="ex-head">
+            <span class="eyebrow">Klinikeksempler</span>
+            <h2 class="h-section">Sådan kunne din klinikside se ud</h2>
+            <p class="lead">Tre eksempler, ikke kundeopgaver. Siderne er rigtige og virker på både mobil og computer.</p>
+          </div>
+          <div class="ex-grid">
+            <div class="ex-card">
+              <a class="ex-link" href="/demo/fysioterapi" target="_blank" rel="noopener" aria-label="Åbn eksempel: Nordvest Fysioterapi"></a>
+              <div class="ex-frame">
+                <div class="ex-bar"><i></i><i></i><i></i><span class="ex-url">nielswahlberg.dk/demo/fysioterapi</span></div>
+                <div class="ex-view" data-demo="/demo/fysioterapi"></div>
+              </div>
+              <div class="ex-name">Nordvest Fysioterapi</div>
+              <div class="ex-type">Fysioterapi og genoptræning, Aarhus N</div>
+            </div>
+            <div class="ex-card">
+              <a class="ex-link" href="/demo/psykolog" target="_blank" rel="noopener" aria-label="Åbn eksempel: Klinik Vestervold"></a>
+              <div class="ex-frame">
+                <div class="ex-bar"><i></i><i></i><i></i><span class="ex-url">nielswahlberg.dk/demo/psykolog</span></div>
+                <div class="ex-view" data-demo="/demo/psykolog"></div>
+              </div>
+              <div class="ex-name">Klinik Vestervold</div>
+              <div class="ex-type">Psykolog, Aarhus C</div>
+            </div>
+            <div class="ex-card">
+              <a class="ex-link" href="/demo/fodpleje" target="_blank" rel="noopener" aria-label="Åbn eksempel: Søbakken Fodpleje"></a>
+              <div class="ex-frame">
+                <div class="ex-bar"><i></i><i></i><i></i><span class="ex-url">nielswahlberg.dk/demo/fodpleje</span></div>
+                <div class="ex-view" data-demo="/demo/fodpleje"></div>
+              </div>
+              <div class="ex-name">Søbakken Fodpleje</div>
+              <div class="ex-type">Statsautoriseret fodterapeut, Solbjerg</div>
             </div>
           </div>
         </div>
@@ -643,6 +770,70 @@
         var nec = document.getElementById("ckNec");
         if (acc) acc.addEventListener("click", function () { set("all"); banner.hidden = true; initAnalytics(); });
         if (nec) nec.addEventListener("click", function () { set("necessary"); banner.hidden = true; });
+      })();
+
+      // =========================================================
+      // Header-telefon (Apex-mønster). INDSÆT NUMMERET HER.
+      // Er PHONE tom, forbliver knappen skjult (ingen synlig pladsholder).
+      // =========================================================
+      var PHONE = ""; // fx "12 34 56 78"
+      (function () {
+        var el = document.getElementById("navPhone");
+        if (!el) return;
+        var num = String(PHONE).trim();
+        if (!num) return; // tom → knap forbliver skjult
+        el.href = "tel:" + num.replace(/\s/g, "");
+        var span = el.querySelector(".np-num");
+        if (span) span.textContent = num;
+        el.hidden = false;
+      })();
+
+      // Kunder: vis screenshot hvis filen findes; ellers bliver den neutrale
+      // flade i --accent-soft med firmanavnet stående (intet brækket billede).
+      (function () {
+        var shots = document.querySelectorAll(".mini-shot[data-shot]");
+        Array.prototype.forEach.call(shots, function (el) {
+          var src = el.getAttribute("data-shot");
+          if (!src) return;
+          var img = new Image();
+          img.onload = function () {
+            el.style.backgroundImage = 'url("' + src + '")';
+            el.classList.add("has-img");
+          };
+          img.src = src;
+        });
+      })();
+
+      // Klinikeksempler: montér demo-iframe DOVENT (kun når kortet er inden for
+      // 400px af viewport), og skalér så hele siden fylder rammen.
+      (function () {
+        var views = document.querySelectorAll(".ex-view[data-demo]");
+        function mount(el) {
+          if (el.getAttribute("data-mounted")) return;
+          el.setAttribute("data-mounted", "1");
+          var f = document.createElement("iframe");
+          f.setAttribute("loading", "lazy");
+          f.setAttribute("tabindex", "-1");
+          f.setAttribute("aria-hidden", "true");
+          f.src = el.getAttribute("data-demo");
+          el.appendChild(f);
+          function scale() { f.style.transform = "scale(" + (el.clientWidth / 420) + ")"; }
+          scale();
+          window.addEventListener("resize", scale, { passive: true });
+        }
+        if ("IntersectionObserver" in window) {
+          var io = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (e) {
+                if (e.isIntersecting) { mount(e.target); io.unobserve(e.target); }
+              });
+            },
+            { rootMargin: "400px 0px" }
+          );
+          Array.prototype.forEach.call(views, function (el) { io.observe(el); });
+        } else {
+          Array.prototype.forEach.call(views, mount);
+        }
       })();
     </script>
   </body>
