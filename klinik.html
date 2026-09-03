@@ -6,7 +6,7 @@
     <title>Hjemmesider til klinikker | Niels Wahlberg</title>
     <meta
       name="description"
-      content="Moderne hjemmesider til klinikker der vil have flere bookinger. Flot design, online booking og tekst der konverterer — bygget for dig."
+      content="Moderne hjemmesider til klinikker der vil have flere bookinger. Flot design, online booking og tekst der konverterer, bygget for dig."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="da_DK" />
@@ -27,9 +27,9 @@
 
     <style>
       /* =========================================================
-         Klinik-landingsside — selvstændig, moderne design.
+         Klinik-landingsside: selvstændig, moderne design.
          Palette: varmt papir + dyb smaragd. Skrift: Fraunces + Manrope.
-         Priser/pakker er PLADSHOLDERE — søg efter "TODO: pris".
+         Priser og punktlister styres af TIERS-const nederst i JavaScript.
       ========================================================= */
       :root {
         --paper: #f5f1e9;
@@ -481,6 +481,8 @@
       .foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 30px; }
       .foot-inner .muted { color: var(--muted); font-size: 0.88rem; }
       .foot-links { display: flex; gap: 24px; font-size: 0.9rem; font-weight: 600; color: var(--ink-soft); }
+      .foot-legal { padding-top: 26px; }
+      .foot-legal .muted { font-size: 0.85rem; line-height: 1.7; }
 
       /* ---------- Scroll-reveal ---------- */
       .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
@@ -515,7 +517,7 @@
         </nav>
         <div class="nav-cta">
           <a class="btn btn-primary" href="#kontakt">
-            Book et kald
+            Få et gratis udkast
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
@@ -531,13 +533,13 @@
             <span class="eyebrow rise">For klinikker der vil vokse</span>
             <h1 class="rise d1">Hjemmesider der giver din klinik <em>flere bookinger</em></h1>
             <p class="lead rise d2">
-              Jeg designer og bygger moderne hjemmesider til klinikker — med online
+              Jeg designer og bygger moderne hjemmesider til klinikker, med online
               booking, tydelige behandlinger og tekst der får besøgende til at
               blive til patienter. Du passer klinikken. Jeg passer nettet.
             </p>
             <div class="hero-actions rise d3">
               <a class="btn btn-primary" href="#kontakt">
-                Book et gratis kald
+                Få et gratis udkast
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </a>
               <a class="btn btn-ghost" href="#priser">Se pakker &amp; priser</a>
@@ -558,7 +560,7 @@
               <div class="small">direkte fra siden</div>
             </div>
             <div class="float-card br">
-              <div class="big">7–14 dage</div>
+              <div class="big">5 hverdage</div>
               <div class="small">fra start til live</div>
             </div>
           </div>
@@ -586,7 +588,7 @@
             <h2>Din klinik er dygtig. Det er hjemmesiden bare ikke.</h2>
             <p>
               De fleste klinik-hjemmesider ser gamle ud, er svære at booke på og
-              siger ikke noget om, hvorfor man skal vælge lige jer. Det koster
+              siger ikke noget om, hvorfor man skal vælge lige din klinik. Det koster
               patienter hver eneste uge.
             </p>
           </div>
@@ -610,7 +612,7 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               </div>
               <h3>Usynlig på mobilen</h3>
-              <p>8 ud af 10 finder en klinik på mobilen. Er siden ikke bygget til mobil først, mister du dem, før de har set jer.</p>
+              <p>8 ud af 10 finder en klinik på mobilen. Er siden ikke bygget til mobil først, mister du dem, før de har set din klinik.</p>
             </div>
           </div>
         </div>
@@ -623,8 +625,8 @@
             <div class="wrap">
               <div class="section-head reveal">
                 <span class="eyebrow">Sådan foregår det</span>
-                <h2>Fra rodet gammel side til live om 1–2 uger</h2>
-                <p>Du skal ikke løfte en finger med teknik. Jeg står for det hele — du giver kun input.</p>
+                <h2>Fra rodet gammel side til live om 5 hverdage</h2>
+                <p>Du skal ikke løfte en finger med teknik. Jeg står for det hele. Du giver kun input.</p>
               </div>
               <div class="steps">
                 <div class="step reveal">
@@ -635,7 +637,7 @@
                 <div class="step reveal">
                   <div class="num">02</div>
                   <h4>Design</h4>
-                  <p>Jeg designer et moderne udkast, der passer til jeres brand — du godkender.</p>
+                  <p>Jeg designer et moderne udkast, der passer til din klinik. Du godkender.</p>
                 </div>
                 <div class="step reveal">
                   <div class="num">03</div>
@@ -654,62 +656,17 @@
       </section>
 
       <!-- ============ PRISER / PAKKER ============ -->
-      <!-- TODO: pris — opdater priser og punkter når de præcise pakker er klar. -->
+      <!-- Priser + punkter styres af TIERS-const nederst i JavaScript. -->
       <section class="block pricing" id="priser">
         <div class="wrap">
           <div class="section-head center reveal">
             <span class="eyebrow" style="justify-content:center">Pakker &amp; priser</span>
             <h2>Vælg det niveau, din klinik har brug for</h2>
-            <p>Faste priser, ingen overraskelser. Alle pakker inkluderer mobilvenligt design og online booking.</p>
+            <p>Ingen opstartspris. Jeg bygger siden, du betaler kun det månedlige. Seks måneder, derefter måned for måned.</p>
           </div>
 
-          <div class="tiers">
-            <!-- Pakke 1 -->
-            <div class="tier reveal">
-              <div class="tier-name">Basis</div>
-              <p class="tier-desc">Den skarpe one-page side til den mindre klinik, der skal se professionel ud.</p>
-              <div class="price">XX.XXX kr<small>engangspris</small></div>
-              <ul>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Moderne one-page hjemmeside</li>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Online booking-knap</li>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Mobil- og Google-venlig</li>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Kontakt, kort &amp; åbningstider</li>
-              </ul>
-              <a class="btn btn-ghost" href="#kontakt">Kom i gang</a>
-            </div>
-
-            <!-- Pakke 2 (fremhævet) -->
-            <div class="tier featured reveal">
-              <span class="tier-badge">Mest populær</span>
-              <div class="tier-name">Vækst</div>
-              <p class="tier-desc">Den komplette klinik-hjemmeside bygget til at fylde kalenderen.</p>
-              <div class="price">XX.XXX kr<small>engangspris</small></div>
-              <ul>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Alt i Basis</li>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Flere sider (behandlinger, om, priser)</li>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Fuld booking-integration</li>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> SEO så I findes på Google</li>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Tekst der konverterer</li>
-              </ul>
-              <a class="btn btn-primary" href="#kontakt">Vælg Vækst</a>
-            </div>
-
-            <!-- Pakke 3 -->
-            <div class="tier reveal">
-              <div class="tier-name">Klinik Pro</div>
-              <p class="tier-desc">For klinikken, der vil have alt kørende — og en fast mand på det.</p>
-              <div class="price">XX.XXX kr<small>+ løbende / md.</small></div>
-              <ul>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Alt i Vækst</li>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Løbende vedligehold &amp; opdatering</li>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Professionel tekstforfatning</li>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Løbende optimering af bookinger</li>
-                <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Prioriteret support</li>
-              </ul>
-              <a class="btn btn-ghost" href="#kontakt">Tal med Niels</a>
-            </div>
-          </div>
-          <p class="price-note">Ikke sikker på hvad der passer? Book et gratis kald, så finder vi det rette sammen.</p>
+          <div class="tiers"></div>
+          <p class="price-note">Eller betal 12 måneder forud og få to måneder gratis.</p>
         </div>
       </section>
 
@@ -729,12 +686,12 @@
           <div class="cta-band reveal">
             <h2>Klar til flere bookinger?</h2>
             <p>
-              Book et gratis og uforpligtende kald. Vi kigger på jeres nuværende
-              side, og jeg fortæller, hvad jeg ville gøre — uanset om vi ender med
+              Book et gratis og uforpligtende kald. Vi kigger på din nuværende
+              side, og jeg fortæller, hvad jeg ville gøre, uanset om vi ender med
               at arbejde sammen.
             </p>
             <a class="btn btn-primary" href="https://calendly.com/feilniels/15min" target="_blank" rel="noopener">
-              Book dit gratis kald
+              Få et gratis udkast
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
           </div>
@@ -752,9 +709,102 @@
           <a href="#kontakt">Kontakt</a>
         </nav>
       </div>
+      <div class="wrap foot-legal">
+        <p class="muted">
+          Niels Wahlberg<br />
+          CVR 46655443<br />
+          [adresse indsættes]<br />
+          Telefon: [nummer indsættes]<br />
+          E-mail: [mail indsættes]
+        </p>
+      </div>
     </footer>
 
     <script>
+      // =========================================================
+      // PAKKER & PRISER. Ret KUN her (priser og punktlister ét sted).
+      // =========================================================
+      var TIERS = [
+        {
+          name: "Basis",
+          desc: "Den skarpe one-page side til den mindre klinik, der skal se professionel ud.",
+          price: "695 kr",
+          per: "pr. måned",
+          featured: false,
+          badge: null,
+          features: [
+            "Moderne one-page hjemmeside",
+            "Hosting, domæne og mailadresse",
+            "Booking-knap til dit eget system",
+            "Mobil- og Google-venlig",
+            "Kontakt, kort og åbningstider",
+            "Løbende småændringer",
+          ],
+          cta: { text: "Kom i gang", href: "#kontakt", primary: false },
+        },
+        {
+          name: "Plus",
+          desc: "Den komplette klinikside bygget til at fylde kalenderen.",
+          price: "995 kr",
+          per: "pr. måned",
+          featured: true,
+          badge: "Mest populær",
+          features: [
+            "Alt i Basis",
+            "Flere sider: behandlinger, om, priser",
+            "Google Business Profil sat op",
+            "Månedlig rapport over klik og bookinger",
+            "SEO så du findes på Google",
+            "Tekst der konverterer",
+          ],
+          cta: { text: "Vælg Plus", href: "#kontakt", primary: true },
+        },
+        {
+          name: "Pro",
+          desc: "For klinikken der vil have alt kørende, og en fast mand på det.",
+          price: "1.795 kr",
+          per: "pr. måned",
+          featured: false,
+          badge: null,
+          features: [
+            "Alt i Plus",
+            "Egen side per behandling til lokal SEO",
+            "Løbende tekstforfatning",
+            "Løbende optimering af bookinger",
+            "Prioriteret svartid, én hverdag",
+          ],
+          cta: { text: "Tal med Niels", href: "#kontakt", primary: false },
+        },
+      ];
+
+      var CHECK =
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+      (function renderTiers() {
+        var host = document.querySelector(".tiers");
+        if (!host) return;
+        host.innerHTML = TIERS.map(function (t) {
+          var cls = "tier reveal" + (t.featured ? " featured" : "");
+          var badge = t.badge ? '<span class="tier-badge">' + t.badge + "</span>" : "";
+          var items = t.features
+            .map(function (f) {
+              return "<li>" + CHECK + " " + f + "</li>";
+            })
+            .join("");
+          var btnCls = t.cta.primary ? "btn btn-primary" : "btn btn-ghost";
+          return (
+            '<div class="' + cls + '">' +
+            badge +
+            '<div class="tier-name">' + t.name + "</div>" +
+            '<p class="tier-desc">' + t.desc + "</p>" +
+            '<div class="price">' + t.price + "<small>" + t.per + "</small></div>" +
+            "<ul>" + items + "</ul>" +
+            '<a class="' + btnCls + '" href="' + t.cta.href + '">' + t.cta.text + "</a>" +
+            "</div>"
+          );
+        }).join("");
+      })();
+
       // Nav-skygge ved scroll
       var nav = document.getElementById("nav");
       var onScroll = function () {
@@ -764,7 +814,9 @@
       window.addEventListener("scroll", onScroll, { passive: true });
       onScroll();
 
-      // Scroll-reveal
+      // Scroll-reveal. FIX: elementer der allerede er i viewport ved mount
+      // (fx når man lander direkte via #priser) markeres STRAKS som synlige,
+      // så de ikke bliver hængende usynlige, fordi observeren aldrig fyrer.
       var io = new IntersectionObserver(
         function (entries) {
           entries.forEach(function (e) {
@@ -776,8 +828,25 @@
         },
         { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
       );
-      document.querySelectorAll(".reveal").forEach(function (el) {
-        io.observe(el);
+      function inView(el) {
+        var r = el.getBoundingClientRect();
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        return r.top < vh && r.bottom > 0;
+      }
+      function initReveal() {
+        document.querySelectorAll(".reveal").forEach(function (el) {
+          if (el.classList.contains("in")) return;
+          if (inView(el)) el.classList.add("in"); // allerede synlig → vis straks
+          else io.observe(el);
+        });
+      }
+      initReveal();
+      // Efter anker-spring/layout på frisk indlæsning (fx /klinik#priser):
+      // fang de elementer der nu er kommet i view.
+      window.addEventListener("load", function () {
+        document.querySelectorAll(".reveal").forEach(function (el) {
+          if (!el.classList.contains("in") && inView(el)) el.classList.add("in");
+        });
       });
     </script>
   </body>
