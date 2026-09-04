@@ -19,7 +19,10 @@ var META_PIXEL_ID = "1841164606872762"; // Meta-pixel (tom = intet script/kald)
 
   var CONSENT_KEY = "klinik_cookie_v1"; // SAMME nøgle som cookiebanneret sætter
   var EVENT_KEY = "booking_event_id"; // eventID til dedup af Lead på tværs af sider
-  var loaded = false;
+  // Idempotens-flag på window (IKKE lokalt): init + PageView skal fyre PRÆCIS
+  // én gang per sidevisning, også hvis denne fil skulle blive kørt to gange
+  // (fx en delt header + sidens egen HTML) eller samtykket gives igen.
+  var GUARD = "__metaPixelLoaded";
 
   function hasConsent() {
     try {
@@ -31,9 +34,9 @@ var META_PIXEL_ID = "1841164606872762"; // Meta-pixel (tom = intet script/kald)
 
   // Indlæs Metas pixel-script (kun én gang, kun med et udfyldt ID).
   function loadPixel() {
-    if (loaded) return;
+    if (window[GUARD]) return; // allerede loadet i denne sidevisning
     if (!META_PIXEL_ID) return; // tomt ID → gør intet, ingen fejl
-    loaded = true;
+    window[GUARD] = true;
     // Metas officielle pixel-loader. fbq sættes synkront (kø), fbevents.js
     // hentes asynkront. Kald før hentning lægges i køen og afvikles bagefter.
     !(function (f, b, e, v, n, t, s) {
