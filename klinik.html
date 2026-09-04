@@ -319,11 +319,13 @@
       .kunder-head h2 { margin: 0 0 10px; }
       .kunder-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
       .kunde { display: block; color: inherit; }
-      a.kunde:hover .mini-frame { border-color: var(--ink); }
-      .mini-frame { border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; background: var(--surface); }
-      .mini-bar { display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; background: var(--ground); border-bottom: 1px solid var(--line); }
-      .mini-bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
-      .mini-url { margin-left: 8px; font-size: 0.72rem; color: var(--muted); }
+      /* Delt browserramme-komponent — bruges af BÅDE kunder og klinikeksempler,
+         så de to sektioner ikke driver fra hinanden. */
+      .frame { border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; background: var(--surface); }
+      a.kunde:hover .frame, .ex-card:hover .frame { border-color: var(--ink); }
+      .frame-bar { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; background: var(--ground); border-bottom: 1px solid var(--line); }
+      .frame-bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+      .frame-url { margin-left: 8px; font-size: 0.72rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .mini-shot { height: 180px; background: var(--accent-soft); background-size: cover; background-position: top center; display: grid; place-items: center; }
       .mini-shot .shot-name { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
       .mini-shot.has-img .shot-name { display: none; }
@@ -333,19 +335,17 @@
       @media (max-width: 760px) { .kunder-grid { grid-template-columns: 1fr; max-width: 420px; } }
 
       /* ---------- Klinikeksempler (prominent, store rammer, mere luft) ---------- */
-      .s-eksempler { margin-top: 7rem; }
+      .s-eksempler { margin-top: 5rem; }
       .ex-head { max-width: 680px; margin-bottom: 44px; }
       .ex-head h2 { margin: 0 0 12px; }
       .ex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
       .ex-card { position: relative; }
       .ex-link { position: absolute; inset: 0; z-index: 3; border-radius: var(--r-card); }
-      .ex-card:hover .ex-frame { border-color: var(--ink); }
-      .ex-frame { position: relative; border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; background: var(--surface); box-shadow: var(--shadow-soft); }
-      .ex-bar { display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; background: var(--ground); border-bottom: 1px solid var(--line); }
-      .ex-bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
-      .ex-url { margin-left: 10px; font-size: 0.74rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      /* Prominens på eksempel-rammerne (blød skygge) — samme frame-komponent. */
+      .s-eksempler .frame { box-shadow: var(--shadow-soft); }
       .ex-view { position: relative; height: 320px; overflow: hidden; background: var(--surface); }
-      .ex-view iframe { position: absolute; top: 0; left: 0; width: 420px; height: 1100px; border: 0; transform-origin: top left; pointer-events: none; }
+      /* Hele demosiden i miniature: bred iframe skaleret ned via JS (kortbredde/1440). */
+      .ex-view iframe { position: absolute; top: 0; left: 0; width: 1440px; height: 1600px; border: 0; transform-origin: top left; pointer-events: none; }
       .ex-name { margin-top: 14px; font-weight: 600; font-size: 1.05rem; }
       .ex-type { color: var(--muted); font-size: 0.92rem; }
       @media (max-width: 860px) { .ex-grid { grid-template-columns: 1fr; max-width: 460px; } }
@@ -492,8 +492,8 @@
           </div>
           <div class="kunder-grid">
             <a class="kunde" href="https://www.apexmurer.dk/" target="_blank" rel="noopener">
-              <div class="mini-frame">
-                <div class="mini-bar"><i></i><i></i><i></i><span class="mini-url">apexmurer.dk</span></div>
+              <div class="frame">
+                <div class="frame-bar"><i></i><i></i><i></i><span class="frame-url">apexmurer.dk</span></div>
                 <div class="mini-shot" data-shot="/kunder/apex.jpg"><span class="shot-name">Apex Murer</span></div>
               </div>
               <div class="kunde-name">Apex Murer</div>
@@ -501,8 +501,8 @@
               <div class="kunde-extra">Prisberegner og AI-assistent indbygget.</div>
             </a>
             <div class="kunde">
-              <div class="mini-frame">
-                <div class="mini-bar"><i></i><i></i><i></i></div>
+              <div class="frame">
+                <div class="frame-bar"><i></i><i></i><i></i></div>
                 <div class="mini-shot" data-shot="/kunder/valkyrix.jpg"><span class="shot-name">Valkyrix</span></div>
               </div>
               <div class="kunde-name">Valkyrix</div>
@@ -510,8 +510,8 @@
               <div class="kunde-extra">Prisberegner og tilbudsliste.</div>
             </div>
             <a class="kunde" href="https://www.contentscale.dk/" target="_blank" rel="noopener">
-              <div class="mini-frame">
-                <div class="mini-bar"><i></i><i></i><i></i><span class="mini-url">contentscale.dk</span></div>
+              <div class="frame">
+                <div class="frame-bar"><i></i><i></i><i></i><span class="frame-url">contentscale.dk</span></div>
                 <div class="mini-shot" data-shot="/kunder/contentscale.jpg"><span class="shot-name">Content Scale</span></div>
               </div>
               <div class="kunde-name">Content Scale</div>
@@ -533,8 +533,8 @@
           <div class="ex-grid">
             <div class="ex-card">
               <a class="ex-link" href="/demo/fysioterapi" target="_blank" rel="noopener" aria-label="Åbn eksempel: Nordvest Fysioterapi"></a>
-              <div class="ex-frame">
-                <div class="ex-bar"><i></i><i></i><i></i><span class="ex-url">nielswahlberg.dk/demo/fysioterapi</span></div>
+              <div class="frame">
+                <div class="frame-bar"><i></i><i></i><i></i><span class="frame-url">nielswahlberg.dk/demo/fysioterapi</span></div>
                 <div class="ex-view" data-demo="/demo/fysioterapi"></div>
               </div>
               <div class="ex-name">Nordvest Fysioterapi</div>
@@ -542,8 +542,8 @@
             </div>
             <div class="ex-card">
               <a class="ex-link" href="/demo/psykolog" target="_blank" rel="noopener" aria-label="Åbn eksempel: Klinik Vestervold"></a>
-              <div class="ex-frame">
-                <div class="ex-bar"><i></i><i></i><i></i><span class="ex-url">nielswahlberg.dk/demo/psykolog</span></div>
+              <div class="frame">
+                <div class="frame-bar"><i></i><i></i><i></i><span class="frame-url">nielswahlberg.dk/demo/psykolog</span></div>
                 <div class="ex-view" data-demo="/demo/psykolog"></div>
               </div>
               <div class="ex-name">Klinik Vestervold</div>
@@ -551,8 +551,8 @@
             </div>
             <div class="ex-card">
               <a class="ex-link" href="/demo/fodpleje" target="_blank" rel="noopener" aria-label="Åbn eksempel: Søbakken Fodpleje"></a>
-              <div class="ex-frame">
-                <div class="ex-bar"><i></i><i></i><i></i><span class="ex-url">nielswahlberg.dk/demo/fodpleje</span></div>
+              <div class="frame">
+                <div class="frame-bar"><i></i><i></i><i></i><span class="frame-url">nielswahlberg.dk/demo/fodpleje</span></div>
                 <div class="ex-view" data-demo="/demo/fodpleje"></div>
               </div>
               <div class="ex-name">Søbakken Fodpleje</div>
@@ -614,7 +614,7 @@
 
     <!-- ============ COOKIEBANNER ============ -->
     <div class="cookie" id="cookie" hidden>
-      <p>Vi bruger cookies til at måle og forbedre siden. Du bestemmer.</p>
+      <p>Jeg bruger statistik til at se om annoncerne rammer rigtigt. Intet af det er nødvendigt for at siden virker, så du kan roligt sige nej.</p>
       <div class="cookie-actions">
         <button class="btn btn-ghost" id="ckNec" type="button">Kun nødvendige</button>
         <button class="btn btn-solid" id="ckAcc" type="button">Accepter</button>
@@ -813,11 +813,13 @@
           el.setAttribute("data-mounted", "1");
           var f = document.createElement("iframe");
           f.setAttribute("loading", "lazy");
+          f.setAttribute("scrolling", "no");
           f.setAttribute("tabindex", "-1");
           f.setAttribute("aria-hidden", "true");
           f.src = el.getAttribute("data-demo");
           el.appendChild(f);
-          function scale() { f.style.transform = "scale(" + (el.clientWidth / 420) + ")"; }
+          // Hele siden i miniature: bred iframe (1440px) skaleret til kortets bredde.
+          function scale() { f.style.transform = "scale(" + (el.clientWidth / 1440) + ")"; }
           scale();
           window.addEventListener("resize", scale, { passive: true });
         }
