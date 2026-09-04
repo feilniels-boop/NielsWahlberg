@@ -541,7 +541,7 @@
             koster ingenting.
           </p>
           <div class="cal-embed" id="cal-book"></div>
-          <p class="book-fallback">Passer ingen af tiderne? Ring eller skriv til 60 88 06 18, så finder vi en.</p>
+          <p class="book-fallback" id="bookFallback"></p>
         </div>
       </section>
     </main>
@@ -557,13 +557,7 @@
         </nav>
       </div>
       <div class="wrap foot-legal">
-        <p>
-          Niels Wahlberg<br />
-          CVR 46655443<br />
-          [adresse indsættes]<br />
-          Telefon: 60 88 06 18<br />
-          E-mail: [mail indsættes]
-        </p>
+        <p id="footLegal"></p>
       </div>
     </footer>
 
@@ -575,6 +569,9 @@
         <button class="btn btn-solid" id="ckAcc" type="button">Accepter</button>
       </div>
     </div>
+
+    <!-- Meta-pixel (bag samtykke). Tom META_PIXEL_ID = intet script, ingen kald. -->
+    <script src="/meta-pixel.js"></script>
 
     <script>
       // =========================================================
@@ -720,6 +717,15 @@
             layout: "month_view",
             cssVarPerTheme: { light: { "cal-brand": "#12574a" } },
           });
+          // Gennemført booking → Lead-hændelse (dedup-eventID gemmes i
+          // sessionStorage, så /tak-klinik kan fyre samme ID). Er pixel'en
+          // ikke loadet (tomt ID/manglende samtykke), gør trackLead intet.
+          Cal.ns.klinik15("on", {
+            action: "bookingSuccessful",
+            callback: function () {
+              try { if (window.trackLead) window.trackLead(); } catch (e) {}
+            },
+          });
         }
         if ("IntersectionObserver" in window) {
           var io = new IntersectionObserver(
@@ -753,24 +759,63 @@
         }
         var acc = document.getElementById("ckAcc");
         var nec = document.getElementById("ckNec");
-        if (acc) acc.addEventListener("click", function () { set("all"); banner.hidden = true; initAnalytics(); });
+        if (acc) acc.addEventListener("click", function () {
+          set("all");
+          banner.hidden = true;
+          initAnalytics();
+          // Signalér samtykke, så Meta-pixel'en kan loade i samme visning.
+          try { window.dispatchEvent(new Event("cookie-accept")); } catch (e) {}
+        });
         if (nec) nec.addEventListener("click", function () { set("necessary"); banner.hidden = true; });
       })();
 
       // =========================================================
-      // Header-telefon (Apex-mønster). INDSÆT NUMMERET HER.
-      // Er PHONE tom, forbliver knappen skjult (ingen synlig pladsholder).
+      // FIRMAOPLYSNINGER. Ret KUN her. Tomme værdier ("") udelades HELT,
+      // både i footeren og i telefon-fald­back'en — der vises aldrig en
+      // tom eller halv linje. Bruges også til header-telefonknappen.
       // =========================================================
-      var PHONE = "60 88 06 18"; // fx "12 34 56 78"
+      var FIRMA = {
+        navn: "Niels Wahlberg",
+        cvr: "46655443",
+        adresse: "", // <-- INDSÆT adresse (tom = linjen skjules)
+        telefon: "60 88 06 18",
+        email: "", // <-- INDSÆT e-mail (tom = linjen skjules)
+      };
+
+      // Header-telefon (Apex-mønster). Er telefon tom, forbliver knappen skjult.
       (function () {
         var el = document.getElementById("navPhone");
         if (!el) return;
-        var num = String(PHONE).trim();
+        var num = String(FIRMA.telefon || "").trim();
         if (!num) return; // tom → knap forbliver skjult
         el.href = "tel:" + num.replace(/\s/g, "");
         var span = el.querySelector(".np-num");
         if (span) span.textContent = num;
         el.hidden = false;
+      })();
+
+      // Footer-oplysninger: byg linjerne, spring tomme værdier over.
+      (function () {
+        var host = document.getElementById("footLegal");
+        if (!host) return;
+        var lines = [];
+        if (FIRMA.navn) lines.push(FIRMA.navn);
+        if (FIRMA.cvr) lines.push("CVR " + FIRMA.cvr);
+        if (FIRMA.adresse) lines.push(FIRMA.adresse);
+        if (FIRMA.telefon) lines.push("Telefon: " + FIRMA.telefon);
+        if (FIRMA.email) lines.push("E-mail: " + FIRMA.email);
+        // Kun egne, faste værdier — ingen brugerinput, så innerHTML er trygt.
+        host.innerHTML = lines.join("<br />");
+      })();
+
+      // Fald­back-linje under kalenderen: udelad nummeret hvis telefon er tom.
+      (function () {
+        var el = document.getElementById("bookFallback");
+        if (!el) return;
+        var num = String(FIRMA.telefon || "").trim();
+        el.textContent = num
+          ? "Passer ingen af tiderne? Ring eller skriv til " + num + ", så finder vi en."
+          : "Passer ingen af tiderne? Skriv til mig, så finder vi en.";
       })();
 
       // Kunder: vis screenshot hvis filen findes; ellers bliver den neutrale
