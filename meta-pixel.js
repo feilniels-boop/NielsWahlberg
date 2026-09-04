@@ -12,7 +12,7 @@
    en "cookie-accept"-hændelse, og pixel'en loades med det samme
    uden genindlæsning.
    ========================================================= */
-var META_PIXEL_ID = ""; // <-- INDSÆT dit Meta-pixel-ID her (fx "1234567890")
+var META_PIXEL_ID = "1841164606872762"; // Meta-pixel (tom = intet script/kald)
 
 (function () {
   "use strict";
