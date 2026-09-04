@@ -666,6 +666,38 @@
       window.addEventListener("scroll", onScroll, { passive: true });
       onScroll();
 
+      // =========================================================
+      // UTM-parametre: fang fra URL ved første sidevisning og gem i
+      // sessionStorage, så de overlever scroll og genindlæsning. Læses igen
+      // når Cal.com-embedden initialiseres, og sendes med på calLink, så de
+      // gemmes på bookingen. Al sessionStorage-brug er pakket i try/catch:
+      // fejler det, fungerer siden normalt (blot uden persistering).
+      // =========================================================
+      var UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
+
+      (function captureUtm() {
+        var search;
+        try { search = new URLSearchParams(window.location.search); } catch (e) { return; }
+        UTM_KEYS.forEach(function (k) {
+          var v = search.get(k);
+          if (v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+        });
+      })();
+
+      // Byg query-halen til calLink af de utm-parametre der findes (URL først,
+      // ellers sessionStorage). Findes ingen, returneres "" og calLink er uændret.
+      function utmQuery() {
+        var search;
+        try { search = new URLSearchParams(window.location.search); } catch (e) { search = null; }
+        var pairs = [];
+        UTM_KEYS.forEach(function (k) {
+          var v = search ? search.get(k) : null;
+          if (!v) { try { v = sessionStorage.getItem(k); } catch (e) { v = null; } }
+          if (v) pairs.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+        });
+        return pairs.length ? "?" + pairs.join("&") : "";
+      }
+
       // Cal.com: initialisér inline-embed DOVENT, kun når #book er inden for
       // 400px af viewport. Cal-loaderen henter selv embed.js ved første kald,
       // så intet indlæses ved sidestart (koster på loadtid).
@@ -681,7 +713,7 @@
           Cal.ns.klinik15("inline", {
             elementOrSelector: "#cal-book",
             config: { layout: "month_view" },
-            calLink: "niels-feil-3q5gpr/15min",
+            calLink: "niels-feil-3q5gpr/15min" + utmQuery(),
           });
           Cal.ns.klinik15("ui", {
             hideEventTypeDetails: false,
