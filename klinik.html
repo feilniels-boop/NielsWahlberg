@@ -267,6 +267,12 @@
       .tier li svg { flex: none; margin-top: 3px; color: var(--accent); }
       .tier .btn { width: 100%; justify-content: center; margin-top: auto; }
       .price-note { margin-top: 26px; color: var(--muted); font-size: 0.9rem; }
+      .price-note-strong { color: var(--ink); font-weight: 600; }
+      .price-note-sub { margin-top: 4px; }
+      /* Opbygningspris: smalt fremhævet felt, venstrestillet, læses som ét tal (ikke et 4. kort). */
+      .buildprice { max-width: 620px; margin-bottom: 28px; padding: 18px 22px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); }
+      .buildprice-main { margin: 0 0 4px; font-weight: 600; font-size: 1.05rem; }
+      .buildprice-sub { margin: 0; color: var(--muted); font-size: 0.92rem; }
       @media (max-width: 900px) { .tiers { grid-template-columns: 1fr; max-width: 440px; } }
 
       /* ---------- Booking (det ENESTE centrerede sted) ---------- */
@@ -513,10 +519,14 @@
           <div class="price-head">
             <span class="eyebrow">Pakker og priser</span>
             <h2 class="h-section">Vælg det niveau, din klinik har brug for</h2>
-            <p class="lead">Ingen opstartspris. Jeg bygger siden, du betaler kun det månedlige. Seks måneder, derefter måned for måned.</p>
+          </div>
+          <div class="buildprice">
+            <p class="buildprice-main">Opbygning af siden: 2.995 kr. ekskl. moms, engangsbeløb.</p>
+            <p class="buildprice-sub">Du betaler først når siden er i luften. Derefter vælger du niveau.</p>
           </div>
           <div class="tiers"></div>
-          <p class="price-note">Eller betal 12 måneder forud og få to måneder gratis.</p>
+          <p class="price-note price-note-strong">Ingen binding. Én måneds opsigelse.</p>
+          <p class="price-note price-note-sub">Eller betal 12 måneder forud og få to måneder gratis.</p>
         </div>
       </section>
 
@@ -573,54 +583,52 @@
       // =========================================================
       var TIERS = [
         {
-          name: "Basis",
-          desc: "Den skarpe one-page side til den mindre klinik, der skal se professionel ud.",
-          price: "695 kr",
+          name: "Drift",
+          desc: "Siden kører, og du skal ikke tænke over den.",
+          price: "395 kr",
           per: "pr. måned",
           featured: false,
           badge: null,
           features: [
-            "Moderne one-page hjemmeside",
-            "Hosting, domæne og mailadresse",
-            "Booking-knap til dit eget system",
-            "Mobil- og Google-venlig",
-            "Kontakt, kort og åbningstider",
+            "Hosting, SSL, backup og drift",
+            "Domæne og mailadresse",
             "Løbende småændringer",
+            "Tracking og cookiesamtykke",
+            "Svar inden for 5 hverdage",
           ],
-          cta: { text: "Kom i gang", primary: false },
+          cta: { text: "Vælg Drift", primary: false },
         },
         {
-          name: "Plus",
-          desc: "Den komplette klinikside bygget til at fylde kalenderen.",
-          price: "995 kr",
+          name: "Synlig",
+          desc: "Så folk også finder dig, når de søger.",
+          price: "795 kr",
           per: "pr. måned",
           featured: true,
           badge: "Mest populær",
           features: [
-            "Alt i Basis",
-            "Flere sider: behandlinger, om, priser",
-            "Google Business Profil sat op",
-            "Månedlig rapport over klik og bookinger",
-            "SEO så du findes på Google",
-            "Tekst der konverterer",
+            "Alt i Drift",
+            "Google Business Profil sat op og passet",
+            "Månedlig rapport over klik på telefon og bookinger",
+            "Hjælp til at samle anmeldelser",
+            "En ekstra underside om året",
+            "Svar inden for 2 hverdage",
           ],
-          cta: { text: "Vælg Plus", primary: true },
+          cta: { text: "Vælg Synlig", primary: true },
         },
         {
-          name: "Pro",
-          desc: "For klinikken der vil have alt kørende, og en fast mand på det.",
-          price: "1.795 kr",
+          name: "Vækst",
+          desc: "For klinikken der vil fylde kalenderen op.",
+          price: "1.495 kr",
           per: "pr. måned",
           featured: false,
           badge: null,
           features: [
-            "Alt i Plus",
+            "Alt i Synlig",
             "Egen side per behandling til lokal SEO",
-            "Løbende tekstforfatning",
-            "Løbende optimering af bookinger",
-            "Prioriteret svartid, én hverdag",
+            "Løbende tekst og optimering",
+            "Svar inden for 1 hverdag",
           ],
-          cta: { text: "Tal med Niels", primary: false },
+          cta: { text: "Vælg Vækst", primary: false },
         },
       ];
 
