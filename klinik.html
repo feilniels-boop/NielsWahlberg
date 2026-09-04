@@ -165,7 +165,7 @@
         border-bottom: 1px solid var(--line);
         padding-block: 4rem;
       }
-      .s-priser { margin-top: 8rem; }
+      .s-priser { margin-top: 6rem; }
       .s-book { margin-top: 6rem; padding-bottom: 5rem; }
 
       /* ---------- Hero (asymmetrisk 5fr/4fr, venstrestillet) ---------- */
@@ -319,10 +319,9 @@
       .kunder-head h2 { margin: 0 0 10px; }
       .kunder-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
       .kunde { display: block; color: inherit; }
-      /* Delt browserramme-komponent — bruges af BÅDE kunder og klinikeksempler,
-         så de to sektioner ikke driver fra hinanden. */
+      /* Browserramme-komponent (bruges af kundekortene). */
       .frame { border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; background: var(--surface); }
-      a.kunde:hover .frame, .ex-card:hover .frame { border-color: var(--ink); }
+      a.kunde:hover .frame { border-color: var(--ink); }
       .frame-bar { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; background: var(--ground); border-bottom: 1px solid var(--line); }
       .frame-bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
       .frame-url { margin-left: 8px; font-size: 0.72rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -334,21 +333,6 @@
       .kunde-extra { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
       @media (max-width: 760px) { .kunder-grid { grid-template-columns: 1fr; max-width: 420px; } }
 
-      /* ---------- Klinikeksempler (prominent, store rammer, mere luft) ---------- */
-      .s-eksempler { margin-top: 5rem; }
-      .ex-head { max-width: 680px; margin-bottom: 44px; }
-      .ex-head h2 { margin: 0 0 12px; }
-      .ex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
-      .ex-card { position: relative; }
-      .ex-link { position: absolute; inset: 0; z-index: 3; border-radius: var(--r-card); }
-      /* Prominens på eksempel-rammerne (blød skygge) — samme frame-komponent. */
-      .s-eksempler .frame { box-shadow: var(--shadow-soft); }
-      .ex-view { position: relative; height: 320px; overflow: hidden; background: var(--surface); }
-      /* Hele demosiden i miniature: bred iframe skaleret ned via JS (kortbredde/1440). */
-      .ex-view iframe { position: absolute; top: 0; left: 0; width: 1440px; height: 1600px; border: 0; transform-origin: top left; pointer-events: none; }
-      .ex-name { margin-top: 14px; font-weight: 600; font-size: 1.05rem; }
-      .ex-type { color: var(--muted); font-size: 0.92rem; }
-      @media (max-width: 860px) { .ex-grid { grid-template-columns: 1fr; max-width: 460px; } }
 
       /* ---------- Den ENESTE animation: hero-tekst ved indlæsning ---------- */
       .hero-rise { opacity: 0; transform: translateY(16px); animation: rise 0.8s var(--ease) forwards; }
@@ -522,46 +506,6 @@
         </div>
       </section>
 
-      <!-- ============ KLINIKEKSEMPLER (prominent, live demo-forhåndsvisninger) ============ -->
-      <section class="s-eksempler" id="eksempler">
-        <div class="wrap">
-          <div class="ex-head">
-            <span class="eyebrow">Klinikeksempler</span>
-            <h2 class="h-section">Sådan kunne din klinikside se ud</h2>
-            <p class="lead">Tre eksempler, ikke kundeopgaver. Siderne er rigtige og virker på både mobil og computer.</p>
-          </div>
-          <div class="ex-grid">
-            <div class="ex-card">
-              <a class="ex-link" href="/demo/fysioterapi" target="_blank" rel="noopener" aria-label="Åbn eksempel: Nordvest Fysioterapi"></a>
-              <div class="frame">
-                <div class="frame-bar"><i></i><i></i><i></i><span class="frame-url">nielswahlberg.dk/demo/fysioterapi</span></div>
-                <div class="ex-view" data-demo="/demo/fysioterapi"></div>
-              </div>
-              <div class="ex-name">Nordvest Fysioterapi</div>
-              <div class="ex-type">Fysioterapi og genoptræning, Aarhus N</div>
-            </div>
-            <div class="ex-card">
-              <a class="ex-link" href="/demo/psykolog" target="_blank" rel="noopener" aria-label="Åbn eksempel: Klinik Vestervold"></a>
-              <div class="frame">
-                <div class="frame-bar"><i></i><i></i><i></i><span class="frame-url">nielswahlberg.dk/demo/psykolog</span></div>
-                <div class="ex-view" data-demo="/demo/psykolog"></div>
-              </div>
-              <div class="ex-name">Klinik Vestervold</div>
-              <div class="ex-type">Psykolog, Aarhus C</div>
-            </div>
-            <div class="ex-card">
-              <a class="ex-link" href="/demo/fodpleje" target="_blank" rel="noopener" aria-label="Åbn eksempel: Søbakken Fodpleje"></a>
-              <div class="frame">
-                <div class="frame-bar"><i></i><i></i><i></i><span class="frame-url">nielswahlberg.dk/demo/fodpleje</span></div>
-                <div class="ex-view" data-demo="/demo/fodpleje"></div>
-              </div>
-              <div class="ex-name">Søbakken Fodpleje</div>
-              <div class="ex-type">Statsautoriseret fodterapeut, Solbjerg</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- ============ PRISER / PAKKER ============ -->
       <!-- Priser + punkter styres af TIERS-const nederst i JavaScript. -->
       <section class="s-priser" id="priser">
@@ -579,14 +523,16 @@
       <!-- ============ BOOKING (Cal.com, indlejret) ============ -->
       <section class="s-book" id="book">
         <div class="wrap book-inner">
-          <span class="eyebrow">Book</span>
-          <h2 class="h-section">Book et kvarter</h2>
+          <span class="eyebrow">Gratis udkast</span>
+          <h2 class="h-section">Se din klinikside før du beslutter dig</h2>
           <p class="lead">
-            Jeg viser dig et udkast til din side på skærmen. Du siger til
-            undervejs når der er noget der skal være anderledes.
+            Book et kvarter. Jeg laver et udkast til hvordan din side kunne se ud,
+            og vi går den igennem på skærmen. Du siger til undervejs når der er
+            noget der skal være anderledes. Du skal ikke forberede noget, og det
+            koster ingenting.
           </p>
           <div class="cal-embed" id="cal-book"></div>
-          <p class="book-fallback">Kan du ikke se kalenderen? Ring på [nummer]</p>
+          <p class="book-fallback">Passer ingen af tiderne? Ring eller skriv til 60 88 06 18, så finder vi en.</p>
         </div>
       </section>
     </main>
@@ -606,7 +552,7 @@
           Niels Wahlberg<br />
           CVR 46655443<br />
           [adresse indsættes]<br />
-          Telefon: [nummer indsættes]<br />
+          Telefon: 60 88 06 18<br />
           E-mail: [mail indsættes]
         </p>
       </div>
@@ -776,7 +722,7 @@
       // Header-telefon (Apex-mønster). INDSÆT NUMMERET HER.
       // Er PHONE tom, forbliver knappen skjult (ingen synlig pladsholder).
       // =========================================================
-      var PHONE = ""; // fx "12 34 56 78"
+      var PHONE = "60 88 06 18"; // fx "12 34 56 78"
       (function () {
         var el = document.getElementById("navPhone");
         if (!el) return;
@@ -802,40 +748,6 @@
           };
           img.src = src;
         });
-      })();
-
-      // Klinikeksempler: montér demo-iframe DOVENT (kun når kortet er inden for
-      // 400px af viewport), og skalér så hele siden fylder rammen.
-      (function () {
-        var views = document.querySelectorAll(".ex-view[data-demo]");
-        function mount(el) {
-          if (el.getAttribute("data-mounted")) return;
-          el.setAttribute("data-mounted", "1");
-          var f = document.createElement("iframe");
-          f.setAttribute("loading", "lazy");
-          f.setAttribute("scrolling", "no");
-          f.setAttribute("tabindex", "-1");
-          f.setAttribute("aria-hidden", "true");
-          f.src = el.getAttribute("data-demo");
-          el.appendChild(f);
-          // Hele siden i miniature: bred iframe (1440px) skaleret til kortets bredde.
-          function scale() { f.style.transform = "scale(" + (el.clientWidth / 1440) + ")"; }
-          scale();
-          window.addEventListener("resize", scale, { passive: true });
-        }
-        if ("IntersectionObserver" in window) {
-          var io = new IntersectionObserver(
-            function (entries) {
-              entries.forEach(function (e) {
-                if (e.isIntersecting) { mount(e.target); io.unobserve(e.target); }
-              });
-            },
-            { rootMargin: "400px 0px" }
-          );
-          Array.prototype.forEach.call(views, function (el) { io.observe(el); });
-        } else {
-          Array.prototype.forEach.call(views, mount);
-        }
       })();
     </script>
   </body>
