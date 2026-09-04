@@ -352,6 +352,19 @@ const server = http.createServer(function (req, res) {
     return require("./lib/admin").handleRunCron(req, res);
   }
 
+  // Takkeside for klinik-funnel: statisk tak-klinik.html. Eksplicit rute, så
+  // den også virker indlejret i Cal.coms iframe (der sættes ingen
+  // X-Frame-Options, og filen serveres som ellers, no-store).
+  if (urlPath === "/tak-klinik") {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      res.writeHead(405, { Allow: "GET" });
+      res.end("Method Not Allowed");
+      return;
+    }
+    req.url = "/tak-klinik.html";
+    return serveStatic(req, res);
+  }
+
   // Takkeside: server-renderet (fornavn fra cookie, tal, video, booking)
   // /en/thanks = engelsk, /forretning/tak = dansk (forretning-funnel).
   if (urlPath === "/en/thanks" || urlPath === "/forretning/tak") {
