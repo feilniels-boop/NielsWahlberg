@@ -49,6 +49,10 @@ checks are expected before committing UI changes.
 - `GET|POST /admin/run-cron` → manual daily-job trigger (Basic Auth).
 - `GET /en/thanks` → `lib/thanks.js` (`lang="en"`) — English thank-you page.
 - `GET /forretning/tak` → `lib/thanks.js` (`lang="da"`) — Danish thank-you page.
+- `GET /demo/<slug>` → `lib/demo.js` — server-rendered demo clinic pages
+  (`fysioterapi`/`psykolog`/`fodpleje`), `noindex`. See "The klinik track".
+- `GET /tak-klinik` → static `tak-klinik.html` — klinik booking thank-you (fires
+  the Meta Pixel Lead). Explicit route so the pretty URL works.
 - Everything else → static files. HTML/JS/CSS served `no-store`; images cached.
   The two funnels' entry pages are static: `/en/quiz` (`en/quiz.html`, English)
   and `/forretning` (`forretning.html`, Danish — replaced the old feedback form).
@@ -111,6 +115,46 @@ on `window.FeedbackFormConfig` (all backward-compatible / opt-in):
 - `phoneMode` — `"dk"` (Danish) vs `"intl"` (English); `newsletterRequired`
   makes the mailing-list opt-in mandatory (funnels set it on).
 
+## The klinik track (web-design sales page + demo clinics)
+A **separate marketing track** from the coaching funnels above: Niels sells
+websites to Danish clinics. All static + one server-rendered template — **no DB,
+no Supabase, no Claude**; it shares nothing with the funnel backend but the server.
+- `/klinik` (`klinik.html`) — the sales page. Cool clinical design with its own
+  token set + Schibsted Grotesk, self-contained inline `<style>`/`<script>`.
+  Sections in order: hero, problem, proces, **kunder**, **priser**, **book**,
+  footer. Pricing lives in ONE `TIERS` const in the inline script: a one-off
+  build fee (2.995 kr, shown once in a highlighted field above the cards) + three
+  monthly tiers — Drift 395 / **Synlig 795** (featured) / Vækst 1.495 kr/md.
+  Booking is a **Cal.com inline embed** at `#book` (`niels-feil-3q5gpr/15min`,
+  lazy-loaded near viewport). Header phone button driven by a `PHONE` const
+  (hidden if empty). "Kunder" shows real client screenshots from `/kunder/*.jpg`
+  (apex, valkyrix, contentscale) with a `--ground` fallback if a file is missing.
+  NB: `/klinik` resolves to `klinik.html`; the legacy `klinik/` folder is shadowed.
+- `/demo/<slug>` → `lib/demo.js` — three example clinic sites (`fysioterapi`,
+  `psykolog`, `fodpleje`) from ONE shared template fed by a `CLINICS` config map
+  (a fourth clinic = one new object). Each: mobile click-to-call, hero that
+  changes layout by `bookingStyle`, treatments list, about with a rectangular
+  work image (not a headshot), Danish hours, a Google Maps **search link** (no
+  embed), 3 reviews labelled "Eksempel", a contact form (name/phone/email/
+  treatment dropdown — **no free-text**), an "example page" footer, own accent
+  colour. `noindex`, fictional clinics.
+- `/tak-klinik` (`tak-klinik.html`) — booking thank-you ("Tid booket"); fires the
+  Meta Pixel Lead.
+
+**Cookie consent + Meta Pixel.** `klinik.html`, the demo pages and
+`tak-klinik.html` share a minimal cookie banner (localStorage `klinik_cookie_v1`)
+and `meta-pixel.js`. The pixel loads **only after consent** (`=== "all"`); an
+empty `META_PIXEL_ID` (top of `meta-pixel.js`) loads nothing and errors nowhere.
+PageView on every consented klinik page, Lead on `/tak-klinik` (dedup via
+`booking_event_id`). Independent of the coaching funnel's Supabase `form_events`.
+
+**Assets & images.** Static assets are served from the **repo root**, not a
+`public/` dir — client screenshots live in `kunder/…`, demo images in
+`demo/<slug>/{hero,break,om}.jpg`, referenced as `/kunder/…` and `/demo/<slug>/…`.
+`scripts/hent-billeder.js` fetches the nine demo images from Unsplash (needs
+`UNSPLASH_ACCESS_KEY`; writes `demo/billedkreditter.md`); missing files fall back
+to a calm `--ground` surface.
+
 ## Data — Supabase
 - **Project `qqaudfinexdtgwhkqlsz`** ("NielsWahlberg", eu-west-1). This project is
   connected to Claude via the Supabase MCP, so you can query/apply migrations to it.
@@ -129,7 +173,8 @@ no-reply), `NOTIFY_EMAIL`, `ADMIN_PASSWORD`. Optional: `SITE_URL`, `BOOKING_URL`
 (+ `CAL_LINK` for the embed — defaults to `niels-feil-3q5gpr/30min`), `SKOOL_URL`
 (empty = Skool link hidden), `CHANNEL_START_DATE` (day of first English video,
 never today; empty = no "day N"), `WELCOME_VIDEO_URL`/`_POSTER`/`_VTT` (empty =
-video section hidden), `AUTO_SEND_MAIL1`.
+video section hidden), `AUTO_SEND_MAIL1`. `UNSPLASH_ACCESS_KEY` is used **only**
+by `scripts/hent-billeder.js` (demo images), never at runtime.
 
 ## Deploy
 Railway auto-deploys **`main`**. `funnel-plan` was merged to `main` via PR #1.
